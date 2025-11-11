@@ -1,0 +1,23 @@
+[
+  {
+    "id": "mr_cook",
+    "name": "Мистер Кук",
+    "category": "Еда",
+    "subcategories": ["Корейская кухня", "Столовая"],
+    "rating": 4.6,
+    "province_ru": "Чхунчхоннам-до",
+    "city_ru": "Асан-си, Донпо-мён",
+    "address": "405-20 Dunpo-ri, Dunpo-myeon, Asan-si, Chungcheongnam-do",
+    "lat": 36.9305,
+    "lng": 127.0458,
+    "owner_name": "—",
+    "phone": "—",
+    "license_url": "",
+    "menu_photos": [],
+    "place_photos": [],
+    "description": "Домашняя корейская кухня от русскоязычных хозяев.",
+    "approved": true,
+    "pending": false,
+    "created_at": "2025-11-11T11:00:00Z"
+  }
+]
