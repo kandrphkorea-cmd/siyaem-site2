@@ -1,217 +1,302 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SiyaEm — Центр возможностей</title>
+  <title>SiyaEm Korea — карта партнёров</title>
   <style>
     :root{
-      --bg:#0F172A;          /* тёмный сине-серый для шапки */
-      --bg-2:#0B1220;
-      --text:#F8FAFC;        /* почти белый текст */
-      --muted:#94A3B8;       /* серый текст */
-      --brand:#10B981;       /* бирюзовый акцент */
-      --gold:#EAB308;        /* золотой акцент */
-      --paper:#0f172a0a;     /* очень светлый фон секций */
-      --card:#111827;
+      --bg:#0f172a;          /* charcoal navy */
+      --card:#111827;        /* deep slate */
+      --text:#e5e7eb;        /* soft white */
+      --muted:#9ca3af;       /* gray */
+      --acc:#2563eb;         /* royal blue */
+      --acc-2:#fbbf24;       /* warm gold */
+      --danger:#ef4444;      /* red */
+      --ok:#10b981;          /* green */
+      --radius:16px;
     }
     *{box-sizing:border-box}
     body{
-      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;
-      background:#fff; color:#0f172a;
+      margin:0;background:linear-gradient(180deg,#0b132b, #0f172a 35% 65%, #111827);
+      color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     }
-
-    /* header */
+    .wrap{max-width:1100px;margin:0 auto;padding:20px}
     header{
-      position:sticky; top:0; z-index:10;
-      background:var(--bg);
-      color:var(--text);
-      border-bottom:1px solid #16213a;
+      position:sticky;top:0;z-index:20;backdrop-filter:blur(12px);
+      background:rgba(15,23,42,.65);border-bottom:1px solid #1f2937;
     }
-    .nav{
-      max-width:1100px; margin:auto;
-      display:flex; align-items:center; gap:24px;
-      padding:14px 20px;
+    .nav{display:flex;align-items:center;gap:16px;justify-content:space-between;padding:14px 0}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px}
+    .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--acc-2);box-shadow:0 0 18px var(--acc-2)}
+    .menu{display:flex;gap:8px;flex-wrap:wrap}
+    .menu button{
+      background:#0b1221;border:1px solid #1f2a44;color:var(--text);
+      padding:10px 14px;border-radius:12px;cursor:pointer;transition:.2s;
     }
-    .brand{
-      font-weight:800; letter-spacing:.5px;
-      color:var(--text); text-decoration:none;
-    }
-    .brand b{ color: var(--gold); }
-    nav a{
-      color:var(--muted); text-decoration:none; font-weight:600;
-      padding:8px 10px; border-radius:10px;
-    }
-    nav a:hover{ color:var(--text); background:var(--bg-2); }
-
-    /* hero */
+    .menu button:hover{border-color:#3256b8;color:#cfe2ff}
     .hero{
-      max-width:1100px; margin:18px auto 0; padding:0 20px 20px;
+      margin:26px 0 14px;background:rgba(17,24,39,.65);
+      border:1px solid #1f2937;border-radius:var(--radius);padding:20px;
     }
-    .hero .note{
-      background:var(--paper); border:1px solid #e5e7eb;
-      border-radius:14px; padding:16px 18px; line-height:1.5;
+    .hero h1{margin:0 0 8px;font-size:24px;font-weight:800}
+    .hero p{margin:0;color:var(--muted)}
+    .card{
+      background:rgba(17,24,39,.8);border:1px solid #1f2937;border-radius:var(--radius);
+      padding:16px;
     }
-    .hero .note b{ color:#0f172a }
-    .hero .note .ok{ color:var(--brand); font-weight:700 }
-
-    /* map */
-    #map{
-      width:100%; height:70vh; min-height:420px;
-      border-radius:14px; margin-top:14px;
-      border:1px solid #e5e7eb;
+    #map{height:520px;border-radius:12px;overflow:hidden}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(37,99,235,.12);border:1px solid rgba(37,99,235,.35);
+      color:#bfdbfe;border-radius:999px;padding:6px 12px;font-size:13px
     }
-
-    /* footer */
-    footer{ color:#475569; text-align:center; padding:26px 12px 40px }
     .btn{
-      display:inline-block; background:var(--brand); color:white;
-      padding:10px 14px; border-radius:10px; text-decoration:none; font-weight:700;
+      appearance:none;border:none;cursor:pointer;
+      padding:12px 16px;border-radius:12px;font-weight:700;letter-spacing:.2px;
     }
-    .btn:hover{ filter:brightness(0.95) }
+    .btn-primary{background:var(--acc);color:white}
+    .btn-primary:hover{filter:brightness(1.1)}
+    .btn-ghost{
+      background:transparent;color:var(--text);border:1px solid #263554
+    }
+    .btn-ghost:hover{border-color:#3b4f7a}
+    footer{padding:28px 0 40px;color:#94a3b8;text-align:center}
+
+    /* Modal */
+    .modal{
+      position:fixed;inset:0;display:none;place-items:center;z-index:50;
+      background:rgba(2,6,23,.6);backdrop-filter:blur(6px)
+    }
+    .modal.show{display:grid}
+    .modal .box{
+      width:min(720px,calc(100vw - 28px));max-height:80vh;overflow:auto;
+      background:var(--card);border:1px solid #1f2937;border-radius:18px;padding:18px 18px 20px
+    }
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .field{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+    label{font-size:14px;color:#cbd5e1}
+    .req{color:var(--danger);margin-left:6px}
+    input[type="text"], input[type="file"], textarea{
+      width:100%;background:#0b1221;border:1px solid #1f2937;color:var(--text);
+      border-radius:10px;padding:10px 12px;outline:none
+    }
+    textarea{min-height:110px;resize:vertical}
+    .hint{color:#9ca3af;font-size:12px}
+    .ok{color:var(--ok)}
+    .center{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+    .mt-12{margin-top:12px}.mt-16{margin-top:16px}.mt-20{margin-top:20px}
   </style>
 </head>
 <body>
-<header>
-  <div class="nav">
-    <a class="brand" href="#"><b>SiyaEm</b> Korea</a>
-    <nav>
-      <a href="#home">Главная</a>
-      <a href="#services">Услуги</a>
-      <a href="#about">О нас</a>
-      <a href="#contact">Контакты</a>
-    </nav>
+  <header>
+    <div class="wrap nav">
+      <div class="brand"><span class="dot"></span><span>SiyaEm Korea</span></div>
+      <div class="menu">
+        <button data-open="#about" class="btn-ghost">О нас</button>
+        <button data-open="#services" class="btn-ghost">Услуги</button>
+        <button data-open="#partner" class="btn-primary">Стать партнёром</button>
+        <button data-open="#contacts" class="btn-ghost">Контакты</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="hero card">
+      <div class="badge">Экосистема только с лицензированными русскоязычными заведениями</div>
+      <h1>Карта партнёров SiyaEm</h1>
+      <p>На карте отображаются <b>только проверенные точки</b>. Сейчас: “Мистер Кук (Mr. Cook)”. Новые партнёры — через анкету ниже.</p>
+    </div>
+
+    <section class="card">
+      <div class="mt-12" id="map"></div>
+      <div class="center mt-16">
+        <button class="btn-primary btn" data-open="#partner">Стать партнёром</button>
+        <button class="btn btn-ghost" data-open="#about">Как мы проверяем партнёров</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 SiyaEm Korea. Все права защищены.
+  </footer>
+
+  <!-- Модалки -->
+  <div class="modal" id="about">
+    <div class="box">
+      <h3>О нас</h3>
+      <p class="hint">Мы собираем и продвигаем **только русскоязычные** и **легальные** места в Корее. Каждая точка проходит проверку лицензии и базовой безопасности.</p>
+      <div class="center mt-16"><button class="btn btn-primary" data-close>Понятно</button></div>
+    </div>
   </div>
-</header>
 
-<main class="hero">
-  <div class="note">
-    <div style="font-size:18px; font-weight:800; margin-bottom:6px;">Партнёрская карта Дунпо (Асан-си)</div>
-    Эти заведения уже <b>с нами сотрудничают</b> и <span class="ok">заинтересованы в совместном развитии</span>.  
-    Если вы владелец бизнеса в 둔포면 — свяжитесь с нами, добавим вас на карту и подключим к экосистеме SiyaEm.
+  <div class="modal" id="services">
+    <div class="box">
+      <h3>Услуги</h3>
+      <ul>
+        <li>Добавление и верификация партнёров (проверка лицензий)</li>
+        <li>Продвижение на карте и в соцсетях</li>
+        <li>Фотосъёмка и оформление карточек</li>
+      </ul>
+      <div class="center mt-16"><button class="btn btn-primary" data-close>Ок</button></div>
+    </div>
   </div>
 
-  <div id="map"></div>
-</main>
+  <div class="modal" id="contacts">
+    <div class="box">
+      <h3>Контакты</h3>
+      <p>Республика Корея, 충남 아산시 둔포면<br/>Email: support@siyaem.kr</p>
+      <div class="center mt-16"><button class="btn btn-primary" data-close>Закрыть</button></div>
+    </div>
+  </div>
 
-<footer>
-  © 2025 SiyaEm Korea. Все права защищены · <a class="btn" href="#contact">Стать партнёром</a>
-</footer>
-
-<!-- Карта Google -->
-<script>
-  // === 1) ЗАПОЛНИ СВОЙ API КЛЮЧ НИЖЕ ===
-  const GOOGLE_MAPS_API_KEY = "AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro";
-
-  // === 2) ПАРТНЁРЫ: можно задавать координаты ИЛИ адрес ===
-  // Если указаны lat/lng — используем их.
-  // Если lat/lng нет, но есть address — сделаем геокодирование (нужно включить Geocoding API).
-  const PARTNERS = [
-    // Пример с координатами (если знаешь):
-    // { title: "Радуга (продуктовый)", desc: "Русскоязычный магазин", lat: 36.93168, lng: 127.04431 },
-
-    // Примеры с адресами (скрипт сам получит координаты):
-    { title: "Радуга (продуктовый)",       desc: "Русскоязычный магазин", address: "충청남도 아산시 둔포면 둔포중앙로 115" },
-    { title: "Мишка (готовые закуски)",    desc: "Кулинария",              address: "충청남도 아산시 둔포면 둔포중앙로109번길 13" },
-    { title: "Конфетка (продукты)",        desc: "Продуктовый",            address: "충청남도 아산시 둔포면 둔포중앙로133번길 23-14" },
-    { title: "Глобус (продукты)",          desc: "Продуктовый",            address: "충남 아산시 둔포면 둔포중앙로133번길 60-1" },
-    { title: "Мистер Кук (кафе)",          desc: "Кафе",                   address: "충남 아산시 둔포면 둔포로 47" },
-    { title: "Радуга 1층 (продуктовый)",   desc: "Продуктовый",            address: "충남 아산시 둔포면 둔포로 46 1층" },
-    { title: "Мистер Кук Кебаб",           desc: "Шаурма/Кебаб",           address: "충남 아산시 둔포면 둔포로 41" },
-    { title: "Кебаб (шаурма)",             desc: "Шаурма/Кебаб",           address: "충청남도 아산시 둔포면 둔포로 42" },
-    { title: "Sushi Baker (роллы)",        desc: "Суши/Роллы",             address: "충남 아산시 둔포면 둔포면로 11" },
-  ];
-
-  // Центр карты — Дунпо (примерные координаты центра)
-  const DUNPO_CENTER = { lat: 36.9326, lng: 127.0485 };
-
-  // Загружаем Google Maps JS динамически
-  (function loadMaps() {
-    const s = document.createElement('script');
-    s.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initMap&v=weekly&language=ru`;
-    s.async = true; s.defer = true;
-    document.head.appendChild(s);
-  })();
-
-  let map;
-  async function initMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
-      center: DUNPO_CENTER,
-      zoom: 15,
-      mapId: "SiyaEmMap",
-      streetViewControl: false,
-      mapTypeControl: false,
-      fullscreenControl: true,
-    });
-
-    // Пытаемся поставить метки
-    await addPartnersMarkers(PARTNERS);
-  }
-
-  async function addPartnersMarkers(list){
-    const geocoder = new google.maps.Geocoder();
-    const bounds = new google.maps.LatLngBounds();
-
-    for (const p of list){
-      try{
-        let position;
-        if (typeof p.lat === "number" && typeof p.lng === "number"){
-          position = { lat: p.lat, lng: p.lng };
-        } else if (p.address){
-          // геокодирование, если нет lat/lng
-          const geo = await geocodeAddress(geocoder, p.address);
-          if (!geo) continue;
-          position = geo;
-        } else {
-          continue;
-        }
-
-        const marker = new google.maps.Marker({
-          position, map,
-          title: p.title
-        });
-
-        const content = `
-          <div style="min-width:220px">
-            <div style="font-weight:800; margin-bottom:6px">${escapeHtml(p.title || "")}</div>
-            ${p.desc ? `<div style="margin-bottom:4px">${escapeHtml(p.desc)}</div>` : ""}
-            ${p.address ? `<div style="color:#64748b">${escapeHtml(p.address)}</div>` : ""}
+  <!-- Анкета партнёра -->
+  <div class="modal" id="partner">
+    <div class="box">
+      <h3>Анкета партнёра</h3>
+      <form id="partnerForm">
+        <div class="row">
+          <div class="field">
+            <label>Фамилия и имя владельца <span class="req">*</span></label>
+            <input type="text" name="owner" required placeholder="Иванов Иван" />
           </div>
-        `;
-        const info = new google.maps.InfoWindow({ content });
-        marker.addListener('click', () => info.open({ anchor: marker, map }));
+          <div class="field">
+            <label>Название заведения <span class="req">*</span></label>
+            <input type="text" name="title" required placeholder="Напр.: Мистер Кук" />
+          </div>
+        </div>
 
-        bounds.extend(position);
-      }catch(e){ console.warn("Marker error:", e); }
-    }
+        <div class="field">
+          <label>Адрес (как в лицензии) <span class="req">*</span></label>
+          <input type="text" name="address" required placeholder="Полный адрес на корейском" />
+          <div class="hint">Например: 충남 아산시 둔포면 둔포로 42</div>
+        </div>
 
-    // Если хотя бы одна метка, подгоним карту
-    if (!bounds.isEmpty()){
-      map.fitBounds(bounds);
-    }
-  }
+        <div class="row">
+          <div class="field">
+            <label>Фото заведения <span class="req">*</span></label>
+            <input type="file" name="placePhoto" accept="image/*" required />
+          </div>
+          <div class="field">
+            <label>Фото лицензии <span class="req">*</span></label>
+            <input type="file" name="licensePhoto" accept="image/*,application/pdf" required />
+          </div>
+        </div>
 
-  function geocodeAddress(geocoder, address){
-    return new Promise((resolve) => {
-      geocoder.geocode({ address }, (res, status) => {
-        if (status === "OK" && res && res[0]){
-          const { location } = res[0].geometry;
-          resolve({ lat: location.lat(), lng: location.lng() });
-        } else {
-          console.warn("Geocode failed:", status, address);
-          resolve(null);
-        }
+        <div class="row">
+          <div class="field">
+            <label>Фото меню <span class="req">*</span></label>
+            <input type="file" name="menuPhoto" accept="image/*,application/pdf" required />
+          </div>
+          <div class="field">
+            <label>Контактный телефон <span class="req">*</span></label>
+            <input type="text" name="phone" required placeholder="+82-10-xxxx-xxxx" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Описание / история заведения</label>
+          <textarea name="desc" placeholder="Коротко о концепции, кухне, преимуществах"></textarea>
+        </div>
+
+        <div class="hint">Поля со <span class="req">*</span> — обязательные. Прикладывайте читаемые фото.</div>
+
+        <div class="center mt-20">
+          <button class="btn btn-primary" type="submit">Отправить</button>
+          <button class="btn btn-ghost" type="button" data-close>Отмена</button>
+        </div>
+      </form>
+      <div id="formResult" class="mt-16" style="display:none">
+        <p class="ok"><b>Готово!</b> Ваши данные отправлены на проверку. Это занимает обычно 10–60 минут.</p>
+        <div class="center mt-12"><button class="btn btn-primary" data-close>Ок</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- UI: модалки ----------
+    document.querySelectorAll('[data-open]').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        document.querySelector(b.getAttribute('data-open')).classList.add('show');
       });
     });
-  }
+    document.querySelectorAll('[data-close]').forEach(b=>{
+      b.addEventListener('click', ()=> b.closest('.modal').classList.remove('show'));
+    });
+    document.querySelectorAll('.modal').forEach(m=>{
+      m.addEventListener('click', (e)=>{ if(e.target===m) m.classList.remove('show'); });
+    });
 
-  function escapeHtml(str){
-    return String(str).replace(/[&<>"']/g, s => (
-      { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[s]
-    ));
-  }
-</script>
+    // ---------- Анкета (демо без бэка) ----------
+    const form = document.getElementById('partnerForm');
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      // в проде здесь отправляем в Google Forms/Sheets или на сервер
+      form.style.display='none';
+      document.getElementById('formResult').style.display='block';
+    });
+
+    // ---------- Карта: один партнёр (геокод адреса) ----------
+    const MISTER_COOK = {
+      title: "Мистер Кук (Mr. Cook)",
+      address: "충남 아산시 둔포면 둔포로 42",
+      fallback: { lat: 36.9298, lng: 127.0439 } // если геокодер не ответит
+    };
+
+    let map;
+    function initMap(){
+      map = new google.maps.Map(document.getElementById('map'),{
+        center: {lat:36.93, lng:127.045},
+        zoom: 15,
+        mapId: "DEMO_MAP",
+        fullscreenControl:false,
+        streetViewControl:false,
+        mapTypeControl:false
+      });
+
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ address: MISTER_COOK.address }, (res, status)=>{
+        let pos = MISTER_COOK.fallback;
+        if(status === 'OK' && res && res[0]){
+          pos = res[0].geometry.location;
+          map.setCenter(pos);
+        }
+        const marker = new google.maps.Marker({
+          position: pos,
+          map,
+          title: MISTER_COOK.title,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 9,
+            fillColor: "#2563eb",
+            fillOpacity: 0.95,
+            strokeWeight: 2,
+            strokeColor: "#93c5fd"
+          }
+        });
+        const info = new google.maps.InfoWindow({
+          content: `<div style="min-width:220px">
+            <b>${MISTER_COOK.title}</b><br/>
+            ${MISTER_COOK.address}<br/>
+            <div style="margin-top:8px">
+              <button id="openPartner" class="btn btn-primary" style="padding:8px 10px;border-radius:10px;border:none">Подробнее / связаться</button>
+            </div>
+          </div>`
+        });
+        marker.addListener('click', ()=> info.open(map, marker));
+        // делегируем клик на кнопку внутри окна
+        google.maps.event.addListener(info,'domready', ()=>{
+          const btn = document.getElementById('openPartner');
+          if(btn) btn.onclick = ()=> document.getElementById('contacts').classList.add('show');
+        });
+      });
+    }
+    window.initMap = initMap;
+  </script>
+
+  <!-- Google Maps JS API (ключ вставлен) -->
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro&callback=initMap&loading=async&libraries=places">
+  </script>
 </body>
 </html>
-
-
