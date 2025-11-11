@@ -1,252 +1,217 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SiyaEm Korea — Центр возможностей</title>
-  <meta name="description" content="SiyaEm — современный центр возможностей в Корее: залы, обучение, партнёрства, мероприятия, медиа.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <title>SiyaEm — Центр возможностей</title>
   <style>
     :root{
-      --bg:#0B0B0B;          /* глубокий чёрный фон */
-      --text:#E0E0E0;        /* основной текст */
-      --muted:#A8A8A8;       /* вторичный текст */
-      --gold:#D4AF37;        /* премиум-акцент (кнопки, важное) */
-      --gold-2:#FFD700;      /* hover-оттенок золота */
-      --neon:#00D4FF;        /* неон для подсветок/линий */
-      --card:#111214;        /* плитки/карточки */
-      --stroke:#1D2023;      /* тонкие границы */
-      --radius:16px;
-      --shadow:0 10px 30px rgba(0,0,0,.45);
+      --bg:#0F172A;          /* тёмный сине-серый для шапки */
+      --bg-2:#0B1220;
+      --text:#F8FAFC;        /* почти белый текст */
+      --muted:#94A3B8;       /* серый текст */
+      --brand:#10B981;       /* бирюзовый акцент */
+      --gold:#EAB308;        /* золотой акцент */
+      --paper:#0f172a0a;     /* очень светлый фон секций */
+      --card:#111827;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;scroll-behavior:smooth}
-    a{color:inherit;text-decoration:none}
-    .container{max-width:1100px;margin:0 auto;padding:0 20px}
-    /* ====== header ====== */
+    body{
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;
+      background:#fff; color:#0f172a;
+    }
+
+    /* header */
     header{
-      position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(11,11,11,.9),rgba(11,11,11,.6) 60%,transparent);
-      backdrop-filter:saturate(1.1) blur(6px);border-bottom:1px solid var(--stroke)
+      position:sticky; top:0; z-index:10;
+      background:var(--bg);
+      color:var(--text);
+      border-bottom:1px solid #16213a;
     }
-    .nav{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.5px}
-    .logo{
-      width:28px;height:28px;border-radius:8px;background:
-        radial-gradient(120% 120% at 10% 10%, var(--neon) 0%, transparent 60%),
-        linear-gradient(135deg, var(--gold) 0%, #7b5b17 100%);
-      box-shadow:0 0 18px rgba(0,212,255,.35), inset 0 0 14px rgba(255,215,0,.25);
+    .nav{
+      max-width:1100px; margin:auto;
+      display:flex; align-items:center; gap:24px;
+      padding:14px 20px;
     }
-    nav ul{display:flex;gap:20px;margin:0;padding:0;list-style:none}
-    nav a{padding:10px 12px;border-radius:10px;color:var(--muted)}
-    nav a:hover{color:var(--text);background:#121315}
-    .cta-head{display:flex;gap:10px}
+    .brand{
+      font-weight:800; letter-spacing:.5px;
+      color:var(--text); text-decoration:none;
+    }
+    .brand b{ color: var(--gold); }
+    nav a{
+      color:var(--muted); text-decoration:none; font-weight:600;
+      padding:8px 10px; border-radius:10px;
+    }
+    nav a:hover{ color:var(--text); background:var(--bg-2); }
+
+    /* hero */
+    .hero{
+      max-width:1100px; margin:18px auto 0; padding:0 20px 20px;
+    }
+    .hero .note{
+      background:var(--paper); border:1px solid #e5e7eb;
+      border-radius:14px; padding:16px 18px; line-height:1.5;
+    }
+    .hero .note b{ color:#0f172a }
+    .hero .note .ok{ color:var(--brand); font-weight:700 }
+
+    /* map */
+    #map{
+      width:100%; height:70vh; min-height:420px;
+      border-radius:14px; margin-top:14px;
+      border:1px solid #e5e7eb;
+    }
+
+    /* footer */
+    footer{ color:#475569; text-align:center; padding:26px 12px 40px }
     .btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      padding:12px 18px;border-radius:12px;border:1px solid var(--stroke);transition:.2s;cursor:pointer;font-weight:600
+      display:inline-block; background:var(--brand); color:white;
+      padding:10px 14px; border-radius:10px; text-decoration:none; font-weight:700;
     }
-    .btn--gold{background:var(--gold);color:#0B0B0B;border-color:transparent}
-    .btn--gold:hover{background:var(--gold-2);transform:translateY(-1px)}
-    .btn--ghost:hover{border-color:#2a2d31;background:#121316}
-    /* ====== hero ====== */
-    .hero{position:relative;padding:90px 0 70px;overflow:hidden}
-    .halo{
-      position:absolute;inset:auto -20% -25% -20%;height:420px;
-      background:radial-gradient(60% 60% at 50% 50%, rgba(0,212,255,.20) 0%, rgba(0,212,255,0) 60%),
-                 radial-gradient(40% 40% at 60% 40%, rgba(212,175,55,.18) 0%, rgba(212,175,55,0) 60%);
-      filter:blur(40px);pointer-events:none
-    }
-    .hero h1{font-size:clamp(32px,4vw,48px);line-height:1.1;margin:0 0 14px}
-    .accent{background:linear-gradient(90deg,var(--gold),var(--gold-2) 55%,var(--neon));-webkit-background-clip:text;background-clip:text;color:transparent}
-    .sub{color:var(--muted);max-width:720px;margin:0 0 26px}
-    .hero .actions{display:flex;gap:12px;flex-wrap:wrap}
-    /* ====== sections ====== */
-    section{padding:56px 0;border-top:1px solid var(--stroke)}
-    h2{font-size:28px;margin:0 0 18px}
-    .lead{color:var(--muted);margin:0 0 26px}
-    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-    .card{
-      background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);padding:18px;
-      box-shadow:var(--shadow);position:relative;overflow:hidden
-    }
-    .chip{display:inline-block;background:#131519;border:1px solid #1f2328;color:#9fb4bf;font-size:12px;padding:6px 10px;border-radius:999px;margin-bottom:10px}
-    .card h3{margin:4px 0 8px;font-size:18px}
-    .card p{margin:0;color:var(--muted)}
-    .card:after{
-      content:"";position:absolute;inset:auto 10% -2px 10%;height:1px;background:
-      linear-gradient(90deg, transparent, var(--neon), transparent);opacity:.35
-    }
-    /* ====== footer ====== */
-    footer{border-top:1px solid var(--stroke);padding:28px 0;color:var(--muted);font-size:14px}
-    .cols{display:grid;grid-template-columns:2fr 1fr 1fr;gap:18px}
-    .kicker{color:#9aa1aa;font-weight:600;margin-bottom:8px}
-    ul.links{list-style:none;padding:0;margin:0;display:grid;gap:8px}
-    ul.links a{color:var(--muted)} ul.links a:hover{color:var(--text)}
-    /* ====== responsive ====== */
-    @media (max-width:920px){
-      .grid{grid-template-columns:1fr 1fr}
-      .cols{grid-template-columns:1fr}
-      nav ul{display:none}
-    }
-    @media (max-width:560px){
-      .grid{grid-template-columns:1fr}
-    }
+    .btn:hover{ filter:brightness(0.95) }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="container nav">
-      <div class="brand">
-        <div class="logo"></div>
-        <span>SiyaEm Korea</span>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="#home">Главная</a></li>
-          <li><a href="#services">Услуги</a></li>
-          <li><a href="#spaces">Залы</a></li>
-          <li><a href="#contact">Контакты</a></li>
-        </ul>
-      </nav>
-      <div class="cta-head">
-        <a class="btn btn--ghost" href="#contact">Связаться</a>
-        <a class="btn btn--gold" href="#spaces">Забронировать зал</a>
-      </div>
-    </div>
-  </header>
+<header>
+  <div class="nav">
+    <a class="brand" href="#"><b>SiyaEm</b> Korea</a>
+    <nav>
+      <a href="#home">Главная</a>
+      <a href="#services">Услуги</a>
+      <a href="#about">О нас</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+  </div>
+</header>
 
-  <!-- Hero -->
-  <section class="hero" id="home">
-    <div class="halo"></div>
-    <div class="container">
-      <h1>Центр <span class="accent">возможностей</span> и роста для тех, кто действует</h1>
-      <p class="sub">SiyaEm — платформа в Корее, где соединяются люди, идеи и инфраструктура: оборудованные залы,
-        обучение, партнёрства, медиа-продвижение и мероприятия. Мы создаём среду, в которой легко начинать и масштабировать.</p>
-      <div class="actions">
-        <a class="btn btn--gold" href="#services">Посмотреть услуги</a>
-        <a class="btn btn--ghost" href="#contact">Стать резидентом</a>
-      </div>
-    </div>
-  </section>
+<main class="hero">
+  <div class="note">
+    <div style="font-size:18px; font-weight:800; margin-bottom:6px;">Партнёрская карта Дунпо (Асан-си)</div>
+    Эти заведения уже <b>с нами сотрудничают</b> и <span class="ok">заинтересованы в совместном развитии</span>.  
+    Если вы владелец бизнеса в 둔포면 — свяжитесь с нами, добавим вас на карту и подключим к экосистеме SiyaEm.
+  </div>
 
-  <!-- Services -->
-  <section id="services">
-    <div class="container">
-      <h2>Что мы делаем</h2>
-      <p class="lead">Практика и результат: всё, что помогает запускать проекты и расти быстрее.</p>
-      <div class="grid">
-        <article class="card">
-          <span class="chip">Инфраструктура</span>
-          <h3>Оборудованные залы</h3>
-          <p>Тренажёрный, зал для спаррингов, сцена под стендап/презентации, медиа-комната. Бронирование по часу/дню.</p>
-        </article>
-        <article class="card">
-          <span class="chip">Обучение</span>
-          <h3>Практические интенсивы</h3>
-          <p>Мастер-классы и воркшопы от практиков: спорт, контент, бизнес-навыки. Мало теории — больше дела.</p>
-        </article>
-        <article class="card">
-          <span class="chip">Медиа</span>
-          <h3>Продакшн и продвижение</h3>
-          <p>Съёмка, монтаж, упаковка соцсетей, локальные интеграции. Помогаем тебя увидеть и услышать.</p>
-        </article>
-        <article class="card">
-          <span class="chip">Партнёрства</span>
-          <h3>Корп. предложения</h3>
-          <p>Командные тренировки, презентации, митапы брендов, тест-ивенты. Счёт/документы — без вопросов.</p>
-        </article>
-        <article class="card">
-          <span class="chip">Сообщество</span>
-          <h3>Нетворкинг и сцена</h3>
-          <p>Открытый микрофон, стендап, питчи стартапов, показы ивентов на большом экране — площадка для первых шагов.</p>
-        </article>
-        <article class="card">
-          <span class="chip">Поддержка</span>
-          <h3>Резидентство SiyaEm</h3>
-          <p>Приоритетная бронь, скидки, PR-поддержка, витрина проектов на сайте и внутри центра.</p>
-        </article>
-      </div>
-    </div>
-  </section>
+  <div id="map"></div>
+</main>
 
-  <!-- Spaces -->
-  <section id="spaces">
-    <div class="container">
-      <h2>Залы и бронирование</h2>
-      <p class="lead">Выбирай пространство под задачу — мы закрыли оборудование и комфорт.</p>
-      <div class="grid">
-        <article class="card">
-          <h3>Тренажёрный зал</h3>
-          <p>Свободные веса, стойки, функциональная зона. От 20,000₩ / час.</p>
-        </article>
-        <article class="card">
-          <h3>Спарринг-зал</h3>
-          <p>Покрытие, мешки, таймеры, защита. От 20,000₩ / час.</p>
-        </article>
-        <article class="card">
-          <h3>Сцена / Экран</h3>
-          <p>Презентации, стендап, показы. Экран, звук, стулья. От 30,000₩ / час.</p>
-        </article>
-      </div>
-      <div style="margin-top:18px">
-        <a class="btn btn--gold" href="#contact">Запросить слот</a>
-        <a class="btn btn--ghost" href="#contact">Получить прайс</a>
-      </div>
-    </div>
-  </section>
+<footer>
+  © 2025 SiyaEm Korea. Все права защищены · <a class="btn" href="#contact">Стать партнёром</a>
+</footer>
 
-  <!-- Contact -->
-  <section id="contact">
-    <div class="container">
-      <h2>Контакты</h2>
-      <p class="lead">Напиши нам, и мы подскажем лучший формат под твою цель.</p>
-      <div class="grid" style="grid-template-columns:1fr 1fr 1fr">
-        <article class="card">
-          <h3>Адрес</h3>
-          <p>Республика Корея, Чхунчхоннам-до, Асан, Дунпо-мён</p>
-        </article>
-        <article class="card">
-          <h3>Телефон</h3>
-          <p><a href="tel:+821098091703">+82-10-9809-1703</a></p>
-        </article>
-        <article class="card">
-          <h3>Email</h3>
-          <p><a href="mailto:support@siyaem.kr">support@siyaem.kr</a></p>
-        </article>
-      </div>
-      <div style="margin-top:18px">
-        <a class="btn btn--gold" href="mailto:support@siyaem.kr?subject=Резидентство SiyaEm">Стать резидентом</a>
-        <a class="btn btn--ghost" href="mailto:support@siyaem.kr?subject=Бронирование зала">Бронировать зал</a>
-      </div>
-    </div>
-  </section>
+<!-- Карта Google -->
+<script>
+  // === 1) ЗАПОЛНИ СВОЙ API КЛЮЧ НИЖЕ ===
+  const GOOGLE_MAPS_API_KEY = "AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro";
 
-  <!-- Footer -->
-  <footer>
-    <div class="container cols">
-      <div>
-        <div class="kicker">SiyaEm Korea</div>
-        <div>Центр возможностей: залы, обучение, партнёрства, медиа и мероприятия.</div>
-      </div>
-      <div>
-        <div class="kicker">Навигация</div>
-        <ul class="links">
-          <li><a href="#services">Услуги</a></li>
-          <li><a href="#spaces">Залы</a></li>
-          <li><a href="#contact">Контакты</a></li>
-        </ul>
-      </div>
-      <div>
-        <div class="kicker">Связь</div>
-        <ul class="links">
-          <li><a href="mailto:support@siyaem.kr">support@siyaem.kr</a></li>
-          <li><a href="tel:+821098091703">+82-10-9809-1703</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="container" style="margin-top:14px;color:#8b9198">© 2025 SiyaEm. Все права защищены.</div>
-  </footer>
+  // === 2) ПАРТНЁРЫ: можно задавать координаты ИЛИ адрес ===
+  // Если указаны lat/lng — используем их.
+  // Если lat/lng нет, но есть address — сделаем геокодирование (нужно включить Geocoding API).
+  const PARTNERS = [
+    // Пример с координатами (если знаешь):
+    // { title: "Радуга (продуктовый)", desc: "Русскоязычный магазин", lat: 36.93168, lng: 127.04431 },
+
+    // Примеры с адресами (скрипт сам получит координаты):
+    { title: "Радуга (продуктовый)",       desc: "Русскоязычный магазин", address: "충청남도 아산시 둔포면 둔포중앙로 115" },
+    { title: "Мишка (готовые закуски)",    desc: "Кулинария",              address: "충청남도 아산시 둔포면 둔포중앙로109번길 13" },
+    { title: "Конфетка (продукты)",        desc: "Продуктовый",            address: "충청남도 아산시 둔포면 둔포중앙로133번길 23-14" },
+    { title: "Глобус (продукты)",          desc: "Продуктовый",            address: "충남 아산시 둔포면 둔포중앙로133번길 60-1" },
+    { title: "Мистер Кук (кафе)",          desc: "Кафе",                   address: "충남 아산시 둔포면 둔포로 47" },
+    { title: "Радуга 1층 (продуктовый)",   desc: "Продуктовый",            address: "충남 아산시 둔포면 둔포로 46 1층" },
+    { title: "Мистер Кук Кебаб",           desc: "Шаурма/Кебаб",           address: "충남 아산시 둔포면 둔포로 41" },
+    { title: "Кебаб (шаурма)",             desc: "Шаурма/Кебаб",           address: "충청남도 아산시 둔포면 둔포로 42" },
+    { title: "Sushi Baker (роллы)",        desc: "Суши/Роллы",             address: "충남 아산시 둔포면 둔포면로 11" },
+  ];
+
+  // Центр карты — Дунпо (примерные координаты центра)
+  const DUNPO_CENTER = { lat: 36.9326, lng: 127.0485 };
+
+  // Загружаем Google Maps JS динамически
+  (function loadMaps() {
+    const s = document.createElement('script');
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initMap&v=weekly&language=ru`;
+    s.async = true; s.defer = true;
+    document.head.appendChild(s);
+  })();
+
+  let map;
+  async function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: DUNPO_CENTER,
+      zoom: 15,
+      mapId: "SiyaEmMap",
+      streetViewControl: false,
+      mapTypeControl: false,
+      fullscreenControl: true,
+    });
+
+    // Пытаемся поставить метки
+    await addPartnersMarkers(PARTNERS);
+  }
+
+  async function addPartnersMarkers(list){
+    const geocoder = new google.maps.Geocoder();
+    const bounds = new google.maps.LatLngBounds();
+
+    for (const p of list){
+      try{
+        let position;
+        if (typeof p.lat === "number" && typeof p.lng === "number"){
+          position = { lat: p.lat, lng: p.lng };
+        } else if (p.address){
+          // геокодирование, если нет lat/lng
+          const geo = await geocodeAddress(geocoder, p.address);
+          if (!geo) continue;
+          position = geo;
+        } else {
+          continue;
+        }
+
+        const marker = new google.maps.Marker({
+          position, map,
+          title: p.title
+        });
+
+        const content = `
+          <div style="min-width:220px">
+            <div style="font-weight:800; margin-bottom:6px">${escapeHtml(p.title || "")}</div>
+            ${p.desc ? `<div style="margin-bottom:4px">${escapeHtml(p.desc)}</div>` : ""}
+            ${p.address ? `<div style="color:#64748b">${escapeHtml(p.address)}</div>` : ""}
+          </div>
+        `;
+        const info = new google.maps.InfoWindow({ content });
+        marker.addListener('click', () => info.open({ anchor: marker, map }));
+
+        bounds.extend(position);
+      }catch(e){ console.warn("Marker error:", e); }
+    }
+
+    // Если хотя бы одна метка, подгоним карту
+    if (!bounds.isEmpty()){
+      map.fitBounds(bounds);
+    }
+  }
+
+  function geocodeAddress(geocoder, address){
+    return new Promise((resolve) => {
+      geocoder.geocode({ address }, (res, status) => {
+        if (status === "OK" && res && res[0]){
+          const { location } = res[0].geometry;
+          resolve({ lat: location.lat(), lng: location.lng() });
+        } else {
+          console.warn("Geocode failed:", status, address);
+          resolve(null);
+        }
+      });
+    });
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, s => (
+      { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[s]
+    ));
+  }
+</script>
 </body>
 </html>
+
 
