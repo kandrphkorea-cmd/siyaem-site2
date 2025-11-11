@@ -298,5 +298,61 @@
   <script async
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro&callback=initMap&loading=async&libraries=places">
   </script>
-</body>
+</body><script>
+  // 1) Стили карты — скрываем чужие POI и подписи заведений
+  const SIYAEM_MAP_STYLES = [
+    { featureType: "poi", stylers: [{ visibility: "off" }] },
+    { featureType: "poi.business", stylers: [{ visibility: "off" }] },
+    { featureType: "poi.attraction", stylers: [{ visibility: "off" }] },
+    { featureType: "poi.medical", stylers: [{ visibility: "off" }] },
+    { featureType: "poi.government", stylers: [{ visibility: "off" }] },
+    { featureType: "poi.school", stylers: [{ visibility: "off" }] },
+    { featureType: "poi.sports_complex", stylers: [{ visibility: "off" }] }
+  ];
+
+  // 2) Инициализация карты
+  let map, markers = [];
+
+  async function initSiyaem() {
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: 36.9305, lng: 127.0458 },
+      zoom: 15,
+      styles: SIYAEM_MAP_STYLES,
+      mapTypeControl: false,
+      streetViewControl: false
+    });
+
+    const res = await fetch("partners.json", { cache: "no-cache" });
+    const items = await res.json();
+
+    const approved = items.filter(x => x.approved === true);
+
+    markers.forEach(m => m.setMap(null));
+    markers = approved.map(place => {
+      const m = new google.maps.Marker({
+        position: { lat: place.lat, lng: place.lng },
+        map,
+        title: place.name
+      });
+      const info = new google.maps.InfoWindow({
+        content: `
+          <div style="max-width:260px">
+            <strong>${place.name}</strong><br/>
+            <small>${place.province_ru} • ${place.city_ru}</small><br/>
+            <div>Категория: ${place.category}${place.subcategories?.length ? " — " + place.subcategories.join(", ") : ""}</div>
+            <div>Рейтинг: ${place.rating ?? "—"}</div>
+            <div style="margin-top:6px">${place.address}</div>
+          </div>`
+      });
+      m.addListener("click", () => info.open({ anchor: m, map }));
+      return m;
+    });
+  }
+
+  // Запуск после загрузки API
+  window.addEventListener("load", () => {
+    if (window.google && google.maps) initSiyaem();
+  });
+</script>
+
 </html>
