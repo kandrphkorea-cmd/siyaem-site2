@@ -1,72 +1,77 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>SiyaEm Korea — карта партнёров</title>
+  <meta name="color-scheme" content="dark light"/>
   <style>
     :root{
       --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af;
-      --acc:#2563eb; --acc-2:#fbbf24; --danger:#ef4444; --ok:#10b981;
-      --line:#1f2937; --chip:#0b1221;
-      --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.35);
+      --acc:#2563eb; --acc-2:#fbbf24; --ok:#10b981; --danger:#ef4444;
+      --stroke:#1f2937; --radius:16px;
     }
     *{box-sizing:border-box}
     body{
-      margin:0;background:linear-gradient(180deg,#0b132b,#0f172a 35% 65%,#111827);
-      color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      margin:0; color:var(--text);
+      background:radial-gradient(1200px 600px at 10% -10%, #0b132b 0 40%, transparent 40%) , #0f172a;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     }
-    .wrap{max-width:1200px;margin:0 auto;padding:20px}
+    .wrap{max-width:1100px;margin:0 auto;padding:20px}
     header{
-      position:sticky;top:0;z-index:30;backdrop-filter:blur(10px);
-      background:rgba(15,23,42,.65);border-bottom:1px solid var(--line)
+      position:sticky; top:0; z-index:30; backdrop-filter:blur(10px);
+      background:rgba(15,23,42,.75); border-bottom:1px solid var(--stroke);
     }
-    .nav{display:flex;align-items:center;gap:16px;justify-content:space-between;padding:12px 0}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0;gap:14px}
     .brand{display:flex;align-items:center;gap:10px;font-weight:800}
-    .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--acc-2);box-shadow:0 0 18px var(--acc-2)}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--acc-2);box-shadow:0 0 18px var(--acc-2)}
     .menu{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{
-      background:var(--chip);border:1px solid #1f2a44;color:var(--text);
-      padding:10px 14px;border-radius:12px;cursor:pointer;transition:.2s
+    .btn{
+      appearance:none;border:1px solid var(--stroke);background:#0b1221;color:var(--text);
+      padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:700;letter-spacing:.2px;transition:.2s
     }
-    .chip:hover{border-color:#3256b8;color:#cfe2ff}
-    .btn{appearance:none;border:none;cursor:pointer;padding:12px 16px;border-radius:12px;font-weight:700}
-    .btn-primary{background:var(--acc);color:white}.btn-primary:hover{filter:brightness(1.1)}
-    .btn-ghost{background:transparent;color:var(--text);border:1px solid #263554}.btn-ghost:hover{border-color:#3b4f7a}
-    .hero{margin:22px 0;background:rgba(17,24,39,.7);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
-    .hero h1{margin:6px 0 6px;font-size:24px;font-weight:800}
-    .hero p{margin:0;color:var(--muted)}
-    .grid{display:grid;grid-template-columns:280px 1fr;gap:16px}
-    .card{background:rgba(17,24,39,.8);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
-    #map{height:560px;border-radius:12px;overflow:hidden}
-    .aside h4{margin:2px 0 10px}
-    .field{display:flex;flex-direction:column;gap:6px;margin:10px 0}
-    select,input,textarea{
-      background:var(--chip);border:1px solid var(--line);color:var(--text);
-      border-radius:10px;padding:10px 12px;outline:none
+    .btn:hover{border-color:#304a8f}
+    .btn-primary{background:var(--acc); border-color:transparent}
+    .btn-primary:hover{filter:brightness(1.08)}
+    .badge{
+      display:inline-flex;gap:8px;align-items:center;
+      background:rgba(37,99,235,.12); border:1px solid rgba(37,99,235,.35);
+      color:#bfdbfe; border-radius:999px; padding:6px 12px; font-size:13px
     }
-    .list{margin-top:10px;display:grid;gap:8px}
-    .item{
-      background:#0c1325;border:1px solid var(--line);border-radius:12px;padding:10px;
-      display:grid;gap:4px
+    .card{background:rgba(17,24,39,.78);border:1px solid var(--stroke);border-radius:var(--radius);padding:16px}
+    .hero{margin:22px 0 14px}
+    .hero h1{margin:8px 0 6px;font-size:24px}
+    .muted{color:var(--muted)}
+    #map{height:520px;border-radius:12px;overflow:hidden}
+    .filters{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+    select{
+      appearance:none;background:#0b1221;color:var(--text);border:1px solid var(--stroke);
+      padding:10px 12px;border-radius:12px;min-width:200px
     }
-    .item small{color:#93a3bd}
-    .role{display:flex;gap:8px}
-    .role .chip[aria-pressed="true"]{border-color:#3b82f6;color:#dbeafe;background:#0b1a3b}
-    footer{padding:28px 0 40px;color:#94a3b8;text-align:center}
+    footer{padding:28px 0 40px;text-align:center;color:#94a3b8}
 
-    /* Modal */
+    /* Модалки */
     .modal{position:fixed;inset:0;display:none;place-items:center;z-index:50;background:rgba(2,6,23,.6);backdrop-filter:blur(6px)}
     .modal.show{display:grid}
-    .modal .box{width:min(760px,calc(100vw - 28px));max-height:80vh;overflow:auto;
-      background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 18px 20px;box-shadow:var(--shadow)}
+    .modal .box{width:min(720px,calc(100vw - 28px));max-height:80vh;overflow:auto;background:var(--card);border:1px solid var(--stroke);border-radius:18px;padding:18px 18px 20px}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .field{display:flex;flex-direction:column;gap:6px;margin:8px 0}
     label{font-size:14px;color:#cbd5e1}
     .req{color:var(--danger);margin-left:6px}
+    input[type="text"],input[type="file"],textarea{
+      width:100%;background:#0b1221;border:1px solid var(--stroke);color:var(--text);
+      border-radius:10px;padding:10px 12px;outline:none
+    }
+    textarea{min-height:110px;resize:vertical}
     .hint{color:#9ca3af;font-size:12px}
-    .ok{color:var(--ok)}
     .center{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
-    .mt-12{margin-top:12px}.mt-16{margin-top:16px}.mt-20{margin-top:20px}
+    .mt-10{margin-top:10px}.mt-14{margin-top:14px}.mt-16{margin-top:16px}.mt-20{margin-top:20px}
+
+    /* Шторка входа */
+    body.blurred main, body.blurred header, body.blurred footer{filter:blur(6px);pointer-events:none;user-select:none}
+    #entryGate{position:fixed;inset:0;display:none;place-items:center;z-index:60;background:rgba(2,6,23,.72);backdrop-filter:blur(6px)}
+    #entryGate.show{display:grid}
+    .gate-box{width:min(620px,calc(100vw - 28px));background:var(--card);border:1px solid var(--stroke);border-radius:18px;padding:22px}
   </style>
 </head>
 <body>
@@ -74,291 +79,289 @@
     <div class="wrap nav">
       <div class="brand"><span class="dot"></span><span>SiyaEm Korea</span></div>
       <div class="menu">
-        <div class="role">
-          <button class="chip" data-role="guest" aria-pressed="true">Гость</button>
-          <button class="chip" data-role="biz">Предприниматель</button>
-        </div>
-        <button data-open="#about"    class="chip">О нас</button>
-        <button data-open="#services" class="chip">Услуги</button>
-        <button data-open="#partner"  class="btn btn-primary">Стать партнёром</button>
-        <button data-open="#contacts" class="chip">Контакты</button>
+        <button data-open="#about" class="btn">О нас</button>
+        <button data-open="#services" class="btn">Услуги</button>
+        <button data-open="#partner" class="btn btn-primary">Стать партнёром</button>
+        <button data-open="#contacts" class="btn">Контакты</button>
       </div>
     </div>
   </header>
 
   <main class="wrap">
     <div class="hero card">
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <span class="chip" style="border-color:#3b4f7a;color:#c7d2fe;background:#0b1a3b">Только лицензированные русскоязычные заведения</span>
-        <span class="chip" style="border-color:#5b7a2a;color:#d9f99d;background:#0f2a0f">Модерация 10–60 минут</span>
-      </div>
+      <div class="badge">Экосистема с <b>легальными</b> русскоязычными заведениями</div>
       <h1>Карта партнёров SiyaEm</h1>
-      <p>На карте показываются **проверенные** точки из нашего каталога. Фильтруй слева: провинция, город, категория/жанр.</p>
+      <p class="muted">На карте показываем <b>только проверенные</b> точки из partners.json (approved = true). Новые партнёры подают заявку через анкету.</p>
     </div>
 
-    <div class="grid">
-      <!-- Сайдбар каталога / фильтров -->
-      <aside class="aside card">
-        <h4>Фильтры</h4>
-        <div class="field">
-          <label>Провинция</label>
-          <select id="fProvince"><option value="">Все</option></select>
-        </div>
-        <div class="field">
-          <label>Город</label>
-          <select id="fCity"><option value="">Все</option></select>
-        </div>
-        <div class="field">
-          <label>Категория</label>
-          <select id="fCategory">
-            <option value="">Все</option>
-            <option>Еда</option>
-            <option>Развлечения</option>
-            <option>Салоны / Услуги</option>
-            <option>Такси / Транспорт</option>
-            <option>Кальяны / Бары</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Жанры / подкатегории</label>
-          <input id="fSub" placeholder="Напр.: Корейская, Столовая" />
-        </div>
-        <div class="center">
-          <button id="apply" class="btn btn-primary">Применить</button>
-          <button id="reset" class="btn btn-ghost">Сбросить</button>
-        </div>
+    <section class="card">
+      <!-- Фильтры -->
+      <div class="filters">
+        <select id="fProvince"><option value="">Провинция: все</option></select>
+        <select id="fCity"><option value="">Город: все</option></select>
+        <select id="fCategory"><option value="">Категория: все</option></select>
+      </div>
 
-        <h4 style="margin-top:14px">Каталог</h4>
-        <div id="list" class="list"></div>
-      </aside>
+      <div id="map"></div>
 
-      <!-- Карта + кнопки -->
-      <section class="card">
-        <div id="map"></div>
-        <div class="center mt-16">
-          <button class="btn btn-primary" data-open="#partner" id="btnPartner">Стать партнёром</button>
-          <button class="btn btn-ghost" data-open="#about">Как мы проверяем партнёров</button>
-        </div>
-      </section>
-    </div>
+      <div class="center mt-16">
+        <button class="btn btn-primary" data-open="#partner">Стать партнёром</button>
+        <button class="btn" data-open="#about">Как мы проверяем</button>
+      </div>
+    </section>
   </main>
 
   <footer>© 2025 SiyaEm Korea. Все права защищены.</footer>
 
   <!-- Модалки -->
-  <div class="modal" id="about"><div class="box">
-    <h3>О нас</h3>
-    <p class="hint">Мы собираем и продвигаем <b>только русскоязычные</b> и <b>легальные</b> места. Каждая точка проходит проверку лицензии и базовой безопасности.</p>
-    <ul>
-      <li>Проверка лицензии / регистрации</li>
-      <li>Верификация адреса и контактов</li>
-      <li>Быстрая модерация (обычно 10–60 минут)</li>
-    </ul>
-    <div class="center mt-16"><button class="btn btn-primary" data-close>Понятно</button></div>
-  </div></div>
+  <div class="modal" id="about">
+    <div class="box">
+      <h3>О нас</h3>
+      <p class="muted">Мы собираем и продвигаем <b>только русскоязычные</b> и <b>легальные</b> места в Республике Корея. Каждая точка проходит проверку лицензии и базовой безопасности.</p>
+      <div class="center mt-16"><button class="btn btn-primary" data-close>Понятно</button></div>
+    </div>
+  </div>
 
-  <div class="modal" id="services"><div class="box">
-    <h3>Услуги</h3>
-    <ul>
-      <li>Добавление и верификация партнёров</li>
-      <li>Продвижение на карте и в соцсетях</li>
-      <li>Фотосъёмка и оформление карточек</li>
-    </ul>
-    <div class="center mt-16"><button class="btn btn-primary" data-close>Ок</button></div>
-  </div></div>
+  <div class="modal" id="services">
+    <div class="box">
+      <h3>Услуги</h3>
+      <ul>
+        <li>Добавление и верификация партнёров (проверка лицензий)</li>
+        <li>Продвижение на карте и в соцсетях</li>
+        <li>Фотосъёмка и оформление карточек</li>
+      </ul>
+      <div class="center mt-16"><button class="btn btn-primary" data-close>Ок</button></div>
+    </div>
+  </div>
 
-  <div class="modal" id="contacts"><div class="box">
-    <h3>Контакты</h3>
-    <p>Республика Корея, 충남 아산시 둔포면<br/>Email: support@siyaem.kr</p>
-    <div class="center mt-16"><button class="btn btn-primary" data-close>Закрыть</button></div>
-  </div></div>
+  <div class="modal" id="contacts">
+    <div class="box">
+      <h3>Контакты</h3>
+      <p>Республика Корея, 충남 아산시 둔포면<br/>Email: support@siyaem.kr</p>
+      <div class="center mt-16"><button class="btn btn-primary" data-close>Закрыть</button></div>
+    </div>
+  </div>
 
   <!-- Анкета партнёра -->
-  <div class="modal" id="partner"><div class="box">
-    <h3>Анкета партнёра</h3>
-    <form id="partnerForm">
-      <div class="row">
-        <div class="field">
-          <label>Фамилия и имя владельца <span class="req">*</span></label>
-          <input name="owner" required placeholder="Иванов Иван" />
+  <div class="modal" id="partner">
+    <div class="box">
+      <h3>Анкета партнёра</h3>
+      <form id="partnerForm">
+        <div class="row">
+          <div class="field">
+            <label>Фамилия и имя владельца <span class="req">*</span></label>
+            <input type="text" name="owner" required placeholder="Иванов Иван"/>
+          </div>
+          <div class="field">
+            <label>Название заведения <span class="req">*</span></label>
+            <input type="text" name="title" required placeholder="Напр.: Мистер Кук"/>
+          </div>
         </div>
         <div class="field">
-          <label>Название заведения <span class="req">*</span></label>
-          <input name="title" required placeholder="Напр.: Мистер Кук" />
+          <label>Адрес (как в лицензии) <span class="req">*</span></label>
+          <input type="text" name="address" required placeholder="Полный адрес на корейском"/>
+          <div class="hint">Например: 충남 아산시 둔포면 둔포로 42</div>
         </div>
+        <div class="row">
+          <div class="field">
+            <label>Фото заведения <span class="req">*</span></label>
+            <input type="file" name="placePhoto" accept="image/*" required/>
+          </div>
+          <div class="field">
+            <label>Фото лицензии <span class="req">*</span></label>
+            <input type="file" name="licensePhoto" accept="image/*,application/pdf" required/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>Фото меню <span class="req">*</span></label>
+            <input type="file" name="menuPhoto" accept="image/*,application/pdf" required/>
+          </div>
+          <div class="field">
+            <label>Контактный телефон <span class="req">*</span></label>
+            <input type="text" name="phone" required placeholder="+82-10-xxxx-xxxx"/>
+          </div>
+        </div>
+        <div class="field">
+          <label>Описание / история</label>
+          <textarea name="desc" placeholder="Коротко о концепции, кухне, преимуществах"></textarea>
+        </div>
+        <div class="hint">Поля со <span class="req">*</span> — обязательные. Прикладывайте читаемые фото.</div>
+        <div class="center mt-20">
+          <button class="btn btn-primary" type="submit">Отправить</button>
+          <button class="btn" type="button" data-close>Отмена</button>
+        </div>
+      </form>
+      <div id="formResult" class="mt-14" style="display:none">
+        <p style="color:var(--ok)"><b>Готово!</b> Заявка отправлена на проверку. Обычно занимает 10–60 минут.</p>
+        <div class="center mt-10"><button class="btn btn-primary" data-close>Ок</button></div>
       </div>
-      <div class="field">
-        <label>Адрес (как в лицензии) <span class="req">*</span></label>
-        <input name="address" required placeholder="Полный адрес (한글/рус)" />
-        <div class="hint">Например: 충남 아산시 둔포면 둔포로 42</div>
-      </div>
-      <div class="row">
-        <div class="field"><label>Фото заведения <span class="req">*</span></label><input type="file" accept="image/*" required /></div>
-        <div class="field"><label>Фото лицензии <span class="req">*</span></label><input type="file" accept="image/*,application/pdf" required /></div>
-      </div>
-      <div class="row">
-        <div class="field"><label>Фото меню <span class="req">*</span></label><input type="file" accept="image/*,application/pdf" required /></div>
-        <div class="field"><label>Контактный телефон <span class="req">*</span></label><input name="phone" required placeholder="+82-10-xxxx-xxxx" /></div>
-      </div>
-      <div class="field"><label>Описание / история</label><textarea name="desc" placeholder="Кухня, концепция, особенности"></textarea></div>
-      <div class="hint">Поля со <span class="req">*</span> — обязательные. В проде сюда подключим отправку в Google Sheets/Forms.</div>
-      <div class="center mt-20">
-        <button class="btn btn-primary" type="submit">Отправить</button>
-        <button class="btn btn-ghost" type="button" data-close>Отмена</button>
-      </div>
-    </form>
-    <div id="formResult" class="mt-16" style="display:none">
-      <p class="ok"><b>Готово!</b> Данные отправлены на проверку. Обычно это 10–60 минут.</p>
-      <div class="center mt-12"><button class="btn btn-primary" data-close>Ок</button></div>
     </div>
-  </div></div>
+  </div>
 
-  <!-- UI-скрипты (модалки, роль, форма) -->
+  <!-- Шторка входа -->
+  <div id="entryGate" class="show">
+    <div class="gate-box">
+      <h3>Выбор входа</h3>
+      <p class="muted">Продолжаем с размытием только после выбора режима.</p>
+      <div class="center mt-16">
+        <button id="enterGuest" class="btn btn-primary">Зайти как гость</button>
+        <button id="enterPartner" class="btn">Стать партнёром</button>
+      </div>
+      <p class="hint mt-10">Режим «гость» показывает карту с проверенными заведениями.</p>
+    </div>
+  </div>
+
   <script>
-    // модалки
+    // ---------- модалки ----------
     document.querySelectorAll('[data-open]').forEach(b=>{
-      b.addEventListener('click', ()=> document.querySelector(b.getAttribute('data-open')).classList.add('show'));
-    });
-    document.querySelectorAll('[data-close]').forEach(b=>{
-      b.addEventListener('click', ()=> b.closest('.modal').classList.remove('show'));
-    });
-    document.querySelectorAll('.modal').forEach(m=>{
-      m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('show'); });
-    });
-
-    // роль (гость / предприниматель): просто скрываем/показываем кнопку анкеты
-    const roleBtns = document.querySelectorAll('[data-role]');
-    const btnPartner = document.getElementById('btnPartner');
-    roleBtns.forEach(b=>{
       b.addEventListener('click', ()=>{
-        roleBtns.forEach(x=>x.setAttribute('aria-pressed','false'));
-        b.setAttribute('aria-pressed','true');
-        const role = b.getAttribute('data-role');
-        btnPartner.style.display = (role==='biz') ? 'inline-flex' : 'none';
+        document.querySelector(b.getAttribute('data-open'))?.classList.add('show');
       });
     });
+    document.querySelectorAll('[data-close]').forEach(b=>{
+      b.addEventListener('click', ()=> b.closest('.modal')?.classList.remove('show'));
+    });
+    document.querySelectorAll('.modal').forEach(m=>{
+      m.addEventListener('click', (e)=>{ if(e.target===m) m.classList.remove('show'); });
+    });
 
-    // форма (демо)
+    // ---------- анкета (демо без бэка) ----------
     const form = document.getElementById('partnerForm');
-    form.addEventListener('submit', e=>{
+    form.addEventListener('submit', (e)=>{
       e.preventDefault();
       form.style.display='none';
       document.getElementById('formResult').style.display='block';
     });
-  </script>
 
-  <!-- КАРТА + каталог -->
-  <script>
-    // Стили карты — скрываем все сторонние POI
-    const SIYAEM_MAP_STYLES = [
-      { featureType: "poi", stylers: [{ visibility: "off" }] },
-      { featureType: "poi.business", stylers: [{ visibility: "off" }] },
-      { featureType: "poi.attraction", stylers: [{ visibility: "off" }] },
-      { featureType: "poi.medical", stylers: [{ visibility: "off" }] },
-      { featureType: "poi.government", stylers: [{ visibility: "off" }] },
-      { featureType: "poi.school", stylers: [{ visibility: "off" }] },
-      { featureType: "poi.sports_complex", stylers: [{ visibility: "off" }] }
+    // ---------- шторка входа ----------
+    const entryGate = document.getElementById('entryGate');
+    function closeGate(){ document.body.classList.remove('blurred'); entryGate.classList.remove('show'); }
+    (function initGate(){
+      const mode = localStorage.getItem('siyaem-mode');
+      if(!mode){ document.body.classList.add('blurred'); entryGate.classList.add('show'); }
+      document.getElementById('enterGuest').onclick = ()=>{
+        localStorage.setItem('siyaem-mode','guest'); closeGate();
+      };
+      document.getElementById('enterPartner').onclick = ()=>{
+        localStorage.setItem('siyaem-mode','guest'); closeGate();
+        document.querySelector('#partner')?.classList.add('show');
+      };
+    })();
+
+    // ---------- карта ----------
+    const MAP_STYLES = [
+      { featureType:"poi", stylers:[{visibility:"off"}] },
+      { featureType:"poi.business", stylers:[{visibility:"off"}] },
+      { featureType:"poi.attraction", stylers:[{visibility:"off"}] },
+      { featureType:"poi.medical", stylers:[{visibility:"off"}] },
+      { featureType:"poi.government", stylers:[{visibility:"off"}] },
+      { featureType:"poi.school", stylers:[{visibility:"off"}] },
+      { featureType:"poi.sports_complex", stylers:[{visibility:"off"}] }
     ];
 
-    let gMap, gMarkers = [], gData = [];
-    const $ = s => document.querySelector(s);
-    const $$ = s => document.querySelectorAll(s);
+    let map, markers = [], allItems = [];
+    const selProvince = document.getElementById('fProvince');
+    const selCity     = document.getElementById('fCity');
+    const selCat      = document.getElementById('fCategory');
 
-    async function initSiyaem(){
-      gMap = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: 36.9305, lng: 127.0458 },
-        zoom: 15, styles: SIYAEM_MAP_STYLES,
-        mapTypeControl:false, streetViewControl:false, fullscreenControl:false
+    function fillSelect(select, values, labelAll){
+      const cur = select.value;
+      select.innerHTML = `<option value="">${labelAll}</option>` + [...values].sort().map(v=>`<option value="${v}">${v}</option>`).join('');
+      if([...values].has(cur)) select.value = cur; // сохранить выбор если есть
+    }
+
+    function rebuildFilters(){
+      const approved = allItems.filter(x=>x.approved===true);
+      const setProvince = new Set(), setCity = new Set(), setCat = new Set();
+      approved.forEach(x=>{
+        if(x.province_ru) setProvince.add(x.province_ru);
+        if(x.city_ru)     setCity.add(x.city_ru);
+        if(x.category)    setCat.add(x.category);
       });
-
-      // грузим JSON
-      try{
-        const res = await fetch("partners.json",{cache:"no-cache"});
-        gData = await res.json();
-      }catch(e){ console.error("partners.json error:", e); gData=[]; }
-
-      buildFilters(gData);
-      applyFilters(); // первичная отрисовка
-
-      // кнопки фильтров
-      $("#apply").onclick = applyFilters;
-      $("#reset").onclick = ()=>{
-        $("#fProvince").value=""; $("#fCity").value=""; $("#fCategory").value=""; $("#fSub").value="";
-        buildFilters(gData); applyFilters();
-      };
+      fillSelect(selProvince,setProvince,'Провинция: все');
+      fillSelect(selCity,setCity,'Город: все');
+      fillSelect(selCat,setCat,'Категория: все');
     }
 
-    function buildFilters(data){
-      const approved = data.filter(x=>x.approved===true);
-      const provinces = [...new Set(approved.map(x=>x.province_ru).filter(Boolean))].sort();
-      const cities    = [...new Set(approved.map(x=>x.city_ru).filter(Boolean))].sort();
-
-      const fp = $("#fProvince"), fc = $("#fCity");
-      fp.innerHTML = '<option value="">Все</option>' + provinces.map(p=>`<option>${p}</option>`).join('');
-      fc.innerHTML = '<option value="">Все</option>' + cities.map(c=>`<option>${c}</option>`).join('');
+    function createMarker(place){
+      const m = new google.maps.Marker({
+        position:{lat:place.lat, lng:place.lng}, map, title:place.name,
+        icon:{
+          path:google.maps.SymbolPath.CIRCLE, scale:9,
+          fillColor:"#2563eb", fillOpacity:.95, strokeWeight:2, strokeColor:"#93c5fd"
+        }
+      });
+      const info = new google.maps.InfoWindow({
+        content: `
+          <div style="max-width:260px">
+            <strong>${place.name}</strong><br/>
+            <small>${place.province_ru??""} ${place.city_ru?("• "+place.city_ru):""}</small><br/>
+            <div>Категория: ${place.category}${place.subcategories?.length ? " — "+place.subcategories.join(", ") : ""}</div>
+            <div>Рейтинг: ${place.rating ?? "—"}</div>
+            <div style="margin-top:6px">${place.address ?? ""}</div>
+          </div>`
+      });
+      m.addListener('click', ()=> info.open({anchor:m,map}));
+      return m;
     }
 
-    function applyFilters(){
-      const p = $("#fProvince").value.trim();
-      const c = $("#fCity").value.trim();
-      const cat = $("#fCategory").value.trim();
-      const sub = $("#fSub").value.trim().toLowerCase();
-
-      const approved = gData.filter(x=>x.approved===true).filter(x=>{
+    function applyFiltersAndRender(){
+      const p = selProvince.value, c = selCity.value, k = selCat.value;
+      const filtered = allItems.filter(x=>{
+        if(x.approved!==true) return false;
         if(p && x.province_ru!==p) return false;
-        if(c && x.city_ru!==c)     return false;
-        if(cat && x.category!==cat) return false;
-        if(sub && !(x.subcategories||[]).some(s=>String(s).toLowerCase().includes(sub))) return false;
+        if(c && x.city_ru!==c) return false;
+        if(k && x.category!==k) return false;
         return true;
       });
+      markers.forEach(m=>m.setMap(null));
+      markers = filtered.map(createMarker);
 
-      // маркеры
-      gMarkers.forEach(m=>m.setMap(null)); gMarkers=[];
-      const bounds = new google.maps.LatLngBounds();
-      let any=false;
-
-      approved.forEach(place=>{
-        const lat = Number(place.lat), lng = Number(place.lng);
-        if(!Number.isFinite(lat)||!Number.isFinite(lng)) return;
-        const pos = {lat,lng};
-        const m = new google.maps.Marker({
-          position:pos, map:gMap, title:place.name,
-          icon:{ path:google.maps.SymbolPath.CIRCLE, scale:8,
-                 fillColor:"#2563eb", fillOpacity:.95, strokeWeight:2, strokeColor:"#93c5fd" }
-        });
-        const inf = new google.maps.InfoWindow({
-          content: `
-            <div style="max-width:260px">
-              <strong>${place.name??""}</strong><br/>
-              <small>${place.province_ru??""} • ${place.city_ru??""}</small><br/>
-              <div>Категория: ${place.category??"—"}${place.subcategories?.length?" — "+place.subcategories.join(", "):""}</div>
-              <div>Рейтинг: ${place.rating??"—"}</div>
-              <div style="margin-top:6px">${place.address??""}</div>
-            </div>`
-        });
-        m.addListener("click", ()=> inf.open({anchor:m, map:gMap}));
-        gMarkers.push(m); bounds.extend(pos); any=true;
-      });
-
-      if(any){ approved.length===1 ? (gMap.setCenter(bounds.getCenter()), gMap.setZoom(17)) : gMap.fitBounds(bounds); }
-
-      // список
-      const list = $("#list");
-      list.innerHTML = approved.map(x=>`
-        <div class="item">
-          <div><b>${x.name}</b></div>
-          <small>${x.province_ru} • ${x.city_ru}</small>
-          <small>Категория: ${x.category}${x.subcategories?.length?" — "+x.subcategories.join(", "):""}</small>
-          <small>Адрес: ${x.address}</small>
-        </div>
-      `).join('') || '<div class="item"><small>Пока пусто по этим фильтрам.</small></div>';
+      if(filtered.length){
+        const b = new google.maps.LatLngBounds();
+        filtered.forEach(x=>b.extend({lat:x.lat,lng:x.lng}));
+        map.fitBounds(b, { top:40,bottom:40,left:40,right:40 });
+      }
     }
 
-    // экспортируем callback
-    window.initSiyaem = initSiyaem;
+    selProvince.onchange = selCity.onchange = selCat.onchange = applyFiltersAndRender;
+
+    async function ensureLatLng(item, geocoder){
+      if(typeof item.lat==='number' && typeof item.lng==='number') return item;
+      if(!item.address) return item;
+      try{
+        const { results, status } = await geocoder.geocode({ address:item.address });
+        if(status==='OK' && results?.[0]){
+          const ll = results[0].geometry.location;
+          item.lat = ll.lat(); item.lng = ll.lng();
+        }
+      }catch{}
+      return item;
+    }
+
+    async function initMap(){
+      map = new google.maps.Map(document.getElementById('map'),{
+        center:{lat:36.9305,lng:127.0458}, zoom:15, styles:MAP_STYLES,
+        streetViewControl:false, mapTypeControl:false, fullscreenControl:false
+      });
+
+      const geocoder = new google.maps.Geocoder();
+
+      const res = await fetch('partners.json', { cache:'no-cache' });
+      let items = await res.json(); // массив объектов
+      // Геокодим при необходимости
+      items = await Promise.all(items.map(x=>ensureLatLng(x, geocoder)));
+      allItems = items;
+
+      rebuildFilters();
+      applyFiltersAndRender();
+    }
+
+    window.initMap = initMap;
   </script>
 
-  <!-- Google Maps JS: один раз, с твоим ключом -->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro&callback=initSiyaem"></script>
+  <!-- Google Maps JS (ключ уже вставлен) -->
+  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro&callback=initMap&loading=async"></script>
 </body>
 </html>
