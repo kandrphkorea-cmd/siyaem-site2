@@ -1,367 +1,372 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>SiyaEm Korea — карта партнёров</title>
-  <meta name="color-scheme" content="dark light"/>
-  <style>
-    :root{
-      --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af;
-      --acc:#2563eb; --acc-2:#fbbf24; --ok:#10b981; --danger:#ef4444;
-      --stroke:#1f2937; --radius:16px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; color:var(--text);
-      background:radial-gradient(1200px 600px at 10% -10%, #0b132b 0 40%, transparent 40%) , #0f172a;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-    }
-    .wrap{max-width:1100px;margin:0 auto;padding:20px}
-    header{
-      position:sticky; top:0; z-index:30; backdrop-filter:blur(10px);
-      background:rgba(15,23,42,.75); border-bottom:1px solid var(--stroke);
-    }
-    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0;gap:14px}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:800}
-    .dot{width:10px;height:10px;border-radius:50%;background:var(--acc-2);box-shadow:0 0 18px var(--acc-2)}
-    .menu{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{
-      appearance:none;border:1px solid var(--stroke);background:#0b1221;color:var(--text);
-      padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:700;letter-spacing:.2px;transition:.2s
-    }
-    .btn:hover{border-color:#304a8f}
-    .btn-primary{background:var(--acc); border-color:transparent}
-    .btn-primary:hover{filter:brightness(1.08)}
-    .badge{
-      display:inline-flex;gap:8px;align-items:center;
-      background:rgba(37,99,235,.12); border:1px solid rgba(37,99,235,.35);
-      color:#bfdbfe; border-radius:999px; padding:6px 12px; font-size:13px
-    }
-    .card{background:rgba(17,24,39,.78);border:1px solid var(--stroke);border-radius:var(--radius);padding:16px}
-    .hero{margin:22px 0 14px}
-    .hero h1{margin:8px 0 6px;font-size:24px}
-    .muted{color:var(--muted)}
-    #map{height:520px;border-radius:12px;overflow:hidden}
-    .filters{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px}
-    select{
-      appearance:none;background:#0b1221;color:var(--text);border:1px solid var(--stroke);
-      padding:10px 12px;border-radius:12px;min-width:200px
-    }
-    footer{padding:28px 0 40px;text-align:center;color:#94a3b8}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SiyaEm Korea — русскоязычные места в Корее</title>
+<style>
+  :root{
+    --bg:#0f172a;           /* тёмно-синий фон */
+    --bg-2:#0b132b;
+    --card:#111827;         /* карточки */
+    --stroke:#1f2937;       /* линии */
+    --text:#e5e7eb;         /* белый мягкий */
+    --muted:#9ca3af;
+    --accent:#2563eb;       /* королевский синий */
+    --accent-2:#60a5fa;
+    --gold:#fbbf24;         /* для звёзд */
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; color:var(--text);
+    background:linear-gradient(180deg,var(--bg-2),var(--bg) 35% 65%,#0c1224);
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  }
+  .wrap{max-width:1200px;margin:0 auto;padding:20px}
+  header{
+    position:sticky; top:0; z-index:20;
+    background:rgba(15,23,42,.65); backdrop-filter: blur(12px);
+    border-bottom:1px solid var(--stroke);
+  }
+  .nav{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 0}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.3px; font-size:18px}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:#fbbf24;box-shadow:0 0 16px #fbbf24}
+  .menu{display:flex; gap:8px; flex-wrap:wrap}
+  .menu a{
+    text-decoration:none; color:var(--text); opacity:.85; padding:10px 14px; border-radius:12px;
+    border:1px solid transparent; transition:.2s; font-weight:700;
+  }
+  .menu a:hover{border-color:#2f467a; color:#dbeafe}
 
-    /* Модалки */
-    .modal{position:fixed;inset:0;display:none;place-items:center;z-index:50;background:rgba(2,6,23,.6);backdrop-filter:blur(6px)}
-    .modal.show{display:grid}
-    .modal .box{width:min(720px,calc(100vw - 28px));max-height:80vh;overflow:auto;background:var(--card);border:1px solid var(--stroke);border-radius:18px;padding:18px 18px 20px}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .field{display:flex;flex-direction:column;gap:6px;margin:8px 0}
-    label{font-size:14px;color:#cbd5e1}
-    .req{color:var(--danger);margin-left:6px}
-    input[type="text"],input[type="file"],textarea{
-      width:100%;background:#0b1221;border:1px solid var(--stroke);color:var(--text);
-      border-radius:10px;padding:10px 12px;outline:none
-    }
-    textarea{min-height:110px;resize:vertical}
-    .hint{color:#9ca3af;font-size:12px}
-    .center{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
-    .mt-10{margin-top:10px}.mt-14{margin-top:14px}.mt-16{margin-top:16px}.mt-20{margin-top:20px}
+  /* Hero панель как у авиасейлс */
+  .hero{
+    margin:26px 0 16px; border:1px solid var(--stroke); border-radius:var(--radius);
+    background:rgba(17,24,39,.75); padding:22px;
+  }
+  .hero h1{margin:0 0 8px; font-size:40px; font-weight:900; letter-spacing:.2px}
+  .hero p{margin:0; color:var(--muted); font-size:16px}
 
-    /* Шторка входа */
-    body.blurred main, body.blurred header, body.blurred footer{filter:blur(6px);pointer-events:none;user-select:none}
-    #entryGate{position:fixed;inset:0;display:none;place-items:center;z-index:60;background:rgba(2,6,23,.72);backdrop-filter:blur(6px)}
-    #entryGate.show{display:grid}
-    .gate-box{width:min(620px,calc(100vw - 28px));background:var(--card);border:1px solid var(--stroke);border-radius:18px;padding:22px}
-  </style>
+  /* Вкладки */
+  .tabs{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap}
+  .tab{
+    background:#0b1221; border:1px solid #1f2a44; color:#cfe2ff;
+    padding:12px 16px; border-radius:14px; font-weight:800; font-size:15px; cursor:pointer; transition:.2s;
+  }
+  .tab.active, .tab:hover{border-color:#3256b8; background:#0f1d3f; color:#ffffff}
+
+  /* Поисковая панель */
+  .search{
+    margin-top:14px; display:grid; grid-template-columns: 2fr 2fr 2fr 1fr;
+    gap:10px; align-items:stretch;
+  }
+  .field{
+    background:#0b1221; border:1px solid var(--stroke); border-radius:14px; padding:10px 12px; display:flex; flex-direction:column; gap:6px
+  }
+  .field label{font-size:12px; color:#9fb0c7}
+  .field select, .field input{
+    width:100%; border:none; outline:none; background:transparent; color:var(--text); font-size:16px; font-weight:700
+  }
+  .btn{appearance:none; border:none; cursor:pointer; padding:12px 16px; border-radius:14px; font-weight:900; font-size:16px}
+  .btn-primary{background:var(--accent); color:#fff}
+  .btn-primary:hover{filter:brightness(1.06)}
+  .btn-ghost{background:transparent; color:#cfe2ff; border:1px solid #2b3f72}
+  .btn-ghost:hover{border-color:#3b57a2}
+
+  /* Результаты */
+  .results{margin-top:18px; display:grid; grid-template-columns:repeat(3, 1fr); gap:12px}
+  @media (max-width:980px){ .results{grid-template-columns:1fr 1fr} }
+  @media (max-width:640px){ .results{grid-template-columns:1fr} .search{grid-template-columns:1fr} }
+  .card{
+    background:rgba(17,24,39,.85); border:1px solid var(--stroke); border-radius:16px; padding:14px
+  }
+  .card h3{margin:0 0 6px; font-size:18px}
+  .card small{color:#9fb0c7}
+  .stars{display:inline-flex; gap:2px; margin-top:6px}
+  .star{color:#475569; font-size:18px}
+  .star.on{color:var(--gold)}
+
+  .hr{height:1px; background:var(--stroke); margin:18px 0}
+
+  /* Модалка карты */
+  .modal{position:fixed; inset:0; display:none; place-items:center; z-index:50; background:rgba(2,6,23,.65); backdrop-filter: blur(6px)}
+  .modal.show{display:grid}
+  .box{width:min(1100px, calc(100vw - 28px)); background:var(--card); border:1px solid var(--stroke); border-radius:18px; padding:16px}
+  #map{height:580px; border-radius:12px; overflow:hidden}
+</style>
 </head>
 <body>
-  <header>
-    <div class="wrap nav">
-      <div class="brand"><span class="dot"></span><span>SiyaEm Korea</span></div>
-      <div class="menu">
-        <button data-open="#about" class="btn">О нас</button>
-        <button data-open="#services" class="btn">Услуги</button>
-        <button data-open="#partner" class="btn btn-primary">Стать партнёром</button>
-        <button data-open="#contacts" class="btn">Контакты</button>
+<header>
+  <div class="wrap nav">
+    <div class="brand"><span class="dot"></span><span>SiyaEm Korea</span></div>
+    <nav class="menu">
+      <a href="#" onclick="openAbout();return false;">О компании</a>
+      <a href="#" onclick="openInvest();return false;">Инвесторам</a>
+      <a href="#" onclick="openSupport();return false;">Поддержка</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Тут находят русскоязычные места в Корее</h1>
+    <p>Партнёры с лицензией. Только проверенные точки. Выбирай провинцию, город и категорию — и смотри результат.</p>
+
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-cat="">Все</button>
+      <button class="tab" data-cat="Еда">🍜 Еда</button>
+      <button class="tab" data-cat="Развлечения">🎯 Развлечения</button>
+      <button class="tab" data-cat="Салоны">💅 Салоны</button>
+      <button class="tab" data-cat="Транспорт">🚖 Транспорт</button>
+    </div>
+
+    <div class="search">
+      <div class="field">
+        <label>Провинция</label>
+        <select id="provinceSelect"><option value="">Любая</option></select>
+      </div>
+      <div class="field">
+        <label>Город</label>
+        <select id="citySelect"><option value="">Любой</option></select>
+      </div>
+      <div class="field">
+        <label>Категория</label>
+        <select id="categorySelect">
+          <option value="">Любая</option>
+          <option>Еда</option>
+          <option>Развлечения</option>
+          <option>Салоны</option>
+          <option>Транспорт</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="btnSearch">Найти</button>
+    </div>
+
+    <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap">
+      <button class="btn btn-ghost" id="btnShowMap">Показать на карте</button>
+      <button class="btn btn-ghost" onclick="openPartner()">Стать партнёром</button>
+    </div>
+  </section>
+
+  <div class="results" id="results"></div>
+  <div class="hr"></div>
+  <p style="opacity:.8">Совет: открой «Показать на карте», чтобы увидеть все результаты на карте. Карта загружается только по твоему запросу — экономим трафик и ускоряем загрузку.</p>
+</main>
+
+<!-- Модалка карты -->
+<div class="modal" id="mapModal">
+  <div class="box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+      <strong>Карта результатов</strong>
+      <div>
+        <button class="btn btn-ghost" onclick="closeMap()">Закрыть</button>
       </div>
     </div>
-  </header>
-
-  <main class="wrap">
-    <div class="hero card">
-      <div class="badge">Экосистема с <b>легальными</b> русскоязычными заведениями</div>
-      <h1>Карта партнёров SiyaEm</h1>
-      <p class="muted">На карте показываем <b>только проверенные</b> точки из partners.json (approved = true). Новые партнёры подают заявку через анкету.</p>
-    </div>
-
-    <section class="card">
-      <!-- Фильтры -->
-      <div class="filters">
-        <select id="fProvince"><option value="">Провинция: все</option></select>
-        <select id="fCity"><option value="">Город: все</option></select>
-        <select id="fCategory"><option value="">Категория: все</option></select>
-      </div>
-
-      <div id="map"></div>
-
-      <div class="center mt-16">
-        <button class="btn btn-primary" data-open="#partner">Стать партнёром</button>
-        <button class="btn" data-open="#about">Как мы проверяем</button>
-      </div>
-    </section>
-  </main>
-
-  <footer>© 2025 SiyaEm Korea. Все права защищены.</footer>
-
-  <!-- Модалки -->
-  <div class="modal" id="about">
-    <div class="box">
-      <h3>О нас</h3>
-      <p class="muted">Мы собираем и продвигаем <b>только русскоязычные</b> и <b>легальные</b> места в Республике Корея. Каждая точка проходит проверку лицензии и базовой безопасности.</p>
-      <div class="center mt-16"><button class="btn btn-primary" data-close>Понятно</button></div>
-    </div>
+    <div id="map"></div>
   </div>
+</div>
 
-  <div class="modal" id="services">
-    <div class="box">
-      <h3>Услуги</h3>
-      <ul>
-        <li>Добавление и верификация партнёров (проверка лицензий)</li>
-        <li>Продвижение на карте и в соцсетях</li>
-        <li>Фотосъёмка и оформление карточек</li>
-      </ul>
-      <div class="center mt-16"><button class="btn btn-primary" data-close>Ок</button></div>
-    </div>
-  </div>
+<script>
+  // ======= Глобальное состояние =======
+  const state = {
+    partners: [],
+    filtered: [],
+    currentTab: "",      // активная вкладка (категория)
+    province: "",
+    city: "",
+    category: ""
+  };
 
-  <div class="modal" id="contacts">
-    <div class="box">
-      <h3>Контакты</h3>
-      <p>Республика Корея, 충남 아산시 둔포면<br/>Email: support@siyaem.kr</p>
-      <div class="center mt-16"><button class="btn btn-primary" data-close>Закрыть</button></div>
-    </div>
-  </div>
+  const els = {
+    province: document.getElementById('provinceSelect'),
+    city: document.getElementById('citySelect'),
+    category: document.getElementById('categorySelect'),
+    results: document.getElementById('results'),
+    tabs: document.getElementById('tabs'),
+    btnSearch: document.getElementById('btnSearch'),
+    btnMap: document.getElementById('btnShowMap'),
+    mapModal: document.getElementById('mapModal')
+  };
 
-  <!-- Анкета партнёра -->
-  <div class="modal" id="partner">
-    <div class="box">
-      <h3>Анкета партнёра</h3>
-      <form id="partnerForm">
-        <div class="row">
-          <div class="field">
-            <label>Фамилия и имя владельца <span class="req">*</span></label>
-            <input type="text" name="owner" required placeholder="Иванов Иван"/>
-          </div>
-          <div class="field">
-            <label>Название заведения <span class="req">*</span></label>
-            <input type="text" name="title" required placeholder="Напр.: Мистер Кук"/>
-          </div>
-        </div>
-        <div class="field">
-          <label>Адрес (как в лицензии) <span class="req">*</span></label>
-          <input type="text" name="address" required placeholder="Полный адрес на корейском"/>
-          <div class="hint">Например: 충남 아산시 둔포면 둔포로 42</div>
-        </div>
-        <div class="row">
-          <div class="field">
-            <label>Фото заведения <span class="req">*</span></label>
-            <input type="file" name="placePhoto" accept="image/*" required/>
-          </div>
-          <div class="field">
-            <label>Фото лицензии <span class="req">*</span></label>
-            <input type="file" name="licensePhoto" accept="image/*,application/pdf" required/>
-          </div>
-        </div>
-        <div class="row">
-          <div class="field">
-            <label>Фото меню <span class="req">*</span></label>
-            <input type="file" name="menuPhoto" accept="image/*,application/pdf" required/>
-          </div>
-          <div class="field">
-            <label>Контактный телефон <span class="req">*</span></label>
-            <input type="text" name="phone" required placeholder="+82-10-xxxx-xxxx"/>
-          </div>
-        </div>
-        <div class="field">
-          <label>Описание / история</label>
-          <textarea name="desc" placeholder="Коротко о концепции, кухне, преимуществах"></textarea>
-        </div>
-        <div class="hint">Поля со <span class="req">*</span> — обязательные. Прикладывайте читаемые фото.</div>
-        <div class="center mt-20">
-          <button class="btn btn-primary" type="submit">Отправить</button>
-          <button class="btn" type="button" data-close>Отмена</button>
-        </div>
-      </form>
-      <div id="formResult" class="mt-14" style="display:none">
-        <p style="color:var(--ok)"><b>Готово!</b> Заявка отправлена на проверку. Обычно занимает 10–60 минут.</p>
-        <div class="center mt-10"><button class="btn btn-primary" data-close>Ок</button></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Шторка входа -->
-  <div id="entryGate" class="show">
-    <div class="gate-box">
-      <h3>Выбор входа</h3>
-      <p class="muted">Продолжаем с размытием только после выбора режима.</p>
-      <div class="center mt-16">
-        <button id="enterGuest" class="btn btn-primary">Зайти как гость</button>
-        <button id="enterPartner" class="btn">Стать партнёром</button>
-      </div>
-      <p class="hint mt-10">Режим «гость» показывает карту с проверенными заведениями.</p>
-    </div>
-  </div>
-
-  <script>
-    // ---------- модалки ----------
-    document.querySelectorAll('[data-open]').forEach(b=>{
-      b.addEventListener('click', ()=>{
-        document.querySelector(b.getAttribute('data-open'))?.classList.add('show');
-      });
-    });
-    document.querySelectorAll('[data-close]').forEach(b=>{
-      b.addEventListener('click', ()=> b.closest('.modal')?.classList.remove('show'));
-    });
-    document.querySelectorAll('.modal').forEach(m=>{
-      m.addEventListener('click', (e)=>{ if(e.target===m) m.classList.remove('show'); });
-    });
-
-    // ---------- анкета (демо без бэка) ----------
-    const form = document.getElementById('partnerForm');
-    form.addEventListener('submit', (e)=>{
-      e.preventDefault();
-      form.style.display='none';
-      document.getElementById('formResult').style.display='block';
-    });
-
-    // ---------- шторка входа ----------
-    const entryGate = document.getElementById('entryGate');
-    function closeGate(){ document.body.classList.remove('blurred'); entryGate.classList.remove('show'); }
-    (function initGate(){
-      const mode = localStorage.getItem('siyaem-mode');
-      if(!mode){ document.body.classList.add('blurred'); entryGate.classList.add('show'); }
-      document.getElementById('enterGuest').onclick = ()=>{
-        localStorage.setItem('siyaem-mode','guest'); closeGate();
-      };
-      document.getElementById('enterPartner').onclick = ()=>{
-        localStorage.setItem('siyaem-mode','guest'); closeGate();
-        document.querySelector('#partner')?.classList.add('show');
-      };
-    })();
-
-    // ---------- карта ----------
-    const MAP_STYLES = [
-      { featureType:"poi", stylers:[{visibility:"off"}] },
-      { featureType:"poi.business", stylers:[{visibility:"off"}] },
-      { featureType:"poi.attraction", stylers:[{visibility:"off"}] },
-      { featureType:"poi.medical", stylers:[{visibility:"off"}] },
-      { featureType:"poi.government", stylers:[{visibility:"off"}] },
-      { featureType:"poi.school", stylers:[{visibility:"off"}] },
-      { featureType:"poi.sports_complex", stylers:[{visibility:"off"}] }
-    ];
-
-    let map, markers = [], allItems = [];
-    const selProvince = document.getElementById('fProvince');
-    const selCity     = document.getElementById('fCity');
-    const selCat      = document.getElementById('fCategory');
-
-    function fillSelect(select, values, labelAll){
-      const cur = select.value;
-      select.innerHTML = `<option value="">${labelAll}</option>` + [...values].sort().map(v=>`<option value="${v}">${v}</option>`).join('');
-      if([...values].has(cur)) select.value = cur; // сохранить выбор если есть
+  // ======= Инициализация =======
+  init();
+  async function init(){
+    // грузим партнёров
+    try{
+      const res = await fetch('partners.json', {cache:'no-cache'});
+      state.partners = await res.json();
+    }catch(e){
+      console.error('partners.json не найден или пуст:', e);
+      state.partners = [];
     }
 
-    function rebuildFilters(){
-      const approved = allItems.filter(x=>x.approved===true);
-      const setProvince = new Set(), setCity = new Set(), setCat = new Set();
-      approved.forEach(x=>{
-        if(x.province_ru) setProvince.add(x.province_ru);
-        if(x.city_ru)     setCity.add(x.city_ru);
-        if(x.category)    setCat.add(x.category);
-      });
-      fillSelect(selProvince,setProvince,'Провинция: все');
-      fillSelect(selCity,setCity,'Город: все');
-      fillSelect(selCat,setCat,'Категория: все');
-    }
+    // populate selects
+    const provinces = [...new Set(state.partners.map(p=>p.province_ru).filter(Boolean))].sort();
+    provinces.forEach(p=>{
+      const o = document.createElement('option'); o.value=o.textContent=p; els.province.appendChild(o);
+    });
 
-    function createMarker(place){
+    els.province.addEventListener('change', ()=>{
+      state.province = els.province.value;
+      rebuildCityOptions();
+    });
+    els.city.addEventListener('change', ()=>{ state.city = els.city.value; });
+    els.category.addEventListener('change', ()=>{ state.category = els.category.value; });
+
+    // вкладки
+    els.tabs.addEventListener('click', (e)=>{
+      const b = e.target.closest('.tab'); if(!b) return;
+      els.tabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      state.currentTab = b.dataset.cat || "";
+      runSearch(); 
+    });
+
+    // кнопки
+    els.btnSearch.onclick = runSearch;
+    els.btnMap.onclick = openMap;
+
+    // первый рендер (без фильтров)
+    runSearch();
+  }
+
+  function rebuildCityOptions(){
+    els.city.innerHTML = '<option value="">Любой</option>';
+    let pool = state.partners;
+    if(state.province) pool = pool.filter(p=>p.province_ru===state.province);
+    const cities = [...new Set(pool.map(p=>p.city_ru).filter(Boolean))].sort();
+    cities.forEach(c=>{
+      const o = document.createElement('option'); o.value=o.textContent=c; els.city.appendChild(o);
+    });
+  }
+
+  // ======= Поиск/фильтрация =======
+  function runSearch(){
+    let arr = [...state.partners];
+    if(state.currentTab) arr = arr.filter(p=>p.category===state.currentTab);
+    if(state.category)   arr = arr.filter(p=>p.category===state.category);
+    if(state.province)   arr = arr.filter(p=>p.province_ru===state.province);
+    if(state.city)       arr = arr.filter(p=>p.city_ru===state.city);
+    // показываем только одобренные
+    arr = arr.filter(p=>p.approved===true);
+
+    state.filtered = arr;
+    renderResults(arr);
+  }
+
+  // ======= Рендер карточек =======
+  function renderResults(list){
+    els.results.innerHTML = '';
+    if(list.length===0){
+      els.results.innerHTML = '<div class="card" style="grid-column:1/-1">Ничего не найдено. Попробуй другие фильтры.</div>';
+      return;
+    }
+    list.forEach(p=>{
+      const card = document.createElement('div');
+      card.className='card';
+      card.innerHTML = `
+        <h3>${escapeHtml(p.name||'Без названия')}</h3>
+        <small>${escapeHtml(p.province_ru||'—')}${p.city_ru?(' • '+escapeHtml(p.city_ru)):""}</small>
+        <div class="stars">${buildStars(p.rating)}</div>
+        <div style="margin-top:8px">${escapeHtml(p.address||'')}</div>
+        <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap">
+          <button class="btn btn-primary" onclick='focusOnMap(${p.lat||0}, ${p.lng||0}, ${JSON.stringify(p).replaceAll("'","&#39;")})'>На карте</button>
+          <button class="btn btn-ghost" onclick='openPartner()'>Стать партнёром</button>
+        </div>
+      `;
+      els.results.appendChild(card);
+    });
+  }
+
+  function buildStars(r){
+    const v = Number(r)||0; let html='';
+    for(let i=1;i<=5;i++){
+      html += `<span class="star ${i<=Math.round(v)?'on':''}">★</span>`;
+    }
+    return html;
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  }
+
+  // ======= Модалка карты и ленивая загрузка Google Maps =======
+  let gMap, gMarkers=[];
+  async function openMap(){
+    els.mapModal.classList.add('show');
+    if(!window.google || !window.google.maps){
+      await loadGoogleMaps();  // подгружаем только по требованию
+    }
+    setTimeout(initOrUpdateMap, 0);
+  }
+  function closeMap(){ els.mapModal.classList.remove('show'); }
+
+  async function loadGoogleMaps(){
+    const KEY = 'AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro'; /* ← ВСТАВЬ СВОЙ КЛЮЧ */
+    const url = `https://maps.googleapis.com/maps/api/js?key=${KEY}&callback=__gmInit`;
+    await new Promise((resolve)=>{
+      window.__gmInit = ()=>resolve();
+      const s = document.createElement('script');
+      s.src = url; s.async = true; document.head.appendChild(s);
+    });
+  }
+
+  function initOrUpdateMap(){
+    const target = document.getElementById('map');
+    if(!gMap){
+      gMap = new google.maps.Map(target,{
+        center:{lat:36.9305, lng:127.0458}, zoom: 12,
+        styles: [
+          { featureType: "poi", stylers:[{visibility:"off"}] },
+          { featureType: "poi.business", stylers:[{visibility:"off"}] },
+          { featureType: "poi.attraction", stylers:[{visibility:"off"}] },
+          { featureType: "poi.medical", stylers:[{visibility:"off"}] },
+          { featureType: "poi.government", stylers:[{visibility:"off"}] },
+          { featureType: "poi.school", stylers:[{visibility:"off"}] },
+          { featureType: "poi.sports_complex", stylers:[{visibility:"off"}] }
+        ],
+        mapTypeControl:false, streetViewControl:false, fullscreenControl:true
+      });
+    }
+    // почистить старые маркеры
+    gMarkers.forEach(m=>m.setMap(null)); gMarkers=[];
+
+    const bounds = new google.maps.LatLngBounds();
+    (state.filtered.length?state.filtered:state.partners.filter(p=>p.approved)).forEach(p=>{
+      if(!(p.lat&&p.lng)) return;
       const m = new google.maps.Marker({
-        position:{lat:place.lat, lng:place.lng}, map, title:place.name,
-        icon:{
-          path:google.maps.SymbolPath.CIRCLE, scale:9,
-          fillColor:"#2563eb", fillOpacity:.95, strokeWeight:2, strokeColor:"#93c5fd"
-        }
+        position:{lat:p.lat, lng:p.lng}, map:gMap, title: p.name || ''
       });
-      const info = new google.maps.InfoWindow({
-        content: `
-          <div style="max-width:260px">
-            <strong>${place.name}</strong><br/>
-            <small>${place.province_ru??""} ${place.city_ru?("• "+place.city_ru):""}</small><br/>
-            <div>Категория: ${place.category}${place.subcategories?.length ? " — "+place.subcategories.join(", ") : ""}</div>
-            <div>Рейтинг: ${place.rating ?? "—"}</div>
-            <div style="margin-top:6px">${place.address ?? ""}</div>
-          </div>`
-      });
-      m.addListener('click', ()=> info.open({anchor:m,map}));
-      return m;
-    }
+      const iw = new google.maps.InfoWindow({content: `
+        <div style="max-width:240px">
+          <strong>${escapeHtml(p.name||'')}</strong><br/>
+          <small>${escapeHtml(p.province_ru||'')}${p.city_ru?(' • '+escapeHtml(p.city_ru)):""}</small><br/>
+          <div class="stars" style="margin-top:6px">${buildStars(p.rating)}</div>
+          <div style="margin-top:6px">${escapeHtml(p.address||'')}</div>
+        </div>
+      `});
+      m.addListener('click', ()=>iw.open({anchor:m, map:gMap}));
+      gMarkers.push(m);
+      bounds.extend(m.getPosition());
+    });
+    if(!bounds.isEmpty()) gMap.fitBounds(bounds);
+  }
 
-    function applyFiltersAndRender(){
-      const p = selProvince.value, c = selCity.value, k = selCat.value;
-      const filtered = allItems.filter(x=>{
-        if(x.approved!==true) return false;
-        if(p && x.province_ru!==p) return false;
-        if(c && x.city_ru!==c) return false;
-        if(k && x.category!==k) return false;
-        return true;
-      });
-      markers.forEach(m=>m.setMap(null));
-      markers = filtered.map(createMarker);
-
-      if(filtered.length){
-        const b = new google.maps.LatLngBounds();
-        filtered.forEach(x=>b.extend({lat:x.lat,lng:x.lng}));
-        map.fitBounds(b, { top:40,bottom:40,left:40,right:40 });
+  // клик «На карте» из карточки
+  function focusOnMap(lat, lng, place){
+    openMap();
+    // дождёмся и сфокусируем
+    setTimeout(()=>{
+      if(gMap && lat && lng){
+        gMap.setCenter({lat, lng}); gMap.setZoom(16);
       }
-    }
+    }, 350);
+  }
 
-    selProvince.onchange = selCity.onchange = selCat.onchange = applyFiltersAndRender;
-
-    async function ensureLatLng(item, geocoder){
-      if(typeof item.lat==='number' && typeof item.lng==='number') return item;
-      if(!item.address) return item;
-      try{
-        const { results, status } = await geocoder.geocode({ address:item.address });
-        if(status==='OK' && results?.[0]){
-          const ll = results[0].geometry.location;
-          item.lat = ll.lat(); item.lng = ll.lng();
-        }
-      }catch{}
-      return item;
-    }
-
-    async function initMap(){
-      map = new google.maps.Map(document.getElementById('map'),{
-        center:{lat:36.9305,lng:127.0458}, zoom:15, styles:MAP_STYLES,
-        streetViewControl:false, mapTypeControl:false, fullscreenControl:false
-      });
-
-      const geocoder = new google.maps.Geocoder();
-
-      const res = await fetch('partners.json', { cache:'no-cache' });
-      let items = await res.json(); // массив объектов
-      // Геокодим при необходимости
-      items = await Promise.all(items.map(x=>ensureLatLng(x, geocoder)));
-      allItems = items;
-
-      rebuildFilters();
-      applyFiltersAndRender();
-    }
-
-    window.initMap = initMap;
-  </script>
-
-  <!-- Google Maps JS (ключ уже вставлен) -->
-  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro&callback=initMap&loading=async"></script>
+  // Заглушки: модалки «О компании / Инвесторам / Партнёру»
+  function openAbout(){ alert('SEO-страница «О компании» будет добавлена на следующем шаге.'); }
+  function openInvest(){ alert('Страница для инвесторов/спонсоров — на следующем шаге.'); }
+  function openPartner(){ alert('Анкета партнёра уже была — подключим сюда позже (или откроем отдельной страницей).'); }
+</script>
 </body>
 </html>
