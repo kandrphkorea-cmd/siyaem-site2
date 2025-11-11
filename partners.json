@@ -1,7 +1,7 @@
 [
   {
     "id": "mr_cook",
-    "name": "Мистер Кук",
+    "name": "Мистер Кук (Mr. Cook)",
     "category": "Еда",
     "subcategories": ["Корейская кухня", "Столовая"],
     "rating": 4.6,
@@ -10,8 +10,8 @@
     "address": "405-20 Dunpo-ri, Dunpo-myeon, Asan-si, Chungcheongnam-do",
     "lat": 36.9305,
     "lng": 127.0458,
-    "owner_name": "—",
-    "phone": "—",
+    "owner_name": "",
+    "phone": "",
     "license_url": "",
     "menu_photos": [],
     "place_photos": [],
