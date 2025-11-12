@@ -1,312 +1,233 @@
-<!-- =============================== APPLY MODAL (ЗАЯВКА) =============================== -->
-<style>
-  .m-apply{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,.6);backdrop-filter:blur(6px);z-index:1000}
-  .m-apply.show{display:grid}
-  .m-apply .box{width:min(680px,calc(100vw - 28px));background:#0b1221;color:#e5e7eb;border:1px solid #1f2937;border-radius:16px;padding:18px}
-  .m-apply h3{margin:0 0 10px;font-size:20px}
-  .m-apply .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .m-apply .field{display:flex;flex-direction:column;gap:6px;margin:8px 0}
-  .m-apply input,.m-apply textarea,.m-apply select{
-    width:100%;background:#0f172a;border:1px solid #1f2937;color:#e5e7eb;border-radius:10px;padding:10px 12px;outline:none
-  }
-  .m-apply textarea{min-height:110px;resize:vertical}
-  .m-apply .hint{color:#9ca3af;font-size:12px}
-  .btn {appearance:none;border:none;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer}
-  .btn-primary{background:#2563eb;color:#fff}
-  .btn-ghost{background:transparent;color:#e5e7eb;border:1px solid #334155}
-  .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
-</style>
-
-<div id="applyModal" class="m-apply" aria-hidden="true">
-  <div class="box">
-    <h3>Оставить заявку</h3>
-    <!-- отправка на почту -->
-    <form id="applyForm" action="https://formsubmit.co/ignatka220033@gmail.com" method="POST">
-      <!-- FormSubmit options -->
-      <input type="hidden" name="_subject" value="Заявка с SiyaEm Korea">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_next" value="https://kandrphkorea-cmd.github.io/siyaem-site2/#thanks">
-      <!-- откуда нажали -->
-      <input type="hidden" id="f-context" name="Контекст" value="Заявка с сайта">
-
-      <div class="row">
-        <div class="field">
-          <label>Имя*</label>
-          <input type="text" name="Имя" required placeholder="Как вас зовут">
-        </div>
-        <div class="field">
-          <label>Телефон / KakaoTalk*</label>
-          <input type="text" name="Телефон" required placeholder="+82-10-XXXX-XXXX / Kakao ID">
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="field">
-          <label>E-mail</label>
-          <input type="email" name="Email" placeholder="example@mail.com">
-        </div>
-        <div class="field">
-          <label>Категория</label>
-          <select name="Категория">
-            <option>Еда</option>
-            <option>Салоны / красота</option>
-            <option>Автомеханики</option>
-            <option>Обучение / языки</option>
-            <option>Развлечения</option>
-            <option>Другое</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Комментарий</label>
-        <textarea name="Комментарий" placeholder="Пару слов о запросе, удобное время для связи…"></textarea>
-      </div>
-
-      <div class="hint">Нажимая «Отправить», вы соглашаетесь с обработкой персональных данных.</div>
-
-      <div class="actions">
-        <button type="button" class="btn btn-ghost" id="applyClose">Отмена</button>
-        <button type="submit" class="btn btn-primary">Отправить</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- ============================== PRICING MODAL (ПРАЙС) ============================== -->
-<style>
-  .m-pricing{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,.66);backdrop-filter:blur(7px);z-index:999}
-  .m-pricing.show{display:grid}
-  .m-pricing .wrap{width:min(960px,calc(100vw - 28px));max-height:86vh;overflow:auto;background:#0b1221;border:1px solid #1f2937;border-radius:18px;padding:18px 18px 22px;color:#e5e7eb;position:relative}
-  .m-pricing .head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
-  .m-pricing .title{font-size:22px;font-weight:800;letter-spacing:.2px}
-  .m-pricing .plane{position:absolute;top:14px;right:18px;pointer-events:none;opacity:.9;transition:transform .15s ease-out}
-  .m-pricing .plane svg{width:34px;height:34px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
-  .m-pricing .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
-  .m-pricing .tab{background:#0f172a;border:1px solid #1f2937;border-radius:12px;padding:8px 12px;color:#cbd5e1;cursor:pointer}
-  .m-pricing .tab.active{border-color:#3556ff;background:#142056;color:#dbeafe}
-  .m-pricing .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-  .price-card{background:#0f172a;border:1px solid #1f2937;border-radius:14px;padding:14px}
-  .price-card h4{margin:2px 0 6px;font-size:16px}
-  .price{font-size:22px;font-weight:800;margin-bottom:8px}
-  .close-x{border:none;background:#0f172a;border:1px solid #1f2937;color:#e5e7eb;border-radius:10px;padding:6px 10px;cursor:pointer}
-</style>
-
-<div id="pricingModal" class="m-pricing" aria-hidden="true">
-  <div class="wrap" id="prWrap">
-    <div class="head">
-      <div class="title"><span id="prTyping">Прайс</span></div>
-      <button id="closePricing" class="close-x">Закрыть</button>
-      <div class="plane" id="plane">
-        <!-- бумажный самолётик -->
-        <svg viewBox="0 0 24 24" fill="#93c5fd" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2 11L22 2L13 22L11 13L2 11Z"/>
-        </svg>
-      </div>
-    </div>
-    <div class="tabs" id="prTabs"></div>
-    <div class="grid" id="prGrid"></div>
-  </div>
-</div>
-
+<!-- ================= SAFE NO-CONFLICT BLOCK (просто вставь перед </body>) ================= -->
 <script>
-/* ===================== 0) БЕЗОПАСНАЯ ИНИЦИАЛИЗАЦИЯ ЭЛЕМЕНТОВ ===================== */
-const pricingModal = document.getElementById('pricingModal');
-const prTyping     = document.getElementById('prTyping');
-const prTabs       = document.getElementById('prTabs');
-const prGrid       = document.getElementById('prGrid');
-const planeEl      = document.getElementById('plane');
+(function(){
+  'use strict';
+  // ==== helpers ====
+  const $=(s,r=document)=>r.querySelector(s);
+  const el=(t,a={})=>Object.assign(document.createElement(t),a);
 
-/* ===================== 1) ГЛОБАЛЬНЫЙ ТАЙПЕР ДЛЯ МОДАЛКИ ===================== */
-let prTimer = null; // единый таймер
-function stopPrTyping(){ if (prTimer){ clearTimeout(prTimer); prTimer = null; } }
+  /* ================= APPLY MODAL (создастся сам) ================= */
+  if(!$('#applyModal')){
+    const css = `
+      .m-apply{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,.6);backdrop-filter:blur(6px);z-index:1000}
+      .m-apply.show{display:grid}
+      .m-apply .box{width:min(680px,calc(100vw - 28px));background:#0b1221;color:#e5e7eb;border:1px solid #1f2937;border-radius:16px;padding:18px}
+      .m-apply h3{margin:0 0 10px;font-size:20px}
+      .m-apply .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+      .m-apply .field{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+      .m-apply input,.m-apply textarea,.m-apply select{
+        width:100%;background:#0f172a;border:1px solid #1f2937;color:#e5e7eb;border-radius:10px;padding:10px 12px;outline:none
+      }
+      .m-apply textarea{min-height:110px;resize:vertical}
+      .m-apply .hint{color:#9ca3af;font-size:12px}
+      .btn{appearance:none;border:none;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer}
+      .btn-primary{background:#2563eb;color:#fff}
+      .btn-ghost{background:transparent;color:#e5e7eb;border:1px solid #334155}
+      .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+    `;
+    const style = el('style',{textContent:css}); document.head.appendChild(style);
 
-function startPrTyping(words, el){
-  stopPrTyping();
-  let i = 0, j = 0, fwd = true;
-  const typeDelay = 90;   // печать
-  const eraseDelay = 45;  // стирание
-  const holdFull  = 1000; // пауза на полном слове
-  const holdEmpty = 450;  // пауза на пустом
+    const wrap = el('div',{id:'applyModal',className:'m-apply','aria-hidden':'true'});
+    wrap.innerHTML = `
+      <div class="box">
+        <h3>Оставить заявку</h3>
+        <form id="applyForm" action="https://formsubmit.co/ignatka220033@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="Заявка с SiyaEm Korea">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_next" value="https://kandrphkorea-cmd.github.io/siyaem-site2/#thanks">
+          <input type="hidden" id="f-context" name="Контекст" value="Заявка с сайта">
+          <div class="row">
+            <div class="field"><label>Имя*</label><input type="text" name="Имя" required placeholder="Как вас зовут"></div>
+            <div class="field"><label>Телефон / KakaoTalk*</label><input type="text" name="Телефон" required placeholder="+82-10-XXXX-XXXX / Kakao ID"></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>E-mail</label><input type="email" name="Email" placeholder="example@mail.com"></div>
+            <div class="field"><label>Категория</label>
+              <select name="Категория">
+                <option>Еда</option><option>Салоны / красота</option><option>Автомеханики</option>
+                <option>Обучение / языки</option><option>Развлечения</option><option>Другое</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label>Комментарий</label>
+            <textarea name="Комментарий" placeholder="Пару слов о запросе, удобное время для связи…"></textarea>
+          </div>
+          <div class="hint">Нажимая «Отправить», вы соглашаетесь с обработкой персональных данных.</div>
+          <div class="actions">
+            <button type="button" class="btn btn-ghost" id="applyClose">Отмена</button>
+            <button type="submit" class="btn btn-primary">Отправить</button>
+          </div>
+        </form>
+      </div>`;
+    document.body.appendChild(wrap);
+  }
 
-  (function tick(){
-    const w = words[i];
-    el.textContent = w.slice(0, j);
-    if (fwd){
-      if (j < w.length){ j++; prTimer = setTimeout(tick, typeDelay); }
-      else { fwd = false; prTimer = setTimeout(tick, holdFull); }
-    } else {
-      if (j > 0){ j--; prTimer = setTimeout(tick, eraseDelay); }
-      else { fwd = true; i = (i+1) % words.length; prTimer = setTimeout(tick, holdEmpty); }
-    }
-  })();
-}
+  /* ================= PRICING MODAL (создастся сам) ================= */
+  if(!$('#pricingModal')){
+    const css = `
+      .m-pricing{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,.66);backdrop-filter:blur(7px);z-index:999}
+      .m-pricing.show{display:grid}
+      .m-pricing .wrap{width:min(960px,calc(100vw - 28px));max-height:86vh;overflow:auto;background:#0b1221;border:1px solid #1f2937;border-radius:18px;padding:18px 18px 22px;color:#e5e7eb;position:relative}
+      .m-pricing .head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+      .m-pricing .title{font-size:22px;font-weight:800;letter-spacing:.2px}
+      .m-pricing .plane{position:absolute;top:14px;right:18px;pointer-events:none;opacity:.9;transition:transform .15s ease-out}
+      .m-pricing .plane svg{width:34px;height:34px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
+      .m-pricing .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
+      .m-pricing .tab{background:#0f172a;border:1px solid #1f2937;border-radius:12px;padding:8px 12px;color:#cbd5e1;cursor:pointer}
+      .m-pricing .tab.active{border-color:#3556ff;background:#142056;color:#dbeafe}
+      .m-pricing .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+      .price-card{background:#0f172a;border:1px solid #1f2937;border-radius:14px;padding:14px}
+      .price-card h4{margin:2px 0 6px;font-size:16px}
+      .price{font-size:22px;font-weight:800;margin-bottom:8px}
+      .close-x{border:none;background:#0f172a;border:1px solid #1f2937;color:#e5e7eb;border-radius:10px;padding:6px 10px;cursor:pointer}
+    `;
+    document.head.appendChild(el('style',{textContent:css}));
 
-/* ===================== 2) ДАННЫЕ ДЛЯ ПОДБОРОК/ПРАЙСОВ ===================== */
-const sections = {
-  food: {
-    title: "Еда",
-    tabs: ["Фастфуд","Лапша/супы","Мясо","Десерты"],
-    items: {
-      "Фастфуд": [
-        {name:"Mr. Cook — сет-меню", desc:"Комбо меню / скидка для подписчиков", price:"₩12 900"},
-        {name:"Кафе „Борщ“ бизнес-ланч", desc:"Суп+основное+напиток", price:"₩9 900"}
+    const modal = el('div',{id:'pricingModal',className:'m-pricing','aria-hidden':'true'});
+    modal.innerHTML = `
+      <div class="wrap" id="prWrap">
+        <div class="head">
+          <div class="title"><span id="prTyping">Прайс</span></div>
+          <button id="closePricing" class="close-x">Закрыть</button>
+          <div class="plane" id="plane"><svg viewBox="0 0 24 24" fill="#93c5fd"><path d="M2 11L22 2L13 22L11 13L2 11Z"/></svg></div>
+        </div>
+        <div class="tabs" id="prTabs"></div>
+        <div class="grid" id="prGrid"></div>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+
+  // ==== refs ====
+  const pricingModal = $('#pricingModal'), prTyping=$('#prTyping'), prTabs=$('#prTabs'), prGrid=$('#prGrid'), planeEl=$('#plane');
+
+  /* ================= плавный тайпер ================= */
+  let prTimer=null;
+  function stopPrTyping(){ if(prTimer){clearTimeout(prTimer); prTimer=null;} }
+  function startPrTyping(words, el){
+    stopPrTyping(); let i=0,j=0,fwd=true;
+    const typeDelay=90, eraseDelay=45, holdFull=1000, holdEmpty=450;
+    (function tick(){
+      const w=words[i]; el.textContent=w.slice(0,j);
+      if(fwd){ if(j<w.length){ j++; prTimer=setTimeout(tick,typeDelay);} else { fwd=false; prTimer=setTimeout(tick,holdFull);} }
+      else   { if(j>0){ j--; prTimer=setTimeout(tick,eraseDelay);} else { fwd=true; i=(i+1)%words.length; prTimer=setTimeout(tick,holdEmpty);} }
+    })();
+  }
+
+  /* ================= данные для секций/прайсов ================= */
+  const SECTIONS = {
+    food:{ title:"Еда", tabs:["Фастфуд","Лапша/супы","Мясо","Десерты"], items:{
+      "Фастфуд":[
+        {name:"Mr. Cook — сет-меню",desc:"Комбо меню / скидка для подписчиков",price:"₩12 900"},
+        {name:"Кафе «Борщ» бизнес-ланч",desc:"Суп+основное+напиток",price:"₩9 900"}
       ],
-      "Лапша/супы": [
-        {name:"Калькуксу", desc:"Домашняя лапша, 500г", price:"₩8 500"},
-        {name:"Кимчи-чиге", desc:"Острое томлёное кимчи", price:"₩8 900"}
+      "Лапша/супы":[
+        {name:"Калькуксу",desc:"Домашняя лапша, 500г",price:"₩8 500"},
+        {name:"Кимчи-чиге",desc:"Острое томлёное кимчи",price:"₩8 900"}
       ],
-      "Мясо": [
-        {name:"Самгёпсаль сет", desc:"2 персоны", price:"₩27 000"},
-        {name:"Гальби сет", desc:"2 персоны", price:"₩31 000"}
+      "Мясо":[
+        {name:"Самгёпсаль сет",desc:"2 персоны",price:"₩27 000"},
+        {name:"Гальби сет",desc:"2 персоны",price:"₩31 000"}
       ],
-      "Десерты": [
-        {name:"Хотток", desc:"мёд/орехи", price:"₩2 500"},
-        {name:"Бингсу", desc:"манго/матча", price:"₩6 900"}
+      "Десерты":[
+        {name:"Хотток",desc:"мёд/орехи",price:"₩2 500"},
+        {name:"Бингсу",desc:"манго/матча",price:"₩6 900"}
+      ]
+    }}
+  };
+  const PRICING = {
+    title:"Размещение на карте",
+    tabs:["Бесплатно","Плюс","Топ","Партнёр PRO"],
+    items:{
+      "Бесплатно":[
+        {name:"Карточка заведения",desc:"Название, адрес, метка на карте",price:"₩0"},
+        {name:"Приём отзывов",desc:"ручная модерация",price:"включено"}
+      ],
+      "Плюс":[
+        {name:"Фото-галерея",desc:"до 6 фото",price:"₩19 000 / мес"},
+        {name:"Кнопка «Забронировать»",desc:"переход в ваш мессенджер",price:"₩9 000 / мес"}
+      ],
+      "Топ":[
+        {name:"Поднятие в категории",desc:"закрепление 1-й строкой",price:"₩39 000 / мес"},
+        {name:"Рекламный баннер",desc:"1 слот на главной",price:"₩59 000 / мес"}
+      ],
+      "Партнёр PRO":[
+        {name:"Съёмка/оформление",desc:"фото + карточка под ключ",price:"₩199 000 единоразово"},
+        {name:"Ведение промо",desc:"таргет, сторис, лид-формы",price:"по договорённости"}
       ]
     }
-  }
-};
+  };
 
-// запасные планы (можешь отредактировать под продажи размещения)
-const defaultPlans = {
-  title: "Размещение на карте",
-  tabs: ["Бесплатно","Плюс","Топ","Партнёр PRO"],
-  items: {
-    "Бесплатно": [
-      {name:"Карточка заведения", desc:"Название, адрес, метка на карте", price:"₩0"},
-      {name:"Приём отзывов", desc:"ручная модерация", price:"включено"}
-    ],
-    "Плюс": [
-      {name:"Фото-галерея", desc:"до 6 фото", price:"₩19 000 / мес"},
-      {name:"Кнопка „Забронировать“", desc:"переход в ваш мессенджер", price:"₩9 000 / мес"}
-    ],
-    "Топ": [
-      {name:"Поднятие в категории", desc:"закрепление 1-й строкой", price:"₩39 000 / мес"},
-      {name:"Рекламный баннер", desc:"1 слот на главной", price:"₩59 000 / мес"}
-    ],
-    "Партнёр PRO": [
-      {name:"Съёмка/оформление", desc:"фото + карточка под ключ", price:"₩199 000 единоразово"},
-      {name:"Ведение промо", desc:"таргет, сторис, лид-формы", price:"по договорённости"}
-    ]
+  /* ================= рендер карточек в прайсе ================= */
+  function renderTab(model, tab){
+    prGrid.innerHTML='';
+    (model.items[tab]||[]).forEach(x=>{
+      const card = el('div',{className:'price-card'});
+      card.innerHTML = `
+        <h4>${x.name}</h4>
+        <div style="color:#9ca3af;margin-bottom:6px">${x.desc||''}</div>
+        <div class="price">${x.price||''}</div>
+        <button class="btn btn-primary" data-apply="${model.title} · ${x.name}">Оставить заявку</button>
+      `;
+      prGrid.appendChild(card);
+    });
   }
-};
 
-/* ===================== 3) РЕНДЕР ТАБОК/СЕТКИ ===================== */
-function renderTab(sec, tabName){
-  const list = (sec.items && sec.items[tabName]) ? sec.items[tabName] : [];
-  prGrid.innerHTML = '';
-  list.forEach(x=>{
-    const card = document.createElement('div');
-    card.className = 'price-card';
-    card.innerHTML = `
-      <h4>${x.name}</h4>
-      <div class="desc" style="color:#9ca3af;margin-bottom:6px">${x.desc||""}</div>
-      <div class="price">${x.price||""}</div>
-      <button class="btn btn-primary" data-apply="${sec.title} · ${x.name}">Оставить заявку</button>
-    `;
-    prGrid.appendChild(card);
+  /* ================= открыть секцию (Еда и т.п.) ================= */
+  function openSection(key){
+    const sec=SECTIONS[key]; if(!sec) return;
+    pricingModal.classList.add('show');
+    startPrTyping([sec.title,"лучшие подборки","рядом с вами"], prTyping);
+    prTabs.innerHTML='';
+    sec.tabs.forEach((t,i)=>{
+      const b = el('button',{className:'tab'+(i===0?' active':''),textContent:t});
+      b.onclick=()=>{ prTabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderTab(sec,t); };
+      prTabs.appendChild(b);
+    });
+    renderTab(sec,sec.tabs[0]);
+  }
+
+  /* ================= открыть прайс/тарифы ================= */
+  function openPricing(plans=PRICING){
+    pricingModal.classList.add('show');
+    startPrTyping([plans.title,"выгодные тарифы","поддержка 7/7"], prTyping);
+    prTabs.innerHTML='';
+    plans.tabs.forEach((t,i)=>{
+      const b = el('button',{className:'tab'+(i===0?' active':''),textContent:t});
+      b.onclick=()=>{ prTabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderTab(plans,t); };
+      prTabs.appendChild(b);
+    });
+    renderTab(plans,plans.tabs[0]);
+  }
+
+  /* ================= самолётик — следует за курсором ================= */
+  (function(){
+    const wrap=$('#prWrap'); const plane=$('#plane'); if(!wrap||!plane) return;
+    let tx=0,ty=0,x=0,y=0,raf;
+    wrap.addEventListener('mousemove',e=>{
+      const r=wrap.getBoundingClientRect(); tx=e.clientX-r.left-20; ty=e.clientY-r.top-20;
+      if(!raf) raf=requestAnimationFrame(loop);
+    });
+    function loop(){
+      x+=(tx-x)*0.18; y+=(ty-y)*0.18;
+      plane.style.transform=`translate(${x}px,${y}px) rotate(${(tx-x)*0.05}deg)`;
+      if(Math.abs(tx-x)>0.5||Math.abs(ty-y)>0.5) raf=requestAnimationFrame(loop); else raf=null;
+    }
+  })();
+
+  /* ================= закрытие и делегаты ================= */
+  $('#closePricing').addEventListener('click', ()=>{ stopPrTyping(); pricingModal.classList.remove('show'); });
+  pricingModal.addEventListener('click', e=>{ if(e.target.id==='pricingModal'){ stopPrTyping(); pricingModal.classList.remove('show'); } });
+
+  $('#applyClose').addEventListener('click', ()=> $('#applyModal').classList.remove('show'));
+  $('#applyModal').addEventListener('click', e=>{ if(e.target.id==='applyModal') $('#applyModal').classList.remove('show'); });
+
+  document.addEventListener('click', e=>{
+    const a=e.target.closest('[data-apply]');   if(a){ $('#f-context').value=a.getAttribute('data-apply')||a.textContent.trim(); $('#applyModal').classList.add('show'); }
+    const p=e.target.closest('[data-pricing]'); if(p){ openPricing(); }
+    const s=e.target.closest('[data-section]'); if(s){ openSection(s.getAttribute('data-section')); }
   });
-}
 
-/* ===================== 4) ОТКРЫТИЕ ПОДБОРОК (еда и т.д.) ===================== */
-function openSection(key){
-  const sec = sections[key]; if(!sec) return;
-  pricingModal.classList.add('show');
-  startPrTyping([sec.title, "лучшие подборки", "рядом с вами"], prTyping);
-
-  // табы
-  prTabs.innerHTML = '';
-  sec.tabs.forEach((t, idx)=>{
-    const el = document.createElement('button');
-    el.className = 'tab' + (idx===0?' active':'');
-    el.textContent = t;
-    el.onclick = ()=>{
-      prTabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-      el.classList.add('active');
-      renderTab(sec, t);
-    };
-    prTabs.appendChild(el);
-  });
-  renderTab(sec, sec.tabs[0]);
-}
-
-/* ===================== 5) ОТКРЫТИЕ ПРАЙСА ДЛЯ ПРОДАЖ ===================== */
-function openPricing(plans = defaultPlans){
-  pricingModal.classList.add('show');
-  startPrTyping([plans.title, "выгодные тарифы", "поддержка 7/7"], prTyping);
-
-  prTabs.innerHTML = '';
-  plans.tabs.forEach((t, idx)=>{
-    const el = document.createElement('button');
-    el.className = 'tab' + (idx===0?' active':'');
-    el.textContent = t;
-    el.onclick = ()=>{
-      prTabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-      el.classList.add('active');
-      renderTab(plans, t);
-    };
-    prTabs.appendChild(el);
-  });
-  renderTab(plans, plans.tabs[0]);
-}
-
-/* ===================== 6) САМОЛЁТИК — МЯГКО СЛЕДУЕТ ЗА КУРСОРОМ ===================== */
-(function planeFollow(){
-  if(!planeEl) return;
-  let targetX = 0, targetY = 0, x = 0, y = 0, raf;
-  const wrap = document.getElementById('prWrap');
-  function onMove(e){
-    const r = wrap.getBoundingClientRect();
-    targetX = e.clientX - r.left - 20;
-    targetY = e.clientY - r.top  - 20;
-    if(!raf) raf = requestAnimationFrame(loop);
-  }
-  function loop(){
-    x += (targetX - x) * 0.18;
-    y += (targetY - y) * 0.18;
-    planeEl.style.transform = `translate(${x}px, ${y}px) rotate(${(targetX-x)*0.05}deg)`;
-    if(Math.abs(targetX-x)>0.5 || Math.abs(targetY-y)>0.5) raf = requestAnimationFrame(loop);
-    else raf = null;
-  }
-  wrap.addEventListener('mousemove', onMove);
 })();
-
-/* ===================== 7) ЗАКРЫТИЕ МОДАЛКИ ===================== */
-document.getElementById('closePricing').onclick = ()=>{
-  stopPrTyping();
-  pricingModal.classList.remove('show');
-};
-pricingModal.addEventListener('click', (e)=>{
-  if(e.target.id === 'pricingModal'){ stopPrTyping(); pricingModal.classList.remove('show'); }
-});
-
-/* ===================== 8) ЗАЯВКА: ОТКРЫТЬ/ЗАКРЫТЬ И ДЕЛЕГАТОР ===================== */
-function openApply(context){
-  const m = document.getElementById('applyModal');
-  document.getElementById('f-context').value = context || 'Заявка с сайта';
-  m.classList.add('show');
-}
-function closeApply(){ document.getElementById('applyModal').classList.remove('show'); }
-document.getElementById('applyClose').addEventListener('click', closeApply);
-document.getElementById('applyModal').addEventListener('click', (e)=>{ if(e.target.id==='applyModal') closeApply(); });
-
-// делегатор: любые кнопки
-document.addEventListener('click', (e)=>{
-  const btnApply = e.target.closest('[data-apply]');
-  if(btnApply){ openApply(btnApply.getAttribute('data-apply') || btnApply.textContent.trim()); }
-
-  const btnPricing = e.target.closest('[data-pricing]');
-  if(btnPricing){ openPricing(); }
-
-  // примеры секций: data-section="food"
-  const secBtn = e.target.closest('[data-section]');
-  if(secBtn){ openSection(secBtn.getAttribute('data-section')); }
-});
-
-/* ===================== 9) ПОДСКАЗКА: КАК ПОВЕСИТЬ КНОПКИ НА СТРАНИЦЕ ===================== */
-// Пример кнопок (добавь где нужно в вёрстке):
-// <button class="btn btn-primary" data-section="food">Еда</button>
-// <button class="btn btn-ghost"   data-pricing>Прайс/Реклама</button>
-// <button class="btn btn-primary" data-apply="Заявка: Мистер Кук">Оставить заявку</button>
 </script>
+<!-- ================= END SAFE NO-CONFLICT BLOCK ================= -->
+
