@@ -1,233 +1,405 @@
-<!-- ================= SAFE NO-CONFLICT BLOCK (просто вставь перед </body>) ================= -->
-<script>
-(function(){
-  'use strict';
-  // ==== helpers ====
-  const $=(s,r=document)=>r.querySelector(s);
-  const el=(t,a={})=>Object.assign(document.createElement(t),a);
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SiyaEm — русскоязычные места в Корее</title>
+<meta name="description" content="Каталог и карта проверенных русскоязычных мест в Корее: еда, салоны, авто, образование. Партнёрство и продвижение." />
 
-  /* ================= APPLY MODAL (создастся сам) ================= */
-  if(!$('#applyModal')){
-    const css = `
-      .m-apply{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,.6);backdrop-filter:blur(6px);z-index:1000}
-      .m-apply.show{display:grid}
-      .m-apply .box{width:min(680px,calc(100vw - 28px));background:#0b1221;color:#e5e7eb;border:1px solid #1f2937;border-radius:16px;padding:18px}
-      .m-apply h3{margin:0 0 10px;font-size:20px}
-      .m-apply .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-      .m-apply .field{display:flex;flex-direction:column;gap:6px;margin:8px 0}
-      .m-apply input,.m-apply textarea,.m-apply select{
-        width:100%;background:#0f172a;border:1px solid #1f2937;color:#e5e7eb;border-radius:10px;padding:10px 12px;outline:none
-      }
-      .m-apply textarea{min-height:110px;resize:vertical}
-      .m-apply .hint{color:#9ca3af;font-size:12px}
-      .btn{appearance:none;border:none;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer}
-      .btn-primary{background:#2563eb;color:#fff}
-      .btn-ghost{background:transparent;color:#e5e7eb;border:1px solid #334155}
-      .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
-    `;
-    const style = el('style',{textContent:css}); document.head.appendChild(style);
+<style>
+/* ---------- THEME (тот же стиль) ---------- */
+:root{
+  --bg:#0b1020; --bg-2:#0e1228; --text:#ecf0ff; --muted:#aab3d3;
+  --card:rgba(255,255,255,.06); --line:rgba(255,255,255,.12);
+  --chip:#1f2a60; --acc:#6aa3ff; --acc-2:#ffd166;
+  --good:#10b981; --warn:#f59e0b; --bad:#ef4444;
+  --radius:18px; --shadow:0 8px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05); --blur:16px;
+}
+:root.light{
+  --bg:#f6f7fb; --bg-2:#ffffff; --text:#0f1222; --muted:#4a5476;
+  --card:rgba(255,255,255,.85); --line:rgba(0,0,0,.08);
+  --chip:#eef2ff; --acc:#2557ff; --acc-2:#ffb703;
+  --shadow:0 8px 24px rgba(10,14,34,.08); --blur:8px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; color:var(--text);
+  background: radial-gradient(1200px 800px at 20% -10%, #1a2b6f55 0%, transparent 60%),
+              radial-gradient(900px 700px at 120% 10%, #3f126955 0%, transparent 60%),
+              linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 60%, var(--bg) 100%);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  letter-spacing:.2px;
+}
+a{color:var(--acc);text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:22px}
+.glass{background:var(--card);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.row{display:grid;grid-template-columns:1fr;gap:18px}
+@media (min-width:960px){.row{grid-template-columns:repeat(12,1fr)}}
 
-    const wrap = el('div',{id:'applyModal',className:'m-apply','aria-hidden':'true'});
-    wrap.innerHTML = `
-      <div class="box">
-        <h3>Оставить заявку</h3>
-        <form id="applyForm" action="https://formsubmit.co/ignatka220033@gmail.com" method="POST">
-          <input type="hidden" name="_subject" value="Заявка с SiyaEm Korea">
-          <input type="hidden" name="_captcha" value="false">
-          <input type="hidden" name="_next" value="https://kandrphkorea-cmd.github.io/siyaem-site2/#thanks">
-          <input type="hidden" id="f-context" name="Контекст" value="Заявка с сайта">
-          <div class="row">
-            <div class="field"><label>Имя*</label><input type="text" name="Имя" required placeholder="Как вас зовут"></div>
-            <div class="field"><label>Телефон / KakaoTalk*</label><input type="text" name="Телефон" required placeholder="+82-10-XXXX-XXXX / Kakao ID"></div>
+/* HEADER */
+.header{position:sticky;top:0;z-index:50;background:linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,0));backdrop-filter:saturate(1.2) blur(10px)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800}
+.badge-dot{width:10px;height:10px;border-radius:50%;background:var(--acc-2);box-shadow:0 0 12px var(--acc-2)}
+.theme-toggle{appearance:none;border:1px solid var(--line);background:var(--chip);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:700}
+.theme-toggle:hover{filter:brightness(1.05)}
+
+/* MASCOTS */
+.mascots{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.face{width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 30% 25%, #fff 0%, #e9ecff 35%, #c7cff9 70%, #aab3ee 100%);border:2px solid #0003;display:grid;place-items:center;box-shadow:0 4px 18px rgba(0,0,0,.18)}
+.face svg{width:28px;height:28px}
+
+/* HERO */
+.hero{padding:28px;margin-top:10px}
+.h1{font-size:clamp(32px,6vw,56px);line-height:1.05;font-weight:900;margin:8px 0 10px}
+.h1 strong{background:linear-gradient(90deg,#8ab4ff,#cba6ff,#ffcd7a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hint{color:var(--muted)}
+.typing{display:inline-block;border-right:2px solid var(--acc);padding-right:4px;animation:blink 1s step-end infinite}
+@keyframes blink{50%{border-color:transparent}}
+
+/* FILTERS + CTA */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.chip{background:var(--chip);border:1px solid var(--line);padding:10px 12px;border-radius:999px;color:var(--text);cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-weight:700}
+.primary{background:linear-gradient(90deg,#4b7bff,#8ab4ff);color:white;border:none}
+.primary:hover{filter:brightness(1.05)} .ghost{background:transparent}
+
+/* ADS */
+.ads{margin-top:18px}
+.ad{aspect-ratio:4/3;border-radius:20px;overflow:hidden;position:relative;background:#0d142e;border:1px dashed #6aa3ff66;box-shadow:var(--shadow)}
+.ad::before{content:"Рекламный слот";position:absolute;top:10px;left:12px;font-size:12px;color:#fff8;background:#0006;padding:4px 8px;border-radius:999px}
+.ad img{width:100%;height:100%;object-fit:cover;filter:contrast(1.05) saturate(1.05)}
+.ad .frame{position:absolute;inset:0;pointer-events:none;border-radius:20px;border:2px solid transparent;background:linear-gradient(#0000,#0000) padding-box,linear-gradient(135deg,#6aa3ff66,#ffd16666) border-box}
+
+/* CATALOG */
+.catalog{padding:20px}
+.cards{display:grid;grid-template-columns:1fr;gap:14px}
+@media (min-width:840px){.cards{grid-template-columns:repeat(2,1fr)}}
+.card{display:grid;grid-template-columns:78px 1fr;gap:14px;padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--card);box-shadow:var(--shadow)}
+.card .logo{width:78px;height:78px;border-radius:16px;background:#0d142e center/cover no-repeat;display:grid;place-items:center;border:1px solid var(--line)}
+.card .meta small{color:var(--muted)}
+.stars{display:flex;gap:4px;align-items:center;margin:6px 0}
+.star{width:18px;height:18px;display:inline-grid;place-items:center;color:#ffcc66;cursor:pointer;filter:drop-shadow(0 2px 4px #0003)}
+.card .actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--chip);color:var(--text);cursor:pointer;font-weight:700}
+.btn.map{background:linear-gradient(90deg,#3a78ff,#6aa3ff);color:#fff;border:none}
+
+/* BLOCKS */
+.blocks{padding:20px;display:grid;gap:14px;grid-template-columns:1fr}
+@media (min-width:960px){.blocks{grid-template-columns:2fr 1fr}}
+.block{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+.block h3{margin:0 0 8px}
+.note{border-left:4px solid var(--acc);padding-left:12px}
+.fact{border-left:4px solid var(--acc-2);padding-left:12px}
+.recipe{border-left:4px solid var(--good);padding-left:12px}
+
+/* FOR WHO */
+.forwho{padding:20px;display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
+@media (min-width:960px){.forwho{grid-template-columns:repeat(4,1fr)}}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
+.tile small{color:var(--muted)}
+
+/* MAP MODAL */
+.modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.5);z-index:60}
+.modal.show{display:grid}
+.modal .box{width:min(900px,calc(100vw - 24px));background:var(--bg-2);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.map-header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
+.map-body{height:480px}
+.close{cursor:pointer;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--chip);font-weight:700}
+
+/* PRICING MODAL (как у Notion Pricing) */
+.pricing .box{width:min(1080px,calc(100vw - 24px))}
+.pr-head{padding:18px 18px 8px;border-bottom:1px solid var(--line)}
+.pr-title{font-size:clamp(28px,4.5vw,44px);font-weight:900}
+.pr-title .typing{border-right:2px solid var(--acc)}
+.pr-tabs{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px}
+.tab{padding:10px 12px;border-radius:999px;border:1px solid var(--line);background:var(--chip);cursor:pointer;font-weight:700}
+.tab.active{background:linear-gradient(90deg,#4b7bff,#8ab4ff);color:#fff;border:none}
+.pr-grid{display:grid;gap:12px;padding:16px}
+@media (min-width:960px){.pr-grid{grid-template-columns:repeat(3,1fr)}}
+.pr-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+.pr-card h4{margin:0}
+.pr-card ul{margin:10px 0 0;padding-left:18px}
+.pr-cta{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="wrap nav">
+    <div class="brand"><span class="badge-dot"></span><span>SiyaEm Korea</span></div>
+    <div class="mascots">
+      <div class="face"><svg viewBox="0 0 24 24" fill="none" stroke="#1c2756" stroke-width="2"><circle cx="8" cy="9" r="1.8"/><circle cx="16" cy="9" r="1.8"/><path d="M6 16c2 2 10 2 12-2"/></svg></div>
+      <div class="face"><svg viewBox="0 0 24 24" fill="none" stroke="#1c2756" stroke-width="2"><path d="M4 9h16"/><path d="M7 9c0-3 10-3 10 0"/><circle cx="9" cy="13" r="1.5"/><circle cx="15" cy="13" r="1.5"/></svg></div>
+      <div class="face"><svg viewBox="0 0 24 24" fill="none" stroke="#1c2756" stroke-width="2"><rect x="5" y="8" width="14" height="10" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M9 8l1.5-2h3L15 8"/></svg></div>
+    </div>
+    <button class="theme-toggle" id="themeToggle">Светлая/Тёмная</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="wrap">
+  <section class="glass hero">
+    <div class="h1">Один сервис. <strong id="typing" class="typing"></strong></div>
+    <div class="hint">Показываем только проверенные русскоязычные места с лицензией. Помогаем партнёрам зарабатывать, гостям — быстро находить своё.</div>
+
+    <div class="filters">
+      <button class="chip open-pricing" data-section="food">🍜 Еда</button>
+      <button class="chip open-pricing" data-section="salon">💅 Салоны</button>
+      <button class="chip open-pricing" data-section="auto">🚗 Авто</button>
+      <button class="chip open-pricing" data-section="edu">🎓 Образование</button>
+      <button class="chip ghost" id="openMap">Показать на карте</button>
+      <button class="chip primary" id="bePartner">Стать партнёром</button>
+    </div>
+
+    <div class="ads row">
+      <div class="ad glass" style="grid-column: span 4">
+        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1200&auto=format&fit=crop" alt="">
+        <div class="frame"></div>
+      </div>
+      <div class="ad glass" style="grid-column: span 4">
+        <img src="https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?q=80&w=1200&auto=format&fit=crop" alt="">
+        <div class="frame"></div>
+      </div>
+      <div class="ad glass" style="grid-column: span 4">
+        <img src="https://images.unsplash.com/photo-1543353071-087092ec393e?q=80&w=1200&auto=format&fit=crop" alt="">
+        <div class="frame"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- КАТАЛОГ -->
+<div class="wrap">
+  <section class="glass catalog">
+    <h2 style="margin:0 0 8px">Партнёры (модерировано)</h2>
+    <div class="cards" id="cards">
+      <article class="card" data-cat="Еда,Лапша,Супы">
+        <div class="logo" style="background-image:url('https://i.imgur.com/R0b0S6X.png')"></div>
+        <div class="meta">
+          <div style="font-weight:800">Мистер Кук (Mr. Cook)</div>
+          <small>Чхунчхоннам-до • Асан-си, Донпо-мён • Еда — Корейская кухня, Столовая</small>
+          <div class="stars" data-id="mr_cook">
+            <span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span>
+            <small class="hint" style="margin-left:6px">(оценок: <b id="r-mr_cook">1</b>)</small>
           </div>
-          <div class="row">
-            <div class="field"><label>E-mail</label><input type="email" name="Email" placeholder="example@mail.com"></div>
-            <div class="field"><label>Категория</label>
-              <select name="Категория">
-                <option>Еда</option><option>Салоны / красота</option><option>Автомеханики</option>
-                <option>Обучение / языки</option><option>Развлечения</option><option>Другое</option>
-              </select>
-            </div>
-          </div>
-          <div class="field"><label>Комментарий</label>
-            <textarea name="Комментарий" placeholder="Пару слов о запросе, удобное время для связи…"></textarea>
-          </div>
-          <div class="hint">Нажимая «Отправить», вы соглашаетесь с обработкой персональных данных.</div>
           <div class="actions">
-            <button type="button" class="btn btn-ghost" id="applyClose">Отмена</button>
-            <button type="submit" class="btn btn-primary">Отправить</button>
+            <button class="btn" data-review="mr_cook">Оставить отзыв</button>
+            <button class="btn map" data-map="36.9305,127.0458">Показать на карте</button>
           </div>
-        </form>
-      </div>`;
-    document.body.appendChild(wrap);
-  }
-
-  /* ================= PRICING MODAL (создастся сам) ================= */
-  if(!$('#pricingModal')){
-    const css = `
-      .m-pricing{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,.66);backdrop-filter:blur(7px);z-index:999}
-      .m-pricing.show{display:grid}
-      .m-pricing .wrap{width:min(960px,calc(100vw - 28px));max-height:86vh;overflow:auto;background:#0b1221;border:1px solid #1f2937;border-radius:18px;padding:18px 18px 22px;color:#e5e7eb;position:relative}
-      .m-pricing .head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
-      .m-pricing .title{font-size:22px;font-weight:800;letter-spacing:.2px}
-      .m-pricing .plane{position:absolute;top:14px;right:18px;pointer-events:none;opacity:.9;transition:transform .15s ease-out}
-      .m-pricing .plane svg{width:34px;height:34px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
-      .m-pricing .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
-      .m-pricing .tab{background:#0f172a;border:1px solid #1f2937;border-radius:12px;padding:8px 12px;color:#cbd5e1;cursor:pointer}
-      .m-pricing .tab.active{border-color:#3556ff;background:#142056;color:#dbeafe}
-      .m-pricing .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-      .price-card{background:#0f172a;border:1px solid #1f2937;border-radius:14px;padding:14px}
-      .price-card h4{margin:2px 0 6px;font-size:16px}
-      .price{font-size:22px;font-weight:800;margin-bottom:8px}
-      .close-x{border:none;background:#0f172a;border:1px solid #1f2937;color:#e5e7eb;border-radius:10px;padding:6px 10px;cursor:pointer}
-    `;
-    document.head.appendChild(el('style',{textContent:css}));
-
-    const modal = el('div',{id:'pricingModal',className:'m-pricing','aria-hidden':'true'});
-    modal.innerHTML = `
-      <div class="wrap" id="prWrap">
-        <div class="head">
-          <div class="title"><span id="prTyping">Прайс</span></div>
-          <button id="closePricing" class="close-x">Закрыть</button>
-          <div class="plane" id="plane"><svg viewBox="0 0 24 24" fill="#93c5fd"><path d="M2 11L22 2L13 22L11 13L2 11Z"/></svg></div>
         </div>
-        <div class="tabs" id="prTabs"></div>
-        <div class="grid" id="prGrid"></div>
-      </div>`;
-    document.body.appendChild(modal);
-  }
+      </article>
+    </div>
+  </section>
+</div>
 
-  // ==== refs ====
-  const pricingModal = $('#pricingModal'), prTyping=$('#prTyping'), prTabs=$('#prTabs'), prGrid=$('#prGrid'), planeEl=$('#plane');
+<!-- БЛОКИ -->
+<div class="wrap">
+  <section class="blocks">
+    <div class="block note"><h3>Как мы проверяем</h3>Запрашиваем фото лицензии, сверяем адрес с картой и делаем тестовый визит. Только после этого точка появляется в каталоге и на карте.</div>
+    <div class="block fact"><h3>Факт дня</h3>Дольше всего курица летела ~13 сек (1954 г.). Микрофакты в промо повышают удержание.</div>
+    <div class="block recipe"><h3>Рецепт мини-контента</h3>1) Фото 2) История (2–3 строки) 3) Цена-якорь 4) Призыв «забронировать стол».</div>
+  </section>
+</div>
 
-  /* ================= плавный тайпер ================= */
-  let prTimer=null;
-  function stopPrTyping(){ if(prTimer){clearTimeout(prTimer); prTimer=null;} }
-  function startPrTyping(words, el){
-    stopPrTyping(); let i=0,j=0,fwd=true;
-    const typeDelay=90, eraseDelay=45, holdFull=1000, holdEmpty=450;
-    (function tick(){
-      const w=words[i]; el.textContent=w.slice(0,j);
-      if(fwd){ if(j<w.length){ j++; prTimer=setTimeout(tick,typeDelay);} else { fwd=false; prTimer=setTimeout(tick,holdFull);} }
-      else   { if(j>0){ j--; prTimer=setTimeout(tick,eraseDelay);} else { fwd=true; i=(i+1)%words.length; prTimer=setTimeout(tick,holdEmpty);} }
-    })();
-  }
+<!-- ДЛЯ КОГО -->
+<div class="wrap">
+  <section class="glass">
+    <h2 style="margin:16px 16px 0">Для кого это</h2>
+    <div class="forwho">
+      <div class="tile">🍜 Кафе и рестораны <br><small>фото-карточки, купоны, геометки</small></div>
+      <div class="tile">💅 Салоны красоты <br><small>портфолио, запись, прайс</small></div>
+      <div class="tile">🚗 Автомеханики <br><small>виды работ, срочные заявки</small></div>
+      <div class="tile">🎓 Школы, кружки <br><small>расписание, наборы, отзывы</small></div>
+    </div>
+  </section>
+</div>
 
-  /* ================= данные для секций/прайсов ================= */
-  const SECTIONS = {
-    food:{ title:"Еда", tabs:["Фастфуд","Лапша/супы","Мясо","Десерты"], items:{
-      "Фастфуд":[
-        {name:"Mr. Cook — сет-меню",desc:"Комбо меню / скидка для подписчиков",price:"₩12 900"},
-        {name:"Кафе «Борщ» бизнес-ланч",desc:"Суп+основное+напиток",price:"₩9 900"}
-      ],
-      "Лапша/супы":[
-        {name:"Калькуксу",desc:"Домашняя лапша, 500г",price:"₩8 500"},
-        {name:"Кимчи-чиге",desc:"Острое томлёное кимчи",price:"₩8 900"}
-      ],
-      "Мясо":[
-        {name:"Самгёпсаль сет",desc:"2 персоны",price:"₩27 000"},
-        {name:"Гальби сет",desc:"2 персоны",price:"₩31 000"}
-      ],
-      "Десерты":[
-        {name:"Хотток",desc:"мёд/орехи",price:"₩2 500"},
-        {name:"Бингсу",desc:"манго/матча",price:"₩6 900"}
-      ]
-    }}
-  };
-  const PRICING = {
-    title:"Размещение на карте",
-    tabs:["Бесплатно","Плюс","Топ","Партнёр PRO"],
+<!-- MAP MODAL -->
+<div class="modal" id="mapModal">
+  <div class="box">
+    <div class="map-header"><strong>Карта</strong><button class="close" id="closeMap">Закрыть</button></div>
+    <div id="map" class="map-body"></div>
+  </div>
+</div>
+
+<!-- PRICING MODAL (категории как у Notion Pricing) -->
+<div class="modal pricing" id="pricingModal">
+  <div class="box">
+    <div class="pr-head">
+      <div class="pr-title">Подборки для: <strong id="prTyping" class="typing"></strong></div>
+      <div class="pr-tabs" id="prTabs"><!-- табы подкатегорий --></div>
+    </div>
+    <div class="pr-grid" id="prGrid"><!-- карточки подкатегории --></div>
+    <div style="display:flex;justify-content:flex-end;padding:0 16px 16px">
+      <button class="close" id="closePricing">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<footer>© 2025 SiyaEm Korea</footer>
+
+<script>
+/* THEME */
+document.getElementById('themeToggle').onclick=()=>document.documentElement.classList.toggle('light');
+
+/* HERO typing */
+const typingEl=document.getElementById('typing');
+const phrases=["большие возможности.","настоящие партнёры.","места, которым доверяешь."];
+let pi=0,ci=0,fwd=true;
+(function loop(){const p=phrases[pi];typingEl.textContent=p.slice(0,ci);ci+=fwd?1:-1;if(ci===p.length+12)fwd=false;if(ci===0){fwd=true;pi=(pi+1)%phrases.length}setTimeout(loop,fwd?70:40)})();
+
+/* RATINGS */
+const ratings={};
+document.querySelectorAll('.stars').forEach(g=>{
+  const id=g.dataset.id; ratings[id]=ratings[id]||4;
+  g.querySelectorAll('.star').forEach(s=>s.onclick=()=>{const v=+s.dataset.v;ratings[id]=(ratings[id]+v)/2;document.getElementById('r-'+id).textContent=+document.getElementById('r-'+id).textContent+1;paint(g,ratings[id])});
+  paint(g,ratings[id]);
+});
+function paint(g,val){g.querySelectorAll('.star').forEach(st=>st.style.opacity=(+st.dataset.v<=Math.round(val))?'1':'.35')}
+
+/* MAP */
+const mapModal=document.getElementById('mapModal');
+document.getElementById('openMap').onclick=()=>openMapAt(36.9305,127.0458);
+document.querySelectorAll('[data-map]').forEach(b=>b.onclick=()=>{const [lat,lng]=b.dataset.map.split(',').map(Number);openMapAt(lat,lng)});
+document.getElementById('closeMap').onclick=()=>mapModal.classList.remove('show');
+let _map,_marker,_mapsLoaded=false;
+function openMapAt(lat,lng){mapModal.classList.add('show');ensureMap(lat,lng)}
+function ensureMap(lat,lng){
+  if(!_mapsLoaded){
+    const s=document.createElement('script');
+    /* ВСТАВЬ СВОЙ КЛЮЧ ↓↓↓ */
+    s.src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE&callback=__initMap";
+    s.async=true; window.__initMap=()=>{_mapsLoaded=true;initMap(lat,lng)}; document.body.appendChild(s);
+  } else initMap(lat,lng);
+}
+function initMap(lat,lng){
+  const c={lat,lng};
+  if(!_map){_map=new google.maps.Map(document.getElementById('map'),{center:c,zoom:15,styles:[{featureType:"poi",stylers:[{visibility:"off"}]}]});_marker=new google.maps.Marker({position:c,map:_map})}
+  else{_map.setCenter(c);_marker.setPosition(c)}
+}
+
+/* CTA partner */
+document.getElementById('bePartner').onclick=()=>alert("Подключим Google Forms/Sheets — анкета → модерация → автоматическое появление на карте.");
+
+/* --------- PRICING (категории как у Notion Pricing) --------- */
+const pricingModal=document.getElementById('pricingModal');
+const closePricing=document.getElementById('closePricing');
+closePricing.onclick=()=>pricingModal.classList.remove('show');
+
+/* структура секций + подкатегорий */
+const sections={
+  food:{
+    title:"Еда",
+    tabs:["Фастфуд","Лапша","Супы","Мясо","Десерты"],
     items:{
-      "Бесплатно":[
-        {name:"Карточка заведения",desc:"Название, адрес, метка на карте",price:"₩0"},
-        {name:"Приём отзывов",desc:"ручная модерация",price:"включено"}
-      ],
-      "Плюс":[
-        {name:"Фото-галерея",desc:"до 6 фото",price:"₩19 000 / мес"},
-        {name:"Кнопка «Забронировать»",desc:"переход в ваш мессенджер",price:"₩9 000 / мес"}
-      ],
-      "Топ":[
-        {name:"Поднятие в категории",desc:"закрепление 1-й строкой",price:"₩39 000 / мес"},
-        {name:"Рекламный баннер",desc:"1 слот на главной",price:"₩59 000 / мес"}
-      ],
-      "Партнёр PRO":[
-        {name:"Съёмка/оформление",desc:"фото + карточка под ключ",price:"₩199 000 единоразово"},
-        {name:"Ведение промо",desc:"таргет, сторис, лид-формы",price:"по договорённости"}
-      ]
+      "Фастфуд":[{title:"Бургеры/Картошка",points:["Русское меню","Доставка","Купоны"],tags:["Еда","Фастфуд"],cat:"Еда,Фастфуд"},
+                 {title:"Курица/Пицца",points:["Семейные сеты","Остро/не остро","Поздно до 02:00"],tags:["Еда","Фастфуд"],cat:"Еда,Фастфуд"},
+                 {title:"Кофе/Сэндвич",points:["Утренние наборы","Выгодно студентам"],tags:["Еда","Кафе"],cat:"Еда,Фастфуд"}],
+      "Лапша":[{title:"Кальгуксу",points:["Домашняя лапша","Большие порции"],tags:["Еда","Лапша"],cat:"Еда,Лапша"},
+               {title:"Рамен",points:["Авторские бульоны","Острый уровень 1–5"],tags:["Еда","Лапша"],cat:"Еда,Лапша"},
+               {title:"Фо/Удон",points:["Вьет/Японские","Быстро готовим"],tags:["Еда","Лапша"],cat:"Еда,Лапша"}],
+      "Супы":[{title:"Кимчи-чиге",points:["Очень горячо","Сытно"],tags:["Еда","Супы"],cat:"Еда,Супы"},
+              {title:"Сундубу",points:["Мягкий тофу","Нежно"],tags:["Еда","Супы"],cat:"Еда,Супы"},
+              {title:"Борщ/Щи",points:["Домашний вкус"],tags:["Еда","Супы"],cat:"Еда,Супы"}],
+      "Мясо":[{title:"Самгёпсаль",points:["На углях","Салаты включены"],tags:["Еда","Мясо"],cat:"Еда,Мясо"},
+              {title:"Говядина",points:["Маринованная/чистая"],tags:["Еда","Мясо"],cat:"Еда,Мясо"},
+              {title:"Шашлык",points:["Русская классика"],tags:["Еда","Мясо"],cat:"Еда,Мясо"}],
+      "Десерты":[{title:"Торты/Эклеры",points:["На заказ","Персональный дизайн"],tags:["Еда","Десерты"],cat:"Еда,Десерты"},
+                 {title:"Пирожные",points:["Каждый день свежие"],tags:["Еда","Десерты"],cat:"Еда,Десерты"},
+                 {title:"Мороженое",points:["Домашнее","Необычные вкусы"],tags:["Еда","Десерты"],cat:"Еда,Десерты"}]
     }
-  };
-
-  /* ================= рендер карточек в прайсе ================= */
-  function renderTab(model, tab){
-    prGrid.innerHTML='';
-    (model.items[tab]||[]).forEach(x=>{
-      const card = el('div',{className:'price-card'});
-      card.innerHTML = `
-        <h4>${x.name}</h4>
-        <div style="color:#9ca3af;margin-bottom:6px">${x.desc||''}</div>
-        <div class="price">${x.price||''}</div>
-        <button class="btn btn-primary" data-apply="${model.title} · ${x.name}">Оставить заявку</button>
-      `;
-      prGrid.appendChild(card);
-    });
-  }
-
-  /* ================= открыть секцию (Еда и т.п.) ================= */
-  function openSection(key){
-    const sec=SECTIONS[key]; if(!sec) return;
-    pricingModal.classList.add('show');
-    startPrTyping([sec.title,"лучшие подборки","рядом с вами"], prTyping);
-    prTabs.innerHTML='';
-    sec.tabs.forEach((t,i)=>{
-      const b = el('button',{className:'tab'+(i===0?' active':''),textContent:t});
-      b.onclick=()=>{ prTabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderTab(sec,t); };
-      prTabs.appendChild(b);
-    });
-    renderTab(sec,sec.tabs[0]);
-  }
-
-  /* ================= открыть прайс/тарифы ================= */
-  function openPricing(plans=PRICING){
-    pricingModal.classList.add('show');
-    startPrTyping([plans.title,"выгодные тарифы","поддержка 7/7"], prTyping);
-    prTabs.innerHTML='';
-    plans.tabs.forEach((t,i)=>{
-      const b = el('button',{className:'tab'+(i===0?' active':''),textContent:t});
-      b.onclick=()=>{ prTabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderTab(plans,t); };
-      prTabs.appendChild(b);
-    });
-    renderTab(plans,plans.tabs[0]);
-  }
-
-  /* ================= самолётик — следует за курсором ================= */
-  (function(){
-    const wrap=$('#prWrap'); const plane=$('#plane'); if(!wrap||!plane) return;
-    let tx=0,ty=0,x=0,y=0,raf;
-    wrap.addEventListener('mousemove',e=>{
-      const r=wrap.getBoundingClientRect(); tx=e.clientX-r.left-20; ty=e.clientY-r.top-20;
-      if(!raf) raf=requestAnimationFrame(loop);
-    });
-    function loop(){
-      x+=(tx-x)*0.18; y+=(ty-y)*0.18;
-      plane.style.transform=`translate(${x}px,${y}px) rotate(${(tx-x)*0.05}deg)`;
-      if(Math.abs(tx-x)>0.5||Math.abs(ty-y)>0.5) raf=requestAnimationFrame(loop); else raf=null;
+  },
+  salon:{
+    title:"Салоны",
+    tabs:["Маникюр","Парикмахер","Косметология"],
+    items:{
+      "Маникюр":[{title:"Маникюр + покрытие",points:["Палитра 200+","Стерильность"],tags:["Салоны"],cat:"Салоны"},
+                 {title:"Дизайн",points:["Аэрография","Стразы"],tags:["Салоны"],cat:"Салоны"}],
+      "Парикмахер":[{title:"Стрижка/Окрашивание",points:["Колористика","Keratin"],tags:["Салоны"],cat:"Салоны"}],
+      "Косметология":[{title:"Чистка/Массаж",points:["Аппаратная/мануальная"],tags:["Салоны"],cat:"Салоны"}]
     }
-  })();
+  },
+  auto:{
+    title:"Авто",
+    tabs:["СТО","Детейлинг","Шины"],
+    items:{
+      "СТО":[{title:"Диагностика",points:["Сканер/электрика"],tags:["Авто"],cat:"Авто"}],
+      "Детейлинг":[{title:"Полировка/Защита",points:["Керамика","Матовые плёнки"],tags:["Авто"],cat:"Авто"}],
+      "Шины":[{title:"Шиномонтаж",points:["Хранение сезонное"],tags:["Авто"],cat:"Авто"}]
+    }
+  },
+  edu:{
+    title:"Образование",
+    tabs:["Языки","Подготовка","Кружки"],
+    items:{
+      "Языки":[{title:"Корейский A0–B2",points:["Группы/индивидуально"],tags:["Образование"],cat:"Образование"}],
+      "Подготовка":[{title:"TOPIK",points:["Пробные тесты"],tags:["Образование"],cat:"Образование"}],
+      "Кружки":[{title:"Танцы/Музыка",points:["Детские/взрослые"],tags:["Образование"],cat:"Образование"}]
+    }
+  }
+};
 
-  /* ================= закрытие и делегаты ================= */
-  $('#closePricing').addEventListener('click', ()=>{ stopPrTyping(); pricingModal.classList.remove('show'); });
-  pricingModal.addEventListener('click', e=>{ if(e.target.id==='pricingModal'){ stopPrTyping(); pricingModal.classList.remove('show'); } });
+const openPricingBtns=document.querySelectorAll('.open-pricing');
+const prTabs=document.getElementById('prTabs');
+const prGrid=document.getElementById('prGrid');
+const prTyping=document.getElementById('prTyping');
 
-  $('#applyClose').addEventListener('click', ()=> $('#applyModal').classList.remove('show'));
-  $('#applyModal').addEventListener('click', e=>{ if(e.target.id==='applyModal') $('#applyModal').classList.remove('show'); });
+openPricingBtns.forEach(b=>b.onclick=()=>openSection(b.dataset.section));
 
-  document.addEventListener('click', e=>{
-    const a=e.target.closest('[data-apply]');   if(a){ $('#f-context').value=a.getAttribute('data-apply')||a.textContent.trim(); $('#applyModal').classList.add('show'); }
-    const p=e.target.closest('[data-pricing]'); if(p){ openPricing(); }
-    const s=e.target.closest('[data-section]'); if(s){ openSection(s.getAttribute('data-section')); }
+function openSection(key){
+  const sec=sections[key]; if(!sec) return;
+  pricingModal.classList.add('show');
+  // typing title
+  const words=[sec.title,"лучшие подборки","рядом с вами"];
+  let i=0,j=0,fw=true;
+  (function t(){const w=words[i];prTyping.textContent=w.slice(0,j);j+=fw?1:-1;
+    if(j===w.length+10)fw=false; if(j===0){fw=true;i=(i+1)%words.length} setTimeout(t, fw?75:45)})();
+  // tabs
+  prTabs.innerHTML='';
+  sec.tabs.forEach((t,idx)=>{
+    const el=document.createElement('button'); el.className='tab'+(idx===0?' active':''); el.textContent=t;
+    el.onclick=()=>{prTabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); el.classList.add('active');renderTab(sec,t)};
+    prTabs.appendChild(el);
   });
+  renderTab(sec,sec.tabs[0]);
+}
 
-})();
+function renderTab(sec,tab){
+  const list=sec.items[tab]||[];
+  prGrid.innerHTML='';
+  list.forEach(card=>{
+    const div=document.createElement('div'); div.className='pr-card';
+    div.innerHTML=`
+      <h4>${card.title}</h4>
+      <ul>${card.points.map(p=>`<li>${p}</li>`).join('')}</ul>
+      <div class="pr-cta">
+        <button class="btn map">Показать точки</button>
+        <button class="btn">Оставить заявку</button>
+      </div>`;
+    div.querySelector('.map').onclick=()=>{
+      // фильтрация каталога по категориям карточки (простая подсветка)
+      const cats=(card.cat||'').split(',').map(s=>s.trim());
+      document.querySelectorAll('#cards .card').forEach(c=>{
+        const has = (c.dataset.cat||'').split(',').some(v=>cats.includes(v.trim()));
+        c.style.outline = has ? '2px solid #6aa3ff' : 'none';
+        c.style.opacity = has ? '1' : '0.55';
+      });
+      pricingModal.classList.remove('show');
+      openMapAt(36.9305,127.0458);
+    };
+    prGrid.appendChild(div);
+  });
+}
+
+document.getElementById('closePricing').onclick=()=>pricingModal.classList.remove('show');
+
+/* подсветку убрать по клику вне */
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.pr-card') && !e.target.closest('.open-pricing')){
+    document.querySelectorAll('#cards .card').forEach(c=>{c.style.outline='none';c.style.opacity='1'})
+  }
+});
 </script>
-<!-- ================= END SAFE NO-CONFLICT BLOCK ================= -->
-
+</body>
+</html>
