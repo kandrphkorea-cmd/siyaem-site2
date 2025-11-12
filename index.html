@@ -7,7 +7,7 @@
 <meta name="description" content="Каталог и карта проверенных русскоязычных мест в Корее: еда, салоны, авто, образование. Партнёрство и продвижение." />
 
 <style>
-/* ---------- THEME ---------- */
+/* ---------- THEME (как было) ---------- */
 :root{
   --bg:#0b1020; --bg-2:#0e1228; --text:#ecf0ff; --muted:#aab3d3;
   --card:rgba(255,255,255,.06); --line:rgba(255,255,255,.12);
@@ -121,7 +121,7 @@ a{color:var(--acc);text-decoration:none}
 .pr-card ul{margin:10px 0 0;padding-left:18px}
 .pr-cta{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
 
-/* APPLY MODAL (заявка) */
+/* APPLY MODAL (FormSubmit) */
 .m-apply{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,.6);backdrop-filter:blur(6px);z-index:1000}
 .m-apply.show{display:grid}
 .m-apply .box{width:min(680px,calc(100vw - 28px));background:#0b1221;color:#e5e7eb;border:1px solid #1f2937;border-radius:16px;padding:18px}
@@ -136,13 +136,9 @@ a{color:var(--acc);text-decoration:none}
 .btn-ghost{background:transparent;color:#e5e7eb;border:1px solid #334155}
 .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
 
-/* Toast + Error overlay */
+/* Toast */
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#4b7bff,#8ab4ff);color:#fff;padding:12px 22px;border-radius:12px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,0.2);z-index:9999;opacity:0;transition:opacity .3s}
 .toast.show{opacity:1}
-.err-overlay{position:fixed;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.7);z-index:99999}
-.err-box{background:#fff;color:#111;padding:18px 22px;border-radius:14px;max-width:720px;box-shadow:0 10px 30px rgba(0,0,0,.4);white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace}
-.err-box h3{margin:0 0 10px}
-.err-box button{margin-top:10px;padding:8px 12px;border:none;border-radius:10px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}
 </style>
 </head>
 <body>
@@ -246,7 +242,7 @@ a{color:var(--acc);text-decoration:none}
   </div>
 </div>
 
-<!-- PRICING MODAL -->
+<!-- PRICING MODAL (категории) -->
 <div class="modal pricing" id="pricingModal">
   <div class="box">
     <div class="pr-head">
@@ -260,30 +256,38 @@ a{color:var(--acc);text-decoration:none}
   </div>
 </div>
 
-<!-- APPLY MODAL -->
+<!-- APPLY MODAL (пишет на e-mail через FormSubmit) -->
 <div id="applyModal" class="m-apply" aria-hidden="true">
   <div class="box">
     <h3>Оставить заявку</h3>
-    <form id="applyForm">
-      <input type="hidden" id="f-context" value="Заявка с сайта">
+    <form id="applyForm" action="https://formsubmit.co/ignatka@gmail.com" method="POST">
+      <!-- FormSubmit опции -->
+      <input type="hidden" name="_subject" value="Заявка с SiyaEm Korea">
+      <input type="hidden" name="_captcha" value="false">
+      <!-- редирект обратно на сайт (якорь #thanks) -->
+      <input type="hidden" name="_next" value="#thanks">
+      <!-- контекст (из какой кнопки нажали) -->
+      <input type="hidden" id="f-context" name="Контекст" value="Заявка с сайта">
+
       <div class="row">
         <div class="field">
           <label>Имя*</label>
-          <input id="f-name" type="text" required placeholder="Как вас зовут">
+          <input type="text" name="Имя" required placeholder="Как вас зовут">
         </div>
         <div class="field">
           <label>Телефон / KakaoTalk*</label>
-          <input id="f-phone" type="text" required placeholder="+82-10-XXXX-XXXX / Kakao ID">
+          <input type="text" name="Телефон" required placeholder="+82-10-XXXX-XXXX / Kakao ID">
         </div>
       </div>
+
       <div class="row">
         <div class="field">
           <label>E-mail</label>
-          <input id="f-email" type="email" placeholder="example@mail.com">
+          <input type="email" name="Email" placeholder="example@mail.com">
         </div>
         <div class="field">
           <label>Категория</label>
-          <select id="f-cat">
+          <select name="Категория">
             <option>Еда</option>
             <option>Салоны / красота</option>
             <option>Автомеханики</option>
@@ -293,141 +297,109 @@ a{color:var(--acc);text-decoration:none}
           </select>
         </div>
       </div>
+
       <div class="field">
         <label>Комментарий</label>
-        <textarea id="f-msg" placeholder="Пару слов о запросе, удобное время для связи…"></textarea>
+        <textarea name="Комментарий" placeholder="Пару слов о запросе, удобное время для связи…"></textarea>
       </div>
-      <div class="hint">Данные улетят в Google Таблицу «SiyaEm Leads».</div>
+
+      <div class="hint">Заявка уйдёт на e-mail: ignatka@gmail.com</div>
+
       <div class="actions">
         <button type="button" class="btn btn-ghost" id="applyClose">Отмена</button>
         <button type="submit" class="btn">Отправить</button>
       </div>
     </form>
-    <div id="applyResult" class="hint" style="margin-top:8px;display:none"></div>
   </div>
 </div>
 
-<footer class="wrap" style="text-align:center;margin:30px 0 50px">© 2025 SiyaEm Korea</footer>
+<footer class="wrap" style="text-align:center;margin:30px 0 50px">© 2025 SiyaEm Korea <a id="thanks" style="margin-left:8px;color:var(--muted)">Спасибо за заявку!</a></footer>
 
 <script>
-/* ===== Ошибки на экран, чтобы ничего тихо не падало ===== */
+/* ===== компактный JS без зависимостей ===== */
 (function(){
-  window.addEventListener('error', (e)=>{
-    showFatal(e.message + "\\n" + (e.filename||'') + ":" + (e.lineno||'') );
-  });
-  window.addEventListener('unhandledrejection', (e)=>{
-    showFatal('Unhandled promise rejection: ' + (e.reason && (e.reason.message||e.reason)) );
-  });
-  function showFatal(msg){
-    const d=document.createElement('div');
-    d.className='err-overlay';
-    d.innerHTML = '<div class="err-box"><h3>🚨 Ошибка скрипта</h3><div>'+String(msg)+'</div><button onclick="this.closest(\\'.err-overlay\\').remove()">Закрыть</button></div>';
-    document.body.appendChild(d);
-  }
-})();
-</script>
+  const GMAPS_KEY = "AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro";
 
-<script>
-document.addEventListener('DOMContentLoaded', function(){ try{
-
-  /* ====== КОНФИГ (твои значения) ====== */
-  const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbwJMX6VtEBWQflmPqNomq_wZbTsb_p3RCMZVNvD9XSJdKcbSxmIYuMLLAbX7aLrJRqZ1g/exec";
-  const GMAPS_KEY   = "AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro";
-
-  /* ===== THEME ===== */
+  // Тема
   const themeToggle = document.getElementById('themeToggle');
-  themeToggle?.addEventListener('click', ()=> document.documentElement.classList.toggle('light'));
+  themeToggle.addEventListener('click', ()=> document.documentElement.classList.toggle('light'));
 
-  /* ===== HERO typing ===== */
+  // Тайпер в hero
   (function(){
-    const typingEl=document.getElementById('typing');
+    const el=document.getElementById('typing');
     const phrases=["большие возможности.","настоящие партнёры.","места, которым доверяешь."];
-    let pi=0,ci=0,fwd=true;
+    let i=0,j=0,fwd=true;
     (function loop(){
-      const p=phrases[pi]; typingEl.textContent=p.slice(0,ci);
-      ci+=fwd?1:-1;
-      if(ci===p.length+12)fwd=false;
-      if(ci===0){fwd=true;pi=(pi+1)%phrases.length}
-      setTimeout(loop,fwd?70:40);
+      const w=phrases[i]; el.textContent=w.slice(0,j);
+      j+=fwd?1:-1; if(j===w.length+8)fwd=false; if(j===0){fwd=true;i=(i+1)%phrases.length}
+      setTimeout(loop,fwd?70:45);
     })();
   })();
 
-  /* ===== RATINGS ===== */
+  // Рейтинг (локально)
   (function(){
     const ratings={};
     document.querySelectorAll('.stars').forEach(g=>{
       const id=g.dataset.id; ratings[id]=ratings[id]||4;
-      g.querySelectorAll('.star').forEach(s=>s.addEventListener('click', ()=>{
+      const paint = v => g.querySelectorAll('.star').forEach(s=> s.style.opacity=(+s.dataset.v<=Math.round(v))?'1':'.35');
+      paint(ratings[id]);
+      g.querySelectorAll('.star').forEach(s=> s.addEventListener('click', ()=>{
         const v=+s.dataset.v; ratings[id]=(ratings[id]+v)/2;
-        const counter=document.getElementById('r-'+id);
-        if(counter) counter.textContent = +counter.textContent + 1;
-        g.querySelectorAll('.star').forEach(st=>{
-          st.style.opacity=(+st.dataset.v<=Math.round(ratings[id]))?'1':'.35';
-        });
+        const cnt=document.getElementById('r-'+id); if(cnt) cnt.textContent=+cnt.textContent+1;
+        paint(ratings[id]);
       }));
-      g.querySelectorAll('.star').forEach(st=>{
-        st.style.opacity=(+st.dataset.v<=Math.round(ratings[id]))?'1':'.35';
-      });
     });
   })();
 
-  /* ===== MAP ===== */
+  // Карта (ленивая загрузка)
   (function(){
     const mapModal=document.getElementById('mapModal');
     const openMapBtn=document.getElementById('openMap');
     const closeMapBtn=document.getElementById('closeMap');
     let _map,_marker,_mapsLoaded=false;
 
-    openMapBtn?.addEventListener('click', ()=> openMapAt(36.9305,127.0458));
-    document.querySelectorAll('[data-map]').forEach(b=>{
-      b.addEventListener('click', ()=>{
-        const [lat,lng]=b.dataset.map.split(',').map(Number);
-        openMapAt(lat,lng);
-      });
-    });
-    closeMapBtn?.addEventListener('click', ()=> mapModal.classList.remove('show'));
+    openMapBtn.addEventListener('click', ()=> openMapAt(36.9305,127.0458));
+    document.querySelectorAll('[data-map]').forEach(b=> b.addEventListener('click', ()=>{
+      const [lat,lng]=b.dataset.map.split(',').map(Number); openMapAt(lat,lng);
+    }));
+    closeMapBtn.addEventListener('click', ()=> mapModal.classList.remove('show'));
 
     function openMapAt(lat,lng){ mapModal.classList.add('show'); ensureMap(lat,lng); }
     function ensureMap(lat,lng){
-      if(!_mapsLoaded){
-        const s=document.createElement('script');
-        s.src=`https://maps.googleapis.com/maps/api/js?key=${GMAPS_KEY}&callback=__initMap`;
-        s.async=true;
-        window.__initMap=()=>{ _mapsLoaded=true; initMap(lat,lng); };
-        document.body.appendChild(s);
-      } else initMap(lat,lng);
+      if(_mapsLoaded) return initMap(lat,lng);
+      const s=document.createElement('script');
+      s.src=`https://maps.googleapis.com/maps/api/js?key=${GMAPS_KEY}&callback=__initMap`;
+      s.async=true; window.__initMap=()=>{ _mapsLoaded=true; initMap(lat,lng); };
+      document.body.appendChild(s);
     }
     function initMap(lat,lng){
       const c={lat,lng};
       if(!_map){
         _map=new google.maps.Map(document.getElementById('map'),{
-          center:c, zoom:15,
-          styles:[{featureType:"poi",stylers:[{visibility:"off"}]}]
+          center:c, zoom:15, styles:[{featureType:"poi",stylers:[{visibility:"off"}]}]
         });
         _marker=new google.maps.Marker({position:c,map:_map});
-      }else{
-        _map.setCenter(c); _marker.setPosition(c);
-      }
+      }else{ _map.setCenter(c); _marker.setPosition(c); }
     }
   })();
 
-  /* ===== APPLY MODAL open/close ===== */
+  // Модалка «Оставить заявку» + контекст кнопки
   (function(){
     const bePartner=document.getElementById('bePartner');
     const modal=document.getElementById('applyModal');
     const closeBtn=document.getElementById('applyClose');
     const ctx=document.getElementById('f-context');
 
-    bePartner?.addEventListener('click', ()=> { if(ctx) ctx.value="Главная — кнопка"; modal.classList.add('show'); });
+    bePartner.addEventListener('click', ()=> { ctx.value="Главная — кнопка"; modal.classList.add('show'); });
     document.addEventListener('click',(e)=>{
       const a=e.target.closest('[data-apply]');
-      if(a){ if(ctx) ctx.value=a.getAttribute('data-apply')||'Заявка'; modal.classList.add('show'); }
+      if(a){ ctx.value=a.getAttribute('data-apply')||'Заявка'; modal.classList.add('show'); }
     });
-    closeBtn?.addEventListener('click', ()=> modal.classList.remove('show'));
-    modal?.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.remove('show')});
+    closeBtn.addEventListener('click', ()=> modal.classList.remove('show'));
+    modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.remove('show')});
   })();
 
-  /* ===== PRICING (табы/карточки) ===== */
+  // Категории (Notion-стиль)
   (function(){
     const pricingModal=document.getElementById('pricingModal');
     const closePricing=document.getElementById('closePricing');
@@ -539,70 +511,11 @@ document.addEventListener('DOMContentLoaded', function(){ try{
       renderTab(sec,sec.tabs[0]);
     }
 
-    openPricingBtns.forEach(b=> b.addEventListener('click', ()=> openSection(b.dataset.section)));
-    closePricing?.addEventListener('click', ()=>{ if(prTimer){clearTimeout(prTimer); prTimer=null;} pricingModal.classList.remove('show'); });
+    document.querySelectorAll('.open-pricing').forEach(b=> b.addEventListener('click', ()=> openSection(b.dataset.section)));
+    closePricing.addEventListener('click', ()=> pricingModal.classList.remove('show'));
   })();
 
-  /* ===== Отправка в Google Sheets ===== */
-  (function(){
-    const form=document.getElementById('applyForm');
-    const resBox=document.getElementById('applyResult');
-    form?.addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      const payload={
-        context : document.getElementById('f-context').value.trim(),
-        name    : document.getElementById('f-name').value.trim(),
-        phone   : document.getElementById('f-phone').value.trim(),
-        email   : document.getElementById('f-email').value.trim(),
-        category: document.getElementById('f-cat').value,
-        message : document.getElementById('f-msg').value.trim(),
-        ua      : navigator.userAgent,
-        page    : location.href
-      };
-      if(!payload.name || !payload.phone){ showMsg("Заполни имя и телефон", false); return; }
-
-      try{
-        const r=await fetch(GAS_ENDPOINT,{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify(payload)
-        });
-        const j=await r.json().catch(()=> ({}));
-        if(r.ok && j.ok){
-          showToast("✅ Заявка отправлена!"); form.reset();
-          document.getElementById('applyModal').classList.remove('show');
-          showMsg("", true);
-        }else{
-          showMsg("Не удалось отправить: " + (j.error||"ошибка сервера"), false);
-        }
-      }catch(err){
-        showMsg("Сеть недоступна или доступ к Web App закрыт", false);
-        console.error(err);
-      }
-    });
-
-    function showMsg(text, ok){
-      if(!resBox) return;
-      if(!text){ resBox.style.display='none'; return; }
-      resBox.style.display='block';
-      resBox.style.color = ok ? '#10b981' : '#ef4444';
-      resBox.textContent = text;
-    }
-  })();
-
-  /* ===== Toast ===== */
-  window.showToast = function(text){
-    const t=document.createElement('div'); t.className='toast'; t.textContent=text;
-    document.body.appendChild(t); setTimeout(()=>t.classList.add('show'), 30);
-    setTimeout(()=>t.remove(), 4000);
-  };
-
-} catch(err){
-  const d=document.createElement('div');
-  d.className='err-overlay';
-  d.innerHTML='<div class="err-box"><h3>🚨 Инициализация упала</h3><div>'+String(err)+'</div><button onclick="this.closest(\\'.err-overlay\\').remove()">Закрыть</button></div>';
-  document.body.appendChild(d);
-}}); // DOMContentLoaded
+})();
 </script>
 
 </body>
