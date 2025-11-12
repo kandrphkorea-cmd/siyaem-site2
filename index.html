@@ -401,5 +401,121 @@ document.addEventListener('click',e=>{
   }
 });
 </script>
-</body>
+</body><script>
+(function(){
+  'use strict';
+
+  // Хелперы
+  const $=(s,r=document)=>r.querySelector(s);
+
+  // ==== Плавный тайпер (без наложений). Работает только если есть #prTyping ====
+  (function(){
+    const el = $('#prTyping'); if(!el) return;
+    let timer=null;
+    function stop(){ if(timer){clearTimeout(timer); timer=null;} }
+    function start(words){
+      stop();
+      let i=0,j=0,fwd=true;
+      const type=90, erase=45, holdFull=1000, holdEmpty=450;
+      (function tick(){
+        const w=words[i]; el.textContent=w.slice(0,j);
+        if(fwd){
+          if(j<w.length){ j++; timer=setTimeout(tick,type); }
+          else { fwd=false; timer=setTimeout(tick,holdFull); }
+        }else{
+          if(j>0){ j--; timer=setTimeout(tick,erase); }
+          else { fwd=true; i=(i+1)%words.length; timer=setTimeout(tick,holdEmpty); }
+        }
+      })();
+      return stop;
+    }
+    // Если у вас есть массив слов — запустите так:
+    // window.startPricingTyping = (words)=> start(words);
+    // Чтобы не менять текущую логику, просто мягко стартанём с дефолтными словами:
+    window.addEventListener('pricing-open', ()=> start(['Прайс','выгодные тарифы','рядом с вами']));
+    window.addEventListener('pricing-close', stop);
+  })();
+
+  // ==== Делегаторы кнопок (НЕ меняют верстку) ====
+  document.addEventListener('click', (e)=>{
+    const a = e.target.closest('[data-apply]');
+    if(a){
+      const m = $('#applyModal');
+      if(m){
+        const ctx = a.getAttribute('data-apply') || a.textContent.trim();
+        const ctxField = $('#f-context'); if(ctxField) ctxField.value = ctx;
+        m.classList.add('show');
+      }else{
+        // Фallback, если модалки нет: не ломаем страницу
+        console.warn('applyModal не найден');
+      }
+    }
+
+    const p = e.target.closest('[data-pricing]');
+    if(p){
+      const m = $('#pricingModal');
+      if(m){
+        m.classList.add('show');
+        window.dispatchEvent(new Event('pricing-open'));
+      }else{
+        console.warn('pricingModal не найден');
+      }
+    }
+  });
+
+  // ==== Закрытия (по вашим существующим id) ====
+  const closePricing = $('#closePricing');
+  if(closePricing){
+    closePricing.addEventListener('click', ()=>{
+      const m = $('#pricingModal'); if(m){ m.classList.remove('show'); window.dispatchEvent(new Event('pricing-close')); }
+    });
+  }
+  const pricingModal = $('#pricingModal');
+  if(pricingModal){
+    pricingModal.addEventListener('click', (e)=>{
+      if(e.target===pricingModal){ pricingModal.classList.remove('show'); window.dispatchEvent(new Event('pricing-close')); }
+    });
+  }
+  const applyClose = $('#applyClose');
+  if(applyClose){
+    applyClose.addEventListener('click', ()=>{
+      const m = $('#applyModal'); if(m) m.classList.remove('show');
+    });
+  }
+  const applyModal = $('#applyModal');
+  if(applyModal){
+    applyModal.addEventListener('click', (e)=>{
+      if(e.target===applyModal){ applyModal.classList.remove('show'); }
+    });
+  }
+
+  // ==== Самолётик (мягко следует за курсором), только если есть #plane и #prWrap ====
+  (function(){
+    const plane = $('#plane'); const wrap = $('#prWrap');
+    if(!plane || !wrap) return;
+    let tx=0,ty=0,x=0,y=0,raf;
+    wrap.addEventListener('mousemove', (e)=>{
+      const r=wrap.getBoundingClientRect();
+      tx=e.clientX-r.left-20; ty=e.clientY-r.top-20;
+      if(!raf) raf=requestAnimationFrame(loop);
+    });
+    function loop(){
+      x+=(tx-x)*0.18; y+=(ty-y)*0.18;
+      plane.style.transform=`translate(${x}px,${y}px) rotate(${(tx-x)*0.05}deg)`;
+      if(Math.abs(tx-x)>0.5 || Math.abs(ty-y)>0.5) raf=requestAnimationFrame(loop); else raf=null;
+    }
+  })();
+
+  // ==== Поддержка формы заявок FormSubmit (ничего не меняем, просто подсказка) ====
+  const applyForm = $('#applyForm');
+  if(applyForm){
+    // Ничего не трогаем: FormSubmit сам отправит на email. Можно повесить «спасибо» после сабмита, если нужно.
+    applyForm.addEventListener('submit', ()=> {
+      // оставить пустым, чтобы не мешать стандартной отправке
+    });
+  }
+
+})();
+</script>
+
 </html>
