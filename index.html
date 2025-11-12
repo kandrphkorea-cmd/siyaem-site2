@@ -136,9 +136,13 @@ a{color:var(--acc);text-decoration:none}
 .btn-ghost{background:transparent;color:#e5e7eb;border:1px solid #334155}
 .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
 
-/* Toast */
+/* Toast + Error overlay */
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#4b7bff,#8ab4ff);color:#fff;padding:12px 22px;border-radius:12px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,0.2);z-index:9999;opacity:0;transition:opacity .3s}
 .toast.show{opacity:1}
+.err-overlay{position:fixed;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.7);z-index:99999}
+.err-box{background:#fff;color:#111;padding:18px 22px;border-radius:14px;max-width:720px;box-shadow:0 10px 30px rgba(0,0,0,.4);white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace}
+.err-box h3{margin:0 0 10px}
+.err-box button{margin-top:10px;padding:8px 12px;border:none;border-radius:10px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}
 </style>
 </head>
 <body>
@@ -261,7 +265,7 @@ a{color:var(--acc);text-decoration:none}
   <div class="box">
     <h3>Оставить заявку</h3>
     <form id="applyForm">
-      <input type="hidden" id="f-context" name="context" value="Заявка с сайта">
+      <input type="hidden" id="f-context" value="Заявка с сайта">
       <div class="row">
         <div class="field">
           <label>Имя*</label>
@@ -306,225 +310,300 @@ a{color:var(--acc);text-decoration:none}
 <footer class="wrap" style="text-align:center;margin:30px 0 50px">© 2025 SiyaEm Korea</footer>
 
 <script>
-/* ====== КОНФИГ ====== */
-const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbwJMX6VtEBWQflmPqNomq_wZbTsb_p3RCMZVNvD9XSJdKcbSxmIYuMLLAbX7aLrJRqZ1g/exec";
-const GMAPS_KEY   = "AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro";
-
-/* THEME */
-document.getElementById('themeToggle').onclick =
-  () => document.documentElement.classList.toggle('light');
-
-/* HERO typing */
-const typingEl=document.getElementById('typing');
-const phrases=["большие возможности.","настоящие партнёры.","места, которым доверяешь."];
-let pi=0,ci=0,fwd=true;
-(function loop(){const p=phrases[pi];typingEl.textContent=p.slice(0,ci);ci+=fwd?1:-1;if(ci===p.length+12)fwd=false;if(ci===0){fwd=true;pi=(pi+1)%phrases.length}setTimeout(loop,fwd?70:40)})();
-
-/* RATINGS */
-const ratings={};
-document.querySelectorAll('.stars').forEach(g=>{
-  const id=g.dataset.id; ratings[id]=ratings[id]||4;
-  g.querySelectorAll('.star').forEach(s=>s.onclick=()=>{
-    const v=+s.dataset.v; ratings[id]=(ratings[id]+v)/2;
-    document.getElementById('r-'+id').textContent=
-      +document.getElementById('r-'+id').textContent+1;
-    paint(g,ratings[id]);
-  });
-  paint(g,ratings[id]);
-});
-function paint(g,val){
-  g.querySelectorAll('.star').forEach(st=>{
-    st.style.opacity=(+st.dataset.v<=Math.round(val))?'1':'.35';
-  });
-}
-
-/* MAP */
-const mapModal=document.getElementById('mapModal');
-document.getElementById('openMap').onclick=()=>openMapAt(36.9305,127.0458);
-document.querySelectorAll('[data-map]').forEach(b=>b.onclick=()=>{
-  const [lat,lng]=b.dataset.map.split(',').map(Number);openMapAt(lat,lng);
-});
-document.getElementById('closeMap').onclick=()=>mapModal.classList.remove('show');
-let _map,_marker,_mapsLoaded=false;
-function openMapAt(lat,lng){mapModal.classList.add('show');ensureMap(lat,lng)}
-function ensureMap(lat,lng){
-  if(!_mapsLoaded){
-    const s=document.createElement('script');
-    s.src=`https://maps.googleapis.com/maps/api/js?key=${GMAPS_KEY}&callback=__initMap`;
-    s.async=true; window.__initMap=()=>{_mapsLoaded=true;initMap(lat,lng)}; document.body.appendChild(s);
-  } else initMap(lat,lng);
-}
-function initMap(lat,lng){
-  const c={lat,lng};
-  if(!_map){_map=new google.maps.Map(document.getElementById('map'),{center:c,zoom:15,styles:[{featureType:"poi",stylers:[{visibility:"off"}]}]});_marker=new google.maps.Marker({position:c,map:_map})}
-  else{_map.setCenter(c);_marker.setPosition(c)}
-}
-
-/* ===== ОТКРЫТИЕ/ЗАКРЫТИЕ ФОРМЫ ===== */
-document.getElementById('bePartner').onclick=()=>openApply("Главная — кнопка");
-document.addEventListener('click',(e)=>{
-  const a=e.target.closest('[data-apply]');
-  if(a) openApply(a.getAttribute('data-apply')||'Заявка');
-});
-function openApply(contextText){
-  const m=document.getElementById('applyModal');
-  const ctx=document.getElementById('f-context');
-  if(ctx) ctx.value=contextText; m.classList.add('show');
-}
+/* ===== Ошибки на экран, чтобы ничего тихо не падало ===== */
 (function(){
-  const modal=document.getElementById('applyModal');
-  const closeBtn=document.getElementById('applyClose');
-  if(closeBtn) closeBtn.onclick=()=>modal.classList.remove('show');
-  modal.addEventListener('click',(e)=>{if(e.target===modal) modal.classList.remove('show')});
-})();
-
-/* ===== ОТПРАВКА В GOOGLE SHEETS (единый обработчик) ===== */
-(function(){
-  const form=document.getElementById('applyForm');
-  const resBox=document.getElementById('applyResult');
-
-  form.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const payload={
-      context : document.getElementById('f-context').value.trim(),
-      name    : document.getElementById('f-name').value.trim(),
-      phone   : document.getElementById('f-phone').value.trim(),
-      email   : document.getElementById('f-email').value.trim(),
-      category: document.getElementById('f-cat').value,
-      message : document.getElementById('f-msg').value.trim(),
-      ua      : navigator.userAgent,
-      page    : location.href
-    };
-    if(!payload.name || !payload.phone){ showMsg("Заполни имя и телефон", false); return; }
-
-    try{
-      const r=await fetch(GAS_ENDPOINT,{
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(payload)
-      });
-      const j=await r.json().catch(()=>({}));
-      if(r.ok && j.ok){ showToast("✅ Заявка отправлена!"); form.reset(); document.getElementById('applyModal').classList.remove('show'); }
-      else { showMsg("Не удалось отправить: "+(j.error||"ошибка сервера"), false); }
-    }catch(err){
-      console.error(err); showMsg("Сеть недоступна или неверный доступ Web App", false);
-    }
+  window.addEventListener('error', (e)=>{
+    showFatal(e.message + "\\n" + (e.filename||'') + ":" + (e.lineno||'') );
   });
-
-  function showMsg(text, ok){
-    resBox.style.display='block';
-    resBox.style.color = ok ? '#10b981' : '#ef4444';
-    resBox.textContent = text;
+  window.addEventListener('unhandledrejection', (e)=>{
+    showFatal('Unhandled promise rejection: ' + (e.reason && (e.reason.message||e.reason)) );
+  });
+  function showFatal(msg){
+    const d=document.createElement('div');
+    d.className='err-overlay';
+    d.innerHTML = '<div class="err-box"><h3>🚨 Ошибка скрипта</h3><div>'+String(msg)+'</div><button onclick="this.closest(\\'.err-overlay\\').remove()">Закрыть</button></div>';
+    document.body.appendChild(d);
   }
 })();
-
-/* --------- PRICING --------- */
-const pricingModal=document.getElementById('pricingModal');
-const closePricing=document.getElementById('closePricing');
-const openPricingBtns=document.querySelectorAll('.open-pricing');
-const prTabs=document.getElementById('prTabs');
-const prGrid=document.getElementById('prGrid');
-const prTyping=document.getElementById('prTyping');
-closePricing.onclick=()=>{ if(prTimer){clearTimeout(prTimer); prTimer=null;} pricingModal.classList.remove('show'); };
-
-const sections={
-  food:{ title:"Еда",
-    tabs:["Фастфуд","Лапша","Супы","Мясо","Десерты"],
-    items:{
-      "Фастфуд":[{title:"Бургеры/Картошка",points:["Русское меню","Доставка","Купоны"],cat:"Еда,Фастфуд"},
-                 {title:"Курица/Пицца",points:["Семейные сеты","Остро/не остро","До 02:00"],cat:"Еда,Фастфуд"},
-                 {title:"Кофе/Сэндвич",points:["Утренние наборы","Студентам"],cat:"Еда,Фастфуд"}],
-      "Лапша":[{title:"Кальгуксу",points:["Домашняя лапша","Большие порции"],cat:"Еда,Лапша"},
-               {title:"Рамен",points:["Авторские бульоны","Острый 1–5"],cat:"Еда,Лапша"},
-               {title:"Фо/Удон",points:["Вьет/Япония","Быстро"],cat:"Еда,Лапша"}],
-      "Супы":[{title:"Кимчи-чиге",points:["Горячо","Сытно"],cat:"Еда,Супы"},
-              {title:"Сундубу",points:["Мягкий тофу","Нежно"],cat:"Еда,Супы"},
-              {title:"Борщ/Щи",points:["Домашний вкус"],cat:"Еда,Супы"}],
-      "Мясо":[{title:"Самгёпсаль",points:["На углях","Салаты включены"],cat:"Еда,Мясо"},
-              {title:"Говядина",points:["Маринованная/чистая"],cat:"Еда,Мясо"},
-              {title:"Шашлык",points:["Русская классика"],cat:"Еда,Мясо"}],
-      "Десерты":[{title:"Торты/Эклеры",points:["На заказ","Дизайн"],cat:"Еда,Десерты"},
-                 {title:"Пирожные",points:["Каждый день свежие"],cat:"Еда,Десерты"},
-                 {title:"Мороженое",points:["Домашнее"],cat:"Еда,Десерты"}]
-    }
-  },
-  salon:{ title:"Салоны",
-    tabs:["Маникюр","Парикмахер","Косметология"],
-    items:{
-      "Маникюр":[{title:"Маникюр + покрытие",points:["Палитра 200+","Стерильность"],cat:"Салоны"},
-                 {title:"Дизайн",points:["Аэрография","Стразы"],cat:"Салоны"}],
-      "Парикмахер":[{title:"Стрижка/Окрашивание",points:["Колористика","Keratin"],cat:"Салоны"}],
-      "Косметология":[{title:"Чистка/Массаж",points:["Аппаратная/мануальная"],cat:"Салоны"}]
-    }
-  },
-  auto:{ title:"Авто",
-    tabs:["СТО","Детейлинг","Шины"],
-    items:{
-      "СТО":[{title:"Диагностика",points:["Сканер/электрика"],cat:"Авто"}],
-      "Детейлинг":[{title:"Полировка/Защита",points:["Керамика","Матовые плёнки"],cat:"Авто"}],
-      "Шины":[{title:"Шиномонтаж",points:["Хранение сезонное"],cat:"Авто"}]
-    }
-  },
-  edu:{ title:"Образование",
-    tabs:["Языки","Подготовка","Кружки"],
-    items:{
-      "Языки":[{title:"Корейский A0–B2",points:["Группы/индивидуально"],cat:"Образование"}],
-      "Подготовка":[{title:"TOPIK",points:["Пробные тесты"],cat:"Образование"}],
-      "Кружки":[{title:"Танцы/Музыка",points:["Детские/взрослые"],cat:"Образование"}]
-    }
-  }
-};
-
-let prTimer=null;
-function startPrTyping(words, el){
-  if(prTimer){clearTimeout(prTimer); prTimer=null;}
-  let i=0,j=0,fwd=true;
-  const typeDelay=75, eraseDelay=45, holdFull=900, holdEmpty=420;
-  (function tick(){
-    const w=words[i]; el.textContent=w.slice(0,j);
-    if(fwd){ if(j<w.length){ j++; prTimer=setTimeout(tick,typeDelay); } else { fwd=false; prTimer=setTimeout(tick,holdFull); } }
-    else   { if(j>0){ j--; prTimer=setTimeout(tick,eraseDelay);} else { fwd=true; i=(i+1)%words.length; prTimer=setTimeout(tick,holdEmpty);} }
-  })();
-}
-openPricingBtns.forEach(b=>b.onclick=()=>openSection(b.dataset.section));
-function openSection(key){
-  const sec=sections[key]; if(!sec) return;
-  pricingModal.classList.add('show');
-  startPrTyping([sec.title,"лучшие подборки","рядом с вами"], prTyping);
-  prTabs.innerHTML='';
-  sec.tabs.forEach((t,idx)=>{
-    const el=document.createElement('button');
-    el.className='tab'+(idx===0?' active':'');
-    el.textContent=t;
-    el.onclick=()=>{ prTabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); el.classList.add('active'); renderTab(sec,t); };
-    prTabs.appendChild(el);
-  });
-  renderTab(sec,sec.tabs[0]);
-}
-function renderTab(sec,tab){
-  const list=sec.items[tab]||[];
-  prGrid.innerHTML='';
-  list.forEach(card=>{
-    const div=document.createElement('div'); div.className='pr-card';
-    div.innerHTML=`
-      <h4>${card.title}</h4>
-      <ul>${card.points.map(p=>`<li>${p}</li>`).join('')}</ul>
-      <div class="pr-cta">
-        <button class="btn map">Показать точки</button>
-        <button class="btn" data-apply="Прайс — ${card.title}">Оставить заявку</button>
-      </div>`;
-    div.querySelector('.map').onclick=()=>{
-      const cats=(card.cat||'').split(',').map(s=>s.trim());
-      document.querySelectorAll('#cards .card').forEach(c=>{
-        const has=(c.dataset.cat||'').split(',').some(v=>cats.includes(v.trim()));
-        c.style.outline=has?'2px solid #6aa3ff':'none';
-        c.style.opacity=has?'1':'0.55';
-      });
-      pricingModal.classList.remove('show');
-      openMapAt(36.9305,127.0458);
-    };
-    prGrid.appendChild(div);
-  });
-}
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){ try{
+
+  /* ====== КОНФИГ (твои значения) ====== */
+  const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbwJMX6VtEBWQflmPqNomq_wZbTsb_p3RCMZVNvD9XSJdKcbSxmIYuMLLAbX7aLrJRqZ1g/exec";
+  const GMAPS_KEY   = "AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro";
+
+  /* ===== THEME ===== */
+  const themeToggle = document.getElementById('themeToggle');
+  themeToggle?.addEventListener('click', ()=> document.documentElement.classList.toggle('light'));
+
+  /* ===== HERO typing ===== */
+  (function(){
+    const typingEl=document.getElementById('typing');
+    const phrases=["большие возможности.","настоящие партнёры.","места, которым доверяешь."];
+    let pi=0,ci=0,fwd=true;
+    (function loop(){
+      const p=phrases[pi]; typingEl.textContent=p.slice(0,ci);
+      ci+=fwd?1:-1;
+      if(ci===p.length+12)fwd=false;
+      if(ci===0){fwd=true;pi=(pi+1)%phrases.length}
+      setTimeout(loop,fwd?70:40);
+    })();
+  })();
+
+  /* ===== RATINGS ===== */
+  (function(){
+    const ratings={};
+    document.querySelectorAll('.stars').forEach(g=>{
+      const id=g.dataset.id; ratings[id]=ratings[id]||4;
+      g.querySelectorAll('.star').forEach(s=>s.addEventListener('click', ()=>{
+        const v=+s.dataset.v; ratings[id]=(ratings[id]+v)/2;
+        const counter=document.getElementById('r-'+id);
+        if(counter) counter.textContent = +counter.textContent + 1;
+        g.querySelectorAll('.star').forEach(st=>{
+          st.style.opacity=(+st.dataset.v<=Math.round(ratings[id]))?'1':'.35';
+        });
+      }));
+      g.querySelectorAll('.star').forEach(st=>{
+        st.style.opacity=(+st.dataset.v<=Math.round(ratings[id]))?'1':'.35';
+      });
+    });
+  })();
+
+  /* ===== MAP ===== */
+  (function(){
+    const mapModal=document.getElementById('mapModal');
+    const openMapBtn=document.getElementById('openMap');
+    const closeMapBtn=document.getElementById('closeMap');
+    let _map,_marker,_mapsLoaded=false;
+
+    openMapBtn?.addEventListener('click', ()=> openMapAt(36.9305,127.0458));
+    document.querySelectorAll('[data-map]').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        const [lat,lng]=b.dataset.map.split(',').map(Number);
+        openMapAt(lat,lng);
+      });
+    });
+    closeMapBtn?.addEventListener('click', ()=> mapModal.classList.remove('show'));
+
+    function openMapAt(lat,lng){ mapModal.classList.add('show'); ensureMap(lat,lng); }
+    function ensureMap(lat,lng){
+      if(!_mapsLoaded){
+        const s=document.createElement('script');
+        s.src=`https://maps.googleapis.com/maps/api/js?key=${GMAPS_KEY}&callback=__initMap`;
+        s.async=true;
+        window.__initMap=()=>{ _mapsLoaded=true; initMap(lat,lng); };
+        document.body.appendChild(s);
+      } else initMap(lat,lng);
+    }
+    function initMap(lat,lng){
+      const c={lat,lng};
+      if(!_map){
+        _map=new google.maps.Map(document.getElementById('map'),{
+          center:c, zoom:15,
+          styles:[{featureType:"poi",stylers:[{visibility:"off"}]}]
+        });
+        _marker=new google.maps.Marker({position:c,map:_map});
+      }else{
+        _map.setCenter(c); _marker.setPosition(c);
+      }
+    }
+  })();
+
+  /* ===== APPLY MODAL open/close ===== */
+  (function(){
+    const bePartner=document.getElementById('bePartner');
+    const modal=document.getElementById('applyModal');
+    const closeBtn=document.getElementById('applyClose');
+    const ctx=document.getElementById('f-context');
+
+    bePartner?.addEventListener('click', ()=> { if(ctx) ctx.value="Главная — кнопка"; modal.classList.add('show'); });
+    document.addEventListener('click',(e)=>{
+      const a=e.target.closest('[data-apply]');
+      if(a){ if(ctx) ctx.value=a.getAttribute('data-apply')||'Заявка'; modal.classList.add('show'); }
+    });
+    closeBtn?.addEventListener('click', ()=> modal.classList.remove('show'));
+    modal?.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.remove('show')});
+  })();
+
+  /* ===== PRICING (табы/карточки) ===== */
+  (function(){
+    const pricingModal=document.getElementById('pricingModal');
+    const closePricing=document.getElementById('closePricing');
+    const openPricingBtns=document.querySelectorAll('.open-pricing');
+    const prTabs=document.getElementById('prTabs');
+    const prGrid=document.getElementById('prGrid');
+    const prTyping=document.getElementById('prTyping');
+    let prTimer=null;
+
+    const sections={
+      food:{ title:"Еда",
+        tabs:["Фастфуд","Лапша","Супы","Мясо","Десерты"],
+        items:{
+          "Фастфуд":[{title:"Бургеры/Картошка",points:["Русское меню","Доставка","Купоны"],cat:"Еда,Фастфуд"},
+                     {title:"Курица/Пицца",points:["Семейные сеты","Остро/не остро","До 02:00"],cat:"Еда,Фастфуд"},
+                     {title:"Кофе/Сэндвич",points:["Утренние наборы","Студентам"],cat:"Еда,Фастфуд"}],
+          "Лапша":[{title:"Кальгуксу",points:["Домашняя лапша","Большие порции"],cat:"Еда,Лапша"},
+                   {title:"Рамен",points:["Авторские бульоны","Острый 1–5"],cat:"Еда,Лапша"},
+                   {title:"Фо/Удон",points:["Вьет/Япония","Быстро"],cat:"Еда,Лапша"}],
+          "Супы":[{title:"Кимчи-чиге",points:["Горячо","Сытно"],cat:"Еда,Супы"},
+                  {title:"Сундубу",points:["Мягкий тофу","Нежно"],cat:"Еда,Супы"},
+                  {title:"Борщ/Щи",points:["Домашний вкус"],cat:"Еда,Супы"}],
+          "Мясо":[{title:"Самгёпсаль",points:["На углях","Салаты включены"],cat:"Еда,Мясо"},
+                  {title:"Говядина",points:["Маринованная/чистая"],cat:"Еда,Мясо"},
+                  {title:"Шашлык",points:["Русская классика"],cat:"Еда,Мясо"}],
+          "Десерты":[{title:"Торты/Эклеры",points:["На заказ","Дизайн"],cat:"Еда,Десерты"},
+                     {title:"Пирожные",points:["Каждый день свежие"],cat:"Еда,Десерты"},
+                     {title:"Мороженое",points:["Домашнее"],cat:"Еда,Десерты"}]
+        }
+      },
+      salon:{ title:"Салоны",
+        tabs:["Маникюр","Парикмахер","Косметология"],
+        items:{
+          "Маникюр":[{title:"Маникюр + покрытие",points:["Палитра 200+","Стерильность"],cat:"Салоны"},
+                     {title:"Дизайн",points:["Аэрография","Стразы"],cat:"Салоны"}],
+          "Парикмахер":[{title:"Стрижка/Окрашивание",points:["Колористика","Keratin"],cat:"Салоны"}],
+          "Косметология":[{title:"Чистка/Массаж",points:["Аппаратная/мануальная"],cat:"Салоны"}]
+        }
+      },
+      auto:{ title:"Авто",
+        tabs:["СТО","Детейлинг","Шины"],
+        items:{
+          "СТО":[{title:"Диагностика",points:["Сканер/электрика"],cat:"Авто"}],
+          "Детейлинг":[{title:"Полировка/Защита",points:["Керамика","Матовые плёнки"],cat:"Авто"}],
+          "Шины":[{title:"Шиномонтаж",points:["Хранение сезонное"],cat:"Авто"}]
+        }
+      },
+      edu:{ title:"Образование",
+        tabs:["Языки","Подготовка","Кружки"],
+        items:{
+          "Языки":[{title:"Корейский A0–B2",points:["Группы/индивидуально"],cat:"Образование"}],
+          "Подготовка":[{title:"TOPIK",points:["Пробные тесты"],cat:"Образование"}],
+          "Кружки":[{title:"Танцы/Музыка",points:["Детские/взрослые"],cat:"Образование"}]
+        }
+      }
+    };
+
+    function startPrTyping(words, el){
+      if(prTimer){clearTimeout(prTimer); prTimer=null;}
+      let i=0,j=0,fwd=true;
+      const typeDelay=75, eraseDelay=45, holdFull=900, holdEmpty=420;
+      (function tick(){
+        const w=words[i]; el.textContent=w.slice(0,j);
+        if(fwd){ if(j<w.length){ j++; prTimer=setTimeout(tick,typeDelay); } else { fwd=false; prTimer=setTimeout(tick,holdFull); } }
+        else   { if(j>0){ j--; prTimer=setTimeout(tick,eraseDelay);} else { fwd=true; i=(i+1)%words.length; prTimer=setTimeout(tick,holdEmpty);} }
+      })();
+    }
+
+    function renderTab(sec,tab){
+      const list=sec.items[tab]||[]; prGrid.innerHTML='';
+      list.forEach(card=>{
+        const div=document.createElement('div'); div.className='pr-card';
+        div.innerHTML=`
+          <h4>${card.title}</h4>
+          <ul>${card.points.map(p=>`<li>${p}</li>`).join('')}</ul>
+          <div class="pr-cta">
+            <button class="btn map">Показать точки</button>
+            <button class="btn" data-apply="Прайс — ${card.title}">Оставить заявку</button>
+          </div>`;
+        div.querySelector('.map').addEventListener('click', ()=>{
+          const cats=(card.cat||'').split(',').map(s=>s.trim());
+          document.querySelectorAll('#cards .card').forEach(c=>{
+            const has=(c.dataset.cat||'').split(',').some(v=>cats.includes(v.trim()));
+            c.style.outline=has?'2px solid #6aa3ff':'none';
+            c.style.opacity=has?'1':'0.55';
+          });
+          pricingModal.classList.remove('show');
+          document.getElementById('openMap').click();
+        });
+        prGrid.appendChild(div);
+      });
+    }
+
+    function openSection(key){
+      const sec=sections[key]; if(!sec) return;
+      pricingModal.classList.add('show');
+      startPrTyping([sec.title,"лучшие подборки","рядом с вами"], prTyping);
+      prTabs.innerHTML='';
+      sec.tabs.forEach((t,idx)=>{
+        const el=document.createElement('button');
+        el.className='tab'+(idx===0?' active':'');
+        el.textContent=t;
+        el.addEventListener('click', ()=>{
+          prTabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+          el.classList.add('active'); renderTab(sec,t);
+        });
+        prTabs.appendChild(el);
+      });
+      renderTab(sec,sec.tabs[0]);
+    }
+
+    openPricingBtns.forEach(b=> b.addEventListener('click', ()=> openSection(b.dataset.section)));
+    closePricing?.addEventListener('click', ()=>{ if(prTimer){clearTimeout(prTimer); prTimer=null;} pricingModal.classList.remove('show'); });
+  })();
+
+  /* ===== Отправка в Google Sheets ===== */
+  (function(){
+    const form=document.getElementById('applyForm');
+    const resBox=document.getElementById('applyResult');
+    form?.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const payload={
+        context : document.getElementById('f-context').value.trim(),
+        name    : document.getElementById('f-name').value.trim(),
+        phone   : document.getElementById('f-phone').value.trim(),
+        email   : document.getElementById('f-email').value.trim(),
+        category: document.getElementById('f-cat').value,
+        message : document.getElementById('f-msg').value.trim(),
+        ua      : navigator.userAgent,
+        page    : location.href
+      };
+      if(!payload.name || !payload.phone){ showMsg("Заполни имя и телефон", false); return; }
+
+      try{
+        const r=await fetch(GAS_ENDPOINT,{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(payload)
+        });
+        const j=await r.json().catch(()=> ({}));
+        if(r.ok && j.ok){
+          showToast("✅ Заявка отправлена!"); form.reset();
+          document.getElementById('applyModal').classList.remove('show');
+          showMsg("", true);
+        }else{
+          showMsg("Не удалось отправить: " + (j.error||"ошибка сервера"), false);
+        }
+      }catch(err){
+        showMsg("Сеть недоступна или доступ к Web App закрыт", false);
+        console.error(err);
+      }
+    });
+
+    function showMsg(text, ok){
+      if(!resBox) return;
+      if(!text){ resBox.style.display='none'; return; }
+      resBox.style.display='block';
+      resBox.style.color = ok ? '#10b981' : '#ef4444';
+      resBox.textContent = text;
+    }
+  })();
+
+  /* ===== Toast ===== */
+  window.showToast = function(text){
+    const t=document.createElement('div'); t.className='toast'; t.textContent=text;
+    document.body.appendChild(t); setTimeout(()=>t.classList.add('show'), 30);
+    setTimeout(()=>t.remove(), 4000);
+  };
+
+} catch(err){
+  const d=document.createElement('div');
+  d.className='err-overlay';
+  d.innerHTML='<div class="err-box"><h3>🚨 Инициализация упала</h3><div>'+String(err)+'</div><button onclick="this.closest(\\'.err-overlay\\').remove()">Закрыть</button></div>';
+  document.body.appendChild(d);
+}}); // DOMContentLoaded
+</script>
+
 </body>
 </html>
