@@ -579,5 +579,64 @@ document.addEventListener('click',(e)=>{
   if(a){ openApply(a.getAttribute('data-apply')||'Заявка'); }
 });
 </script>
+  <!-- === КНОПКА ПРОВЕРКИ СВЯЗИ С GOOGLE SHEETS === -->
+<div style="position:fixed;bottom:20px;right:20px;z-index:1000;">
+  <button id="testConnection"
+    style="padding:10px 16px;background:#2563eb;color:#fff;border:none;
+    border-radius:12px;font-weight:700;cursor:pointer;
+    box-shadow:0 4px 10px rgba(0,0,0,.25)">
+    Проверить соединение
+  </button>
+</div>
+
+<script>
+const GAS_ENDPOINT = "https://script.google.com/macros/s/1M_GFKDNZYAMUulp9xDydakv4kPt4cqjVw4-Bs9JrtmU/exec";
+
+document.getElementById('testConnection').onclick = async () => {
+  const btn = document.getElementById('testConnection');
+  btn.textContent = "⏳ Проверяю...";
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(GAS_ENDPOINT + '?test=1', { method: 'GET' });
+    if (res.ok) {
+      alert('✅ Связь установлена! Google Script отвечает нормально.');
+    } else {
+      showFixHint('⚠️ Скрипт не ответил корректно.\n\nВозможные причины:\n1️⃣ Скрипт не опубликован (Deploy → New deployment → Web app → доступ “Anyone”).\n2️⃣ URL неправильный (в коде должен быть /exec).\n3️⃣ Ошибка в самом скрипте Apps Script.');
+    }
+  } catch (err) {
+    showFixHint('❌ Ошибка соединения: ' + err.message + '\n\nПроверь интернет или повтори попытку через минуту.');
+  }
+
+  btn.textContent = "Проверить соединение";
+  btn.disabled = false;
+};
+
+// Подсказки (модальное окно)
+function showFixHint(msg) {
+  const div = document.createElement('div');
+  div.style.position = 'fixed';
+  div.style.inset = '0';
+  div.style.display = 'grid';
+  div.style.placeItems = 'center';
+  div.style.background = 'rgba(0,0,0,.7)';
+  div.style.zIndex = '2000';
+  div.innerHTML = `
+    <div style="background:#fff;color:#111;padding:20px 28px;border-radius:16px;
+                max-width:480px;text-align:left;line-height:1.5;font-family:sans-serif;
+                box-shadow:0 8px 30px rgba(0,0,0,.4)">
+      <h3 style="margin-top:0">ℹ️ Проверка соединения</h3>
+      <pre style="white-space:pre-wrap">${msg}</pre>
+      <button style="margin-top:10px;padding:8px 14px;background:#2563eb;
+                     color:#fff;border:none;border-radius:10px;font-weight:700;
+                     cursor:pointer;" onclick="this.parentElement.parentElement.remove()">
+        Понятно
+      </button>
+    </div>
+  `;
+  document.body.appendChild(div);
+}
+</script>
+
 </body>
 </html>
