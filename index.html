@@ -7,7 +7,7 @@
 <meta name="description" content="Каталог и карта проверенных русскоязычных мест в Корее: еда, салоны, авто, образование. Партнёрство и продвижение." />
 
 <style>
-/* ---------- THEME (как раньше) ---------- */
+/* ---------- THEME ---------- */
 :root{
   --bg:#0b1020; --bg-2:#0e1228; --text:#ecf0ff; --muted:#aab3d3;
   --card:rgba(255,255,255,.06); --line:rgba(255,255,255,.12);
@@ -121,7 +121,7 @@ a{color:var(--acc);text-decoration:none}
 .pr-card ul{margin:10px 0 0;padding-left:18px}
 .pr-cta{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
 
-/* APPLY MODAL (заявка в Google Sheets) */
+/* APPLY MODAL (заявка) */
 .m-apply{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,.6);backdrop-filter:blur(6px);z-index:1000}
 .m-apply.show{display:grid}
 .m-apply .box{width:min(680px,calc(100vw - 28px));background:#0b1221;color:#e5e7eb;border:1px solid #1f2937;border-radius:16px;padding:18px}
@@ -137,22 +137,8 @@ a{color:var(--acc);text-decoration:none}
 .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
 
 /* Toast */
-.toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(90deg,#4b7bff,#8ab4ff);
-  color: #fff;
-  padding: 12px 22px;
-  border-radius: 12px;
-  font-weight: 700;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
-  z-index: 9999;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.toast.show { opacity: 1; }
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#4b7bff,#8ab4ff);color:#fff;padding:12px 22px;border-radius:12px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,0.2);z-index:9999;opacity:0;transition:opacity .3s}
+.toast.show{opacity:1}
 </style>
 </head>
 <body>
@@ -256,7 +242,7 @@ a{color:var(--acc);text-decoration:none}
   </div>
 </div>
 
-<!-- PRICING MODAL (категории) -->
+<!-- PRICING MODAL -->
 <div class="modal pricing" id="pricingModal">
   <div class="box">
     <div class="pr-head">
@@ -270,32 +256,30 @@ a{color:var(--acc);text-decoration:none}
   </div>
 </div>
 
-<!-- APPLY MODAL (Google Sheets) -->
+<!-- APPLY MODAL -->
 <div id="applyModal" class="m-apply" aria-hidden="true">
   <div class="box">
     <h3>Оставить заявку</h3>
     <form id="applyForm">
       <input type="hidden" id="f-context" name="context" value="Заявка с сайта">
-
       <div class="row">
         <div class="field">
           <label>Имя*</label>
-          <input id="f-name" type="text" name="name" required placeholder="Как вас зовут">
+          <input id="f-name" type="text" required placeholder="Как вас зовут">
         </div>
         <div class="field">
           <label>Телефон / KakaoTalk*</label>
-          <input id="f-phone" type="text" name="phone" required placeholder="+82-10-XXXX-XXXX / Kakao ID">
+          <input id="f-phone" type="text" required placeholder="+82-10-XXXX-XXXX / Kakao ID">
         </div>
       </div>
-
       <div class="row">
         <div class="field">
           <label>E-mail</label>
-          <input id="f-email" type="email" name="email" placeholder="example@mail.com">
+          <input id="f-email" type="email" placeholder="example@mail.com">
         </div>
         <div class="field">
           <label>Категория</label>
-          <select id="f-cat" name="category">
+          <select id="f-cat">
             <option>Еда</option>
             <option>Салоны / красота</option>
             <option>Автомеханики</option>
@@ -305,17 +289,14 @@ a{color:var(--acc);text-decoration:none}
           </select>
         </div>
       </div>
-
       <div class="field">
         <label>Комментарий</label>
-        <textarea id="f-msg" name="message" placeholder="Пару слов о запросе, удобное время для связи…"></textarea>
+        <textarea id="f-msg" placeholder="Пару слов о запросе, удобное время для связи…"></textarea>
       </div>
-
       <div class="hint">Данные улетят в Google Таблицу «SiyaEm Leads».</div>
-
       <div class="actions">
         <button type="button" class="btn btn-ghost" id="applyClose">Отмена</button>
-        <button type="submit" class="btn btn">Отправить</button>
+        <button type="submit" class="btn">Отправить</button>
       </div>
     </form>
     <div id="applyResult" class="hint" style="margin-top:8px;display:none"></div>
@@ -330,7 +311,8 @@ const GAS_ENDPOINT = "https://script.google.com/macros/s/AKfycbwJMX6VtEBWQflmPqN
 const GMAPS_KEY   = "AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro";
 
 /* THEME */
-document.getElementById('themeToggle').onclick=()=>document.documentElement.classList.toggle('light');
+document.getElementById('themeToggle').onclick =
+  () => document.documentElement.classList.toggle('light');
 
 /* HERO typing */
 const typingEl=document.getElementById('typing');
@@ -342,50 +324,26 @@ let pi=0,ci=0,fwd=true;
 const ratings={};
 document.querySelectorAll('.stars').forEach(g=>{
   const id=g.dataset.id; ratings[id]=ratings[id]||4;
-  g.querySelectorAll('.star').forEach(s=>s.onclick=()=>{const v=+s.dataset.v;ratings[id]=(ratings[id]+v)/2;document.getElementById('r-'+id).textContent=+document.getElementById('r-'+id).textContent+1;paint(g,ratings[id])});
+  g.querySelectorAll('.star').forEach(s=>s.onclick=()=>{
+    const v=+s.dataset.v; ratings[id]=(ratings[id]+v)/2;
+    document.getElementById('r-'+id').textContent=
+      +document.getElementById('r-'+id').textContent+1;
+    paint(g,ratings[id]);
+  });
   paint(g,ratings[id]);
 });
-function paint(g,val){g.querySelectorAll('.star').forEach(st=>st.style.opacity=(+st.dataset.v<=Math.round(val))?'1':'.35')}
-
-/* MAP (ленивая загрузка) */
-const mapModal=document.getElementById('mapModal');
-document.getElementById('openMap').onclick=()=>openMapAt(36.9305,127.0458);
-document.querySelectorAll('[data-map]').forEach(b=>b.onclick=()=>{const [lat,lng]=b.dataset.map.split(',').map(Number);openMapAt(lat,lng)});
-  // ===== ОТПРАВКА ЗАЯВКИ =====
-const applyForm = document.getElementById('applyForm');
-if (applyForm) {
-  applyForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const fd = new FormData(applyForm);
-    const payload = {
-      name: fd.get('Имя') || '',
-      phone: fd.get('Телефон') || '',
-      email: fd.get('Email') || '',
-      category: fd.get('Категория') || '',
-      message: fd.get('Комментарий') || '',
-      ua: navigator.userAgent,
-      page: location.href
-    };
-
-    try {
-      const res = await fetch(GAS_ENDPOINT, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      alert('✅ Заявка успешно отправлена!');
-      applyForm.reset();
-      document.getElementById('applyModal')?.classList.remove('show');
-    } catch (err) {
-      console.error(err);
-      alert('⚠️ Ошибка при отправке. Проверьте подключение.');
-    }
+function paint(g,val){
+  g.querySelectorAll('.star').forEach(st=>{
+    st.style.opacity=(+st.dataset.v<=Math.round(val))?'1':'.35';
   });
 }
 
+/* MAP */
+const mapModal=document.getElementById('mapModal');
+document.getElementById('openMap').onclick=()=>openMapAt(36.9305,127.0458);
+document.querySelectorAll('[data-map]').forEach(b=>b.onclick=()=>{
+  const [lat,lng]=b.dataset.map.split(',').map(Number);openMapAt(lat,lng);
+});
 document.getElementById('closeMap').onclick=()=>mapModal.classList.remove('show');
 let _map,_marker,_mapsLoaded=false;
 function openMapAt(lat,lng){mapModal.classList.add('show');ensureMap(lat,lng)}
@@ -402,27 +360,32 @@ function initMap(lat,lng){
   else{_map.setCenter(c);_marker.setPosition(c)}
 }
 
-/* CTA partner — открытие модалки заявки */
-document.getElementById('bePartner').onclick=()=>{openApply("Главная — кнопка")};
-document.addEventListener('click',(e)=>{const btn=e.target.closest('[data-apply]');if(btn){openApply(btn.getAttribute('data-apply')||'Заявка')}});
+/* ===== ОТКРЫТИЕ/ЗАКРЫТИЕ ФОРМЫ ===== */
+document.getElementById('bePartner').onclick=()=>openApply("Главная — кнопка");
+document.addEventListener('click',(e)=>{
+  const a=e.target.closest('[data-apply]');
+  if(a) openApply(a.getAttribute('data-apply')||'Заявка');
+});
 function openApply(contextText){
-  const m=document.getElementById('applyModal'); const ctx=document.getElementById('f-context');
+  const m=document.getElementById('applyModal');
+  const ctx=document.getElementById('f-context');
   if(ctx) ctx.value=contextText; m.classList.add('show');
 }
-
-/* APPLY (отправка в Google Sheets) */
 (function(){
-  const modal   = document.getElementById('applyModal');
-  const form    = document.getElementById('applyForm');
-  const resBox  = document.getElementById('applyResult');
-  const closeBtn= document.getElementById('applyClose');
-
-  if (closeBtn) closeBtn.onclick = () => modal.classList.remove('show');
+  const modal=document.getElementById('applyModal');
+  const closeBtn=document.getElementById('applyClose');
+  if(closeBtn) closeBtn.onclick=()=>modal.classList.remove('show');
   modal.addEventListener('click',(e)=>{if(e.target===modal) modal.classList.remove('show')});
+})();
 
-  form.addEventListener('submit', async (e) => {
+/* ===== ОТПРАВКА В GOOGLE SHEETS (единый обработчик) ===== */
+(function(){
+  const form=document.getElementById('applyForm');
+  const resBox=document.getElementById('applyResult');
+
+  form.addEventListener('submit', async (e)=>{
     e.preventDefault();
-    const payload = {
+    const payload={
       context : document.getElementById('f-context').value.trim(),
       name    : document.getElementById('f-name').value.trim(),
       phone   : document.getElementById('f-phone').value.trim(),
@@ -435,91 +398,81 @@ function openApply(contextText){
     if(!payload.name || !payload.phone){ showMsg("Заполни имя и телефон", false); return; }
 
     try{
-      const r=await fetch(GAS_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      const r=await fetch(GAS_ENDPOINT,{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+      });
       const j=await r.json().catch(()=>({}));
-      if(r.ok && j.ok){ showToast("✅ Заявка отправлена!"); form.reset(); modal.classList.remove('show'); }
-      else { showMsg("Не удалось отправить: " + (j.error || "ошибка сервера"), false); }
-    }catch(err){ console.error(err); showMsg("Сеть недоступна или неверный доступ Web App", false); }
+      if(r.ok && j.ok){ showToast("✅ Заявка отправлена!"); form.reset(); document.getElementById('applyModal').classList.remove('show'); }
+      else { showMsg("Не удалось отправить: "+(j.error||"ошибка сервера"), false); }
+    }catch(err){
+      console.error(err); showMsg("Сеть недоступна или неверный доступ Web App", false);
+    }
   });
 
   function showMsg(text, ok){
-    if (!resBox) return;
-    resBox.style.display = 'block';
+    resBox.style.display='block';
     resBox.style.color = ok ? '#10b981' : '#ef4444';
     resBox.textContent = text;
   }
 })();
 
-/* Toast */
-function showToast(text){
-  const t=document.createElement('div'); t.className='toast'; t.textContent=text; document.body.appendChild(t);
-  setTimeout(()=>t.classList.add('show'), 50); setTimeout(()=>t.remove(), 4000);
-}
-
-/* --------- PRICING (категории как у Notion Pricing) --------- */
+/* --------- PRICING --------- */
 const pricingModal=document.getElementById('pricingModal');
 const closePricing=document.getElementById('closePricing');
 const openPricingBtns=document.querySelectorAll('.open-pricing');
 const prTabs=document.getElementById('prTabs');
 const prGrid=document.getElementById('prGrid');
 const prTyping=document.getElementById('prTyping');
+closePricing.onclick=()=>{ if(prTimer){clearTimeout(prTimer); prTimer=null;} pricingModal.classList.remove('show'); };
 
-closePricing.onclick=()=>{pricingModal.classList.remove('show')};
-
-/* структура секций + подкатегорий */
 const sections={
-  food:{
-    title:"Еда",
+  food:{ title:"Еда",
     tabs:["Фастфуд","Лапша","Супы","Мясо","Десерты"],
     items:{
-      "Фастфуд":[{title:"Бургеры/Картошка",points:["Русское меню","Доставка","Купоны"],tags:["Еда","Фастфуд"],cat:"Еда,Фастфуд"},
-                 {title:"Курица/Пицца",points:["Семейные сеты","Остро/не остро","До 02:00"],tags:["Еда","Фастфуд"],cat:"Еда,Фастфуд"},
-                 {title:"Кофе/Сэндвич",points:["Утренние наборы","Студентам"],tags:["Еда","Кафе"],cat:"Еда,Фастфуд"}],
-      "Лапша":[{title:"Кальгуксу",points:["Домашняя лапша","Большие порции"],tags:["Еда","Лапша"],cat:"Еда,Лапша"},
-               {title:"Рамен",points:["Авторские бульоны","Острый 1–5"],tags:["Еда","Лапша"],cat:"Еда,Лапша"},
-               {title:"Фо/Удон",points:["Вьет/Япония","Быстро"],tags:["Еда","Лапша"],cat:"Еда,Лапша"}],
-      "Супы":[{title:"Кимчи-чиге",points:["Горячо","Сытно"],tags:["Еда","Супы"],cat:"Еда,Супы"},
-              {title:"Сундубу",points:["Мягкий тофу","Нежно"],tags:["Еда","Супы"],cat:"Еда,Супы"},
-              {title:"Борщ/Щи",points:["Домашний вкус"],tags:["Еда","Супы"],cat:"Еда,Супы"}],
-      "Мясо":[{title:"Самгёпсаль",points:["На углях","Салаты включены"],tags:["Еда","Мясо"],cat:"Еда,Мясо"},
-              {title:"Говядина",points:["Маринованная/чистая"],tags:["Еда","Мясо"],cat:"Еда,Мясо"},
-              {title:"Шашлык",points:["Русская классика"],tags:["Еда","Мясо"],cat:"Еда,Мясо"}],
-      "Десерты":[{title:"Торты/Эклеры",points:["На заказ","Дизайн"],tags:["Еда","Десерты"],cat:"Еда,Десерты"},
-                 {title:"Пирожные",points:["Каждый день свежие"],tags:["Еда","Десерты"],cat:"Еда,Десерты"},
-                 {title:"Мороженое",points:["Домашнее"],tags:["Еда","Десерты"],cat:"Еда,Десерты"}]
+      "Фастфуд":[{title:"Бургеры/Картошка",points:["Русское меню","Доставка","Купоны"],cat:"Еда,Фастфуд"},
+                 {title:"Курица/Пицца",points:["Семейные сеты","Остро/не остро","До 02:00"],cat:"Еда,Фастфуд"},
+                 {title:"Кофе/Сэндвич",points:["Утренние наборы","Студентам"],cat:"Еда,Фастфуд"}],
+      "Лапша":[{title:"Кальгуксу",points:["Домашняя лапша","Большие порции"],cat:"Еда,Лапша"},
+               {title:"Рамен",points:["Авторские бульоны","Острый 1–5"],cat:"Еда,Лапша"},
+               {title:"Фо/Удон",points:["Вьет/Япония","Быстро"],cat:"Еда,Лапша"}],
+      "Супы":[{title:"Кимчи-чиге",points:["Горячо","Сытно"],cat:"Еда,Супы"},
+              {title:"Сундубу",points:["Мягкий тофу","Нежно"],cat:"Еда,Супы"},
+              {title:"Борщ/Щи",points:["Домашний вкус"],cat:"Еда,Супы"}],
+      "Мясо":[{title:"Самгёпсаль",points:["На углях","Салаты включены"],cat:"Еда,Мясо"},
+              {title:"Говядина",points:["Маринованная/чистая"],cat:"Еда,Мясо"},
+              {title:"Шашлык",points:["Русская классика"],cat:"Еда,Мясо"}],
+      "Десерты":[{title:"Торты/Эклеры",points:["На заказ","Дизайн"],cat:"Еда,Десерты"},
+                 {title:"Пирожные",points:["Каждый день свежие"],cat:"Еда,Десерты"},
+                 {title:"Мороженое",points:["Домашнее"],cat:"Еда,Десерты"}]
     }
   },
-  salon:{
-    title:"Салоны",
+  salon:{ title:"Салоны",
     tabs:["Маникюр","Парикмахер","Косметология"],
     items:{
-      "Маникюр":[{title:"Маникюр + покрытие",points:["Палитра 200+","Стерильность"],tags:["Салоны"],cat:"Салоны"},
-                 {title:"Дизайн",points:["Аэрография","Стразы"],tags:["Салоны"],cat:"Салоны"}],
-      "Парикмахер":[{title:"Стрижка/Окрашивание",points:["Колористика","Keratin"],tags:["Салоны"],cat:"Салоны"}],
-      "Косметология":[{title:"Чистка/Массаж",points:["Аппаратная/мануальная"],tags:["Салоны"],cat:"Салоны"}]
+      "Маникюр":[{title:"Маникюр + покрытие",points:["Палитра 200+","Стерильность"],cat:"Салоны"},
+                 {title:"Дизайн",points:["Аэрография","Стразы"],cat:"Салоны"}],
+      "Парикмахер":[{title:"Стрижка/Окрашивание",points:["Колористика","Keratin"],cat:"Салоны"}],
+      "Косметология":[{title:"Чистка/Массаж",points:["Аппаратная/мануальная"],cat:"Салоны"}]
     }
   },
-  auto:{
-    title:"Авто",
+  auto:{ title:"Авто",
     tabs:["СТО","Детейлинг","Шины"],
     items:{
-      "СТО":[{title:"Диагностика",points:["Сканер/электрика"],tags:["Авто"],cat:"Авто"}],
-      "Детейлинг":[{title:"Полировка/Защита",points:["Керамика","Матовые плёнки"],tags:["Авто"],cat:"Авто"}],
-      "Шины":[{title:"Шиномонтаж",points:["Хранение сезонное"],tags:["Авто"],cat:"Авто"}]
+      "СТО":[{title:"Диагностика",points:["Сканер/электрика"],cat:"Авто"}],
+      "Детейлинг":[{title:"Полировка/Защита",points:["Керамика","Матовые плёнки"],cat:"Авто"}],
+      "Шины":[{title:"Шиномонтаж",points:["Хранение сезонное"],cat:"Авто"}]
     }
   },
-  edu:{
-    title:"Образование",
+  edu:{ title:"Образование",
     tabs:["Языки","Подготовка","Кружки"],
     items:{
-      "Языки":[{title:"Корейский A0–B2",points:["Группы/индивидуально"],tags:["Образование"],cat:"Образование"}],
-      "Подготовка":[{title:"TOPIK",points:["Пробные тесты"],tags:["Образование"],cat:"Образование"}],
-      "Кружки":[{title:"Танцы/Музыка",points:["Детские/взрослые"],tags:["Образование"],cat:"Образование"}]
+      "Языки":[{title:"Корейский A0–B2",points:["Группы/индивидуально"],cat:"Образование"}],
+      "Подготовка":[{title:"TOPIK",points:["Пробные тесты"],cat:"Образование"}],
+      "Кружки":[{title:"Танцы/Музыка",points:["Детские/взрослые"],cat:"Образование"}]
     }
   }
 };
-
-openPricingBtns.forEach(b=>b.onclick=()=>openSection(b.dataset.section));
 
 let prTimer=null;
 function startPrTyping(words, el){
@@ -532,24 +485,24 @@ function startPrTyping(words, el){
     else   { if(j>0){ j--; prTimer=setTimeout(tick,eraseDelay);} else { fwd=true; i=(i+1)%words.length; prTimer=setTimeout(tick,holdEmpty);} }
   })();
 }
+openPricingBtns.forEach(b=>b.onclick=()=>openSection(b.dataset.section));
 function openSection(key){
   const sec=sections[key]; if(!sec) return;
   pricingModal.classList.add('show');
   startPrTyping([sec.title,"лучшие подборки","рядом с вами"], prTyping);
-
-  // tabs
   prTabs.innerHTML='';
   sec.tabs.forEach((t,idx)=>{
-    const el=document.createElement('button'); el.className='tab'+(idx===0?' active':''); el.textContent=t;
-    el.onclick=()=>{prTabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); el.classList.add('active');renderTab(sec,t)};
+    const el=document.createElement('button');
+    el.className='tab'+(idx===0?' active':'');
+    el.textContent=t;
+    el.onclick=()=>{ prTabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); el.classList.add('active'); renderTab(sec,t); };
     prTabs.appendChild(el);
   });
   renderTab(sec,sec.tabs[0]);
 }
-document.getElementById('closePricing').onclick=()=>{ if(prTimer){clearTimeout(prTimer); prTimer=null;} pricingModal.classList.remove('show'); };
-
 function renderTab(sec,tab){
-  const list=sec.items[tab]||[]; prGrid.innerHTML='';
+  const list=sec.items[tab]||[];
+  prGrid.innerHTML='';
   list.forEach(card=>{
     const div=document.createElement('div'); div.className='pr-card';
     div.innerHTML=`
@@ -572,71 +525,6 @@ function renderTab(sec,tab){
     prGrid.appendChild(div);
   });
 }
-
-/* APPLY DELEGATE — клики по data-apply */
-document.addEventListener('click',(e)=>{
-  const a=e.target.closest('[data-apply]');
-  if(a){ openApply(a.getAttribute('data-apply')||'Заявка'); }
-});
 </script>
-  <!-- === КНОПКА ПРОВЕРКИ СВЯЗИ С GOOGLE SHEETS === -->
-<div style="position:fixed;bottom:20px;right:20px;z-index:1000;">
-  <button id="testConnection"
-    style="padding:10px 16px;background:#2563eb;color:#fff;border:none;
-    border-radius:12px;font-weight:700;cursor:pointer;
-    box-shadow:0 4px 10px rgba(0,0,0,.25)">
-    Проверить соединение
-  </button>
-</div>
-
-<script>
-const GAS_ENDPOINT = "https://script.google.com/macros/s/1M_GFKDNZYAMUulp9xDydakv4kPt4cqjVw4-Bs9JrtmU/exec";
-
-document.getElementById('testConnection').onclick = async () => {
-  const btn = document.getElementById('testConnection');
-  btn.textContent = "⏳ Проверяю...";
-  btn.disabled = true;
-
-  try {
-    const res = await fetch(GAS_ENDPOINT + '?test=1', { method: 'GET' });
-    if (res.ok) {
-      alert('✅ Связь установлена! Google Script отвечает нормально.');
-    } else {
-      showFixHint('⚠️ Скрипт не ответил корректно.\n\nВозможные причины:\n1️⃣ Скрипт не опубликован (Deploy → New deployment → Web app → доступ “Anyone”).\n2️⃣ URL неправильный (в коде должен быть /exec).\n3️⃣ Ошибка в самом скрипте Apps Script.');
-    }
-  } catch (err) {
-    showFixHint('❌ Ошибка соединения: ' + err.message + '\n\nПроверь интернет или повтори попытку через минуту.');
-  }
-
-  btn.textContent = "Проверить соединение";
-  btn.disabled = false;
-};
-
-// Подсказки (модальное окно)
-function showFixHint(msg) {
-  const div = document.createElement('div');
-  div.style.position = 'fixed';
-  div.style.inset = '0';
-  div.style.display = 'grid';
-  div.style.placeItems = 'center';
-  div.style.background = 'rgba(0,0,0,.7)';
-  div.style.zIndex = '2000';
-  div.innerHTML = `
-    <div style="background:#fff;color:#111;padding:20px 28px;border-radius:16px;
-                max-width:480px;text-align:left;line-height:1.5;font-family:sans-serif;
-                box-shadow:0 8px 30px rgba(0,0,0,.4)">
-      <h3 style="margin-top:0">ℹ️ Проверка соединения</h3>
-      <pre style="white-space:pre-wrap">${msg}</pre>
-      <button style="margin-top:10px;padding:8px 14px;background:#2563eb;
-                     color:#fff;border:none;border-radius:10px;font-weight:700;
-                     cursor:pointer;" onclick="this.parentElement.parentElement.remove()">
-        Понятно
-      </button>
-    </div>
-  `;
-  document.body.appendChild(div);
-}
-</script>
-
 </body>
 </html>
