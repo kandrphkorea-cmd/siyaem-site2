@@ -1,553 +1,479 @@
 <!doctype html>
-<html lang="ru" data-theme="light">
+<html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SiyaEm Korea — проверенные места</title>
-  <meta name="description" content="Каталог и промо русскоязычных проверенных заведений в Корее: еда, салоны, механики, сервисы.">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SiyaEm — русскоязычные места в Корее</title>
+<meta name="description" content="Каталог и карта проверенных русскоязычных мест в Корее: еда, салоны, авто, образование. Партнёрство и продвижение." />
 
-  <style>
-    :root{
-      --brand:#2563eb;          /* основной синий */
-      --brand-2:#60a5fa;        /* светлый акцент */
-      --gold:#f59e0b;           /* золото (бейдж/звезды) */
-      --ok:#10b981;             /* зелёный */
-      --danger:#ef4444;         /* красный */
-      --bg:#0f172a;             /* фон тёмной */
-      --bg-soft:#0b1221;        /* карточки тёмной */
-      --txt:#e5e7eb;            /* текст тёмной */
-      --muted:#94a3b8;          /* вторичный тёмной */
-      --ring:rgba(59,130,246,.35);
-      --rad:16px;
-      --shadow:0 10px 28px rgba(2,8,23,.12), 0 2px 6px rgba(2,8,23,.08);
-      --chip:#1f2a44;
-    }
-    [data-theme="light"]{
-      --bg:#f7fbff;
-      --bg-soft:#ffffff;
-      --txt:#0f172a;
-      --muted:#64748b;
-      --chip:#e9eef8;
-      --shadow:0 10px 26px rgba(2,8,23,.06), 0 2px 5px rgba(2,8,23,.05);
-    }
+<style>
+/* ---------- Тема и дизайн (Stripe-ish + Notion-ish) ---------- */
+:root{
+  --bg:#0b1020;
+  --bg-2:#0e1228;
+  --text:#ecf0ff;
+  --muted:#aab3d3;
+  --card:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.12);
+  --chip:#1f2a60;
+  --acc:#6aa3ff;
+  --acc-2:#ffd166;
+  --good:#10b981;
+  --warn:#f59e0b;
+  --bad:#ef4444;
+  --radius:18px;
+  --shadow:0 8px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05);
+  --blur:16px;
+}
+:root.light{
+  --bg:#f6f7fb;
+  --bg-2:#ffffff;
+  --text:#0f1222;
+  --muted:#4a5476;
+  --card:rgba(255,255,255,.85);
+  --line:rgba(0,0,0,.08);
+  --chip:#eef2ff;
+  --acc:#2557ff;
+  --acc-2:#ffb703;
+  --shadow:0 8px 24px rgba(10,14,34,.08);
+  --blur:8px;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--text);
+  background: radial-gradient(1200px 800px at 20% -10%, #1a2b6f55 0%, transparent 60%),
+              radial-gradient(900px 700px at 120% 10%, #3f126955 0%, transparent 60%),
+              linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 60%, var(--bg) 100%);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  letter-spacing:.2px;
+}
+a{color:var(--acc);text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:22px}
+.glass{
+  background:var(--card);
+  backdrop-filter:blur(var(--blur));
+  -webkit-backdrop-filter:blur(var(--blur));
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.row{display:grid;grid-template-columns:1fr;gap:18px}
+@media (min-width:960px){.row{grid-template-columns:repeat(12,1fr)}}
 
-    *{box-sizing:border-box}
-    body{margin:0;background:linear-gradient(180deg,#eef5ff,#f7fbff 35% 65%, #eef3fb);color:var(--txt);font:16px/1.45 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    a{color:inherit;text-decoration:none}
-    .wrap{max-width:1100px;margin:0 auto;padding:18px}
-    header{position:sticky;top:0;z-index:30;backdrop-filter:blur(10px);border-bottom:1px solid rgba(2,8,23,.07)}
-    header .bar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
-    .brand-bullet{width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 16px var(--gold)}
-    .menu{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{cursor:pointer;border:1px solid rgba(2,8,23,.1);background:var(--bg-soft);padding:10px 14px;border-radius:12px}
-    .btn:hover{border-color:var(--brand-2)}
-    .btn-primary{background:var(--brand);color:#fff;border-color:transparent}
-    .btn-primary:hover{filter:brightness(1.05)}
-    .chip{display:inline-flex;align-items:center;gap:8px;background:var(--chip);padding:6px 10px;border-radius:999px;color:var(--muted);font-size:13px}
-    .filters{background:var(--bg-soft);border-radius:var(--rad);box-shadow:var(--shadow);padding:14px;border:1px solid rgba(2,8,23,.06);display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-    .select, input[type="search"]{width:100%;background:#fff;border:1px solid rgba(2,8,23,.12);border-radius:12px;padding:10px 12px;outline:0}
-    [data-theme="dark"] .select, [data-theme="dark"] input[type="search"]{background:#0b1221;color:#e5e7eb;border-color:#1f2937}
-    .ads-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:14px}
-    .ad{position:relative;background:var(--bg-soft);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);border:1px solid rgba(2,8,23,.08)}
-    .ad img{width:100%;height:280px;object-fit:cover;display:block}
-    .ad .tag{position:absolute;left:12px;top:12px;background:rgba(255,255,255,.85);color:#0f172a;border-radius:999px;padding:6px 10px;font-size:12px;border:1px solid rgba(2,8,23,.08)}
-    [data-theme="dark"] .ad .tag{background:rgba(2,8,23,.85);color:#cbd5e1;border-color:#1f2937}
-    section.card{background:var(--bg-soft);border-radius:var(--rad);box-shadow:var(--shadow);border:1px solid rgba(2,8,23,.06);padding:16px;margin-top:18px}
+/* ---------- ШАПКА ---------- */
+.header{
+  position:sticky; top:0; z-index:50;
+  background:linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,0));
+  backdrop-filter:saturate(1.2) blur(10px);
+}
+.nav{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:12px 0;
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800}
+.badge-dot{width:10px;height:10px;border-radius:50%;background:var(--acc-2);box-shadow:0 0 12px var(--acc-2)}
+.theme-toggle{
+  appearance:none;border:1px solid var(--line); background:var(--chip); color:var(--text);
+  padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:700
+}
+.theme-toggle:hover{filter:brightness(1.05)}
 
-    /* партнёры */
-    .partners{display:grid;gap:12px}
-    .partner{display:grid;grid-template-columns:68px 1fr auto;gap:12px;padding:12px;border-radius:14px;border:1px solid rgba(2,8,23,.08);background:linear-gradient(180deg,rgba(37,99,235,.03),transparent 35%)}
-    [data-theme="dark"] .partner{background:linear-gradient(180deg,rgba(37,99,235,.12),transparent 35%)}
-    .partner .logo{width:68px;height:68px;border-radius:12px;display:grid;place-items:center;background:#0b1221;color:#fff}
-    [data-theme="light"] .partner .logo{background:#eef3ff;color:#0f172a}
-    .partner h4{margin:0 0 4px 0;font-size:16px;display:flex;align-items:center;gap:8px}
-    .badges{display:inline-flex;gap:6px;flex-wrap:wrap}
-    .badge{font-size:11px;background:#fff;border:1px solid rgba(2,8,23,.08);padding:4px 8px;border-radius:999px;color:#64748b}
-    [data-theme="dark"] .badge{background:#0b1221;border-color:#1f2937;color:#9ca3af}
-    .meta{font-size:13px;color:var(--muted)}
-    .p-actions{display:flex;gap:8px;align-items:center}
-    .star{color:#fbbf24;font-size:16px}
-    .stars{display:inline-flex;gap:2px;vertical-align:middle}
-    .fav{cursor:pointer;font-size:18px;line-height:0;color:#ef4444;opacity:.85}
-    .fav.active{filter:drop-shadow(0 0 8px rgba(239,68,68,.4))}
-    .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+/* ---------- ЛИЦА-МАСКОТЫ (Notion vibe) ---------- */
+.mascots{
+  display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:10px
+}
+.face{
+  width:46px;height:46px;border-radius:50%;
+  background:radial-gradient(circle at 30% 25%, #fff 0%, #e9ecff 35%, #c7cff9 70%, #aab3ee 100%);
+  border:2px solid #0003; display:grid;place-items:center;
+  box-shadow:0 4px 18px rgba(0,0,0,.18);
+  transform:translateZ(0);
+}
+.face svg{width:28px;height:28px}
 
-    /* модалки */
-    .modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,.6);backdrop-filter:blur(6px);z-index:50}
-    .modal.show{display:grid}
-    .box{width:min(720px,calc(100vw - 28px));max-height:80vh;overflow:auto;background:var(--bg-soft);border:1px solid rgba(2,8,23,.12);border-radius:18px;padding:16px}
-    .box h3{margin:0 0 8px}
-    .field{display:flex;flex-direction:column;gap:6px;margin:8px 0}
-    textarea,input[type="text"],input[type="tel"]{background:#fff;border:1px solid rgba(2,8,23,.12);border-radius:12px;padding:10px 12px;outline:none}
-    [data-theme="dark"] textarea,[data-theme="dark"] input[type="text"],[data-theme="dark"] input[type="tel"]{background:#0b1221;color:#e5e7eb;border-color:#1f2937}
-    .center{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
-    footer{padding:28px 0 40px;text-align:center;color:var(--muted)}
+/* ---------- HERO ---------- */
+.hero{padding:28px; margin-top:10px}
+.h1{
+  font-size:clamp(32px,6vw,56px); line-height:1.05; font-weight:900; margin:8px 0 10px
+}
+.h1 strong{background:linear-gradient(90deg,#8ab4ff,#cba6ff,#ffcd7a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hint{color:var(--muted)}
+.typing{display:inline-block;border-right:2px solid var(--acc);padding-right:4px;animation:blink 1s step-end infinite}
+@keyframes blink{50%{border-color:transparent}}
 
-    /* факты и нижняя промо-сетка */
-    .facts{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .fact{background:var(--bg-soft);border:1px solid rgba(2,8,23,.06);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
-    .ads-bottom{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+/* ---------- ФИЛЬТРЫ + CTA ---------- */
+.filters{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:16px
+}
+.chip{
+  background:var(--chip); border:1px solid var(--line); padding:10px 12px; border-radius:999px; color:var(--text); cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px; font-weight:700
+}
+.primary{
+  background:linear-gradient(90deg,#4b7bff,#8ab4ff); color:white; border:none;
+}
+.primary:hover{filter:brightness(1.05)}
+.ghost{background:transparent}
 
-    /* мини-иконки */
-    .ico{width:18px;height:18px;display:inline-block;vertical-align:-3px}
-    .ico-food{filter:hue-rotate(300deg)}
-    .ico-salon{filter:hue-rotate(30deg)}
-    .ico-mech{filter:hue-rotate(180deg)}
-    .ico-ent{filter:hue-rotate(90deg)}
-    .tiny{font-size:12px;color:var(--muted)}
-  </style>
+/* ---------- РЕКЛАМНЫЕ ТАЙЛЫ ---------- */
+.ads{margin-top:18px}
+.ad{
+  aspect-ratio: 4/3; border-radius:20px; overflow:hidden; position:relative;
+  background:#0d142e; border:1px dashed #6aa3ff66; box-shadow:var(--shadow);
+}
+.ad::before{
+  content:"Рекламный слот"; position:absolute; top:10px; left:12px;
+  font-size:12px; color:#fff8; background:#0006; padding:4px 8px; border-radius:999px
+}
+.ad img{width:100%;height:100%;object-fit:cover;filter:contrast(1.05) saturate(1.05)}
+.ad .frame{
+  position:absolute; inset:0; pointer-events:none; border-radius:20px;
+  border:2px solid transparent; background:
+    linear-gradient(#0000,#0000) padding-box,
+    linear-gradient(135deg,#6aa3ff66,#ffd16666) border-box;
+}
+
+/* ---------- КАТАЛОГ ---------- */
+.catalog{padding:20px}
+.cards{display:grid;grid-template-columns:1fr; gap:14px}
+@media (min-width:840px){.cards{grid-template-columns:repeat(2,1fr)}}
+.card{
+  display:grid; grid-template-columns:78px 1fr; gap:14px; padding:14px; border:1px solid var(--line); border-radius:16px; background:var(--card);
+  box-shadow:var(--shadow);
+}
+.card .logo{
+  width:78px;height:78px;border-radius:16px; background:#0d142e url('') center/cover no-repeat; display:grid;place-items:center;
+  border:1px solid var(--line);
+}
+.card .meta small{color:var(--muted)}
+.stars{display:flex;gap:4px;align-items:center;margin:6px 0}
+.star{
+  width:18px;height:18px; display:inline-grid; place-items:center; color:#ffcc66; cursor:pointer; filter:drop-shadow(0 2px 4px #0003)
+}
+.card .actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{
+  padding:10px 12px;border-radius:10px;border:1px solid var(--line); background:var(--chip); color:var(--text); cursor:pointer; font-weight:700
+}
+.btn.map{background:linear-gradient(90deg,#3a78ff,#6aa3ff); color:#fff;border:none}
+
+/* ---------- ФАКТЫ / РЕЦЕПТЫ / ЗАМЕТКИ (Notion-like) ---------- */
+.blocks{padding:20px; display:grid; gap:14px; grid-template-columns:1fr}
+@media (min-width:960px){.blocks{grid-template-columns:2fr 1fr}}
+.block{
+  background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; box-shadow:var(--shadow)
+}
+.block h3{margin:0 0 8px}
+.note{border-left:4px solid var(--acc); padding-left:12px}
+.fact{border-left:4px solid var(--acc-2); padding-left:12px}
+.recipe{border-left:4px solid var(--good); padding-left:12px}
+
+/* ---------- ДЛЯ КОГО ---------- */
+.forwho{
+  padding:20px; display:grid; gap:14px;
+  grid-template-columns:repeat(2,1fr)
+}
+@media (min-width:960px){.forwho{grid-template-columns:repeat(4,1fr)}}
+.tile{
+  background:var(--card); border:1px solid var(--line); border-radius:16px; padding:14px; box-shadow:var(--shadow)
+}
+.tile small{color:var(--muted)}
+
+/* ---------- MAP MODAL ---------- */
+.modal{position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,.5); z-index:60}
+.modal.show{display:grid}
+.modal .box{width:min(900px,calc(100vw - 24px)); background:var(--bg-2); border:1px solid var(--line); border-radius:16px; overflow:hidden}
+.map-header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
+.map-body{height:480px}
+.close{cursor:pointer;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--chip);font-weight:700}
+
+/* ---------- FOOTER ---------- */
+footer{color:var(--muted);text-align:center;padding:28px 0}
+</style>
 </head>
 <body>
 
-<header>
-  <div class="wrap bar">
-    <div class="brand"><span class="brand-bullet"></span> SiyaEm Korea</div>
-    <div class="menu">
-      <button class="btn" data-open="#about">О нас</button>
-      <button class="btn" data-open="#services">Услуги</button>
-      <button class="btn" id="themeToggle">Светлая/Тёмная</button>
-      <button class="btn" id="langToggle">RU</button>
-      <button class="btn-primary" data-open="#partnerGate">Стать партнёром</button>
+<!-- ========== HEADER ========== -->
+<div class="header">
+  <div class="wrap nav">
+    <div class="brand">
+      <span class="badge-dot"></span>
+      <span>SiyaEm Korea</span>
     </div>
+    <div class="mascots">
+      <!-- простые свои лица (SVG) -->
+      <div class="face" title="hi">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1c2756" stroke-width="2">
+          <circle cx="8" cy="9" r="1.8"/><circle cx="16" cy="9" r="1.8"/>
+          <path d="M6 16c2 2 10 2 12-2" />
+        </svg>
+      </div>
+      <div class="face" title="chef">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1c2756" stroke-width="2">
+          <path d="M4 9h16" /><path d="M7 9c0-3 10-3 10 0" />
+          <circle cx="9" cy="13" r="1.5"/><circle cx="15" cy="13" r="1.5"/>
+        </svg>
+      </div>
+      <div class="face" title="camera">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1c2756" stroke-width="2">
+          <rect x="5" y="8" width="14" height="10" rx="2"/>
+          <circle cx="12" cy="13" r="3"/><path d="M9 8l1.5-2h3L15 8"/>
+        </svg>
+      </div>
+      <div class="face" title="salon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1c2756" stroke-width="2">
+          <path d="M6 18c4-2 8-2 12 0" /><circle cx="9" cy="10" r="1.4"/><circle cx="15" cy="10" r="1.4"/>
+        </svg>
+      </div>
+    </div>
+    <button class="theme-toggle" id="themeToggle">Светлая/Тёмная</button>
   </div>
-</header>
+</div>
 
-<main class="wrap">
-  <!-- Фильтры -->
-  <section class="filters">
-    <select id="fProvince" class="select">
-      <option value="">Провинция (все)</option>
-    </select>
-    <select id="fCity" class="select">
-      <option value="">Город (все)</option>
-    </select>
-    <select id="fCategory" class="select">
-      <option value="">Категория (все)</option>
-      <option>Еда 🍜</option>
-      <option>Салоны 💅</option>
-      <option>Автомеханики 🔧</option>
-      <option>Развлечения 🎯</option>
-      <option>Услуги 🧰</option>
-    </select>
-    <button id="applyFilters" class="btn">Показать</button>
-  </section>
-
-  <!-- Верхние промо-карточки -->
-  <div class="ads-grid">
-    <div class="ad"><span class="tag">Реклама — слот #1</span>
-      <img src="https://images.unsplash.com/photo-1521017432531-fbd92d4566b6?q=80&w=1200&auto=format&fit=crop" alt="">
+<!-- ========== HERO ========== -->
+<div class="wrap">
+  <section class="glass hero">
+    <div class="h1">
+      Один сервис. <strong id="typing" class="typing"></strong>
     </div>
-    <div class="ad"><span class="tag">Реклама — слот #2</span>
-      <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop" alt="">
-    </div>
-    <div class="ad"><span class="tag">Реклама — слот #3</span>
-      <img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?q=80&w=1200&auto=format&fit=crop" alt="">
-    </div>
-  </div>
+    <div class="hint">Показываем только проверенные русскоязычные места с лицензией. Помогаем партнёрам зарабатывать, гостям — быстро находить своё.</div>
 
-  <!-- Партнёры -->
-  <section class="card">
-    <div class="chip">Партнёры (модерировано)</div>
-    <div id="partnersList" class="partners" style="margin-top:12px"></div>
-  </section>
-
-  <!-- Факты и полезные блоки -->
-  <section class="card">
-    <div class="facts">
-      <div class="fact">
-        <div class="chip">А вы знали?</div>
-        <div id="factText" style="margin-top:10px"></div>
-        <div class="tiny" id="factSrc" style="margin-top:6px"></div>
-      </div>
-      <div class="fact">
-        <div class="chip">Для спонсоров</div>
-        <p style="margin-top:10px">Рекламные блоки 3× сверху и 3× снизу (адаптив). Возможна гео-таргетированная выдача по провинциям и городам.</p>
-        <div class="row">
-          <button class="btn" data-open="#contacts">Связаться</button>
-          <button class="btn-primary" data-open="#partnerGate">Разместить рекламу</button>
-        </div>
-      </div>
+    <div class="filters">
+      <button class="chip" data-cat="Еда">🍜 Еда</button>
+      <button class="chip" data-cat="Салоны">💅 Салоны</button>
+      <button class="chip" data-cat="Авто">🚗 Авто</button>
+      <button class="chip" data-cat="Образование">🎓 Образование</button>
+      <button class="chip ghost" id="openMap">Показать на карте</button>
+      <button class="chip primary" id="bePartner">Стать партнёром</button>
     </div>
-  </section>
 
-  <!-- Нижние промо-карточки -->
-  <section class="card">
-    <div class="ads-bottom">
-      <div class="ad"><span class="tag">Промо</span>
-        <img src="https://images.unsplash.com/photo-1541542684-4a4c2c9533cc?q=80&w=1200&auto=format&fit=crop" alt="">
+    <!-- Рекламные тайлы -->
+    <div class="ads row">
+      <div class="ad glass" style="grid-column: span 4">
+        <img alt="" src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1200&auto=format&fit=crop" />
+        <div class="frame"></div>
       </div>
-      <div class="ad"><span class="tag">Промо</span>
-        <img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=1200&auto=format&fit=crop" alt="">
+      <div class="ad glass" style="grid-column: span 4">
+        <img alt="" src="https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?q=80&w=1200&auto=format&fit=crop" />
+        <div class="frame"></div>
       </div>
-      <div class="ad"><span class="tag">Промо</span>
-        <img src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=1200&auto=format&fit=crop" alt="">
+      <div class="ad glass" style="grid-column: span 4">
+        <img alt="" src="https://images.unsplash.com/photo-1543353071-087092ec393e?q=80&w=1200&auto=format&fit=crop" />
+        <div class="frame"></div>
       </div>
     </div>
   </section>
-</main>
-
-<footer>© 2025 SiyaEm Korea. Все права защищены.</footer>
-
-<!-- МОДАЛКИ -->
-<div class="modal" id="about">
-  <div class="box">
-    <h3>О нас</h3>
-    <p>Мы собираем только <b>лицензированные</b> русскоязычные места в Корее и модерируем каждую заявку. Наша цель — удобный и честный каталог «рядом с вами».</p>
-    <div class="center"><button class="btn-primary" data-close>Понятно</button></div>
-  </div>
 </div>
 
-<div class="modal" id="services">
-  <div class="box">
-    <h3>Услуги</h3>
-    <ul>
-      <li>Проверка лицензий и модерация карточек</li>
-      <li>Продвижение в каталоге и соцсетях</li>
-      <li>Фото/видео-контент и оформление</li>
-      <li>Пакеты для спонсоров и городских партнёров</li>
-    </ul>
-    <div class="center"><button class="btn-primary" data-close>Ок</button></div>
-  </div>
-</div>
-
-<div class="modal" id="contacts">
-  <div class="box">
-    <h3>Контакты</h3>
-    <p>Республика Корея, 충남 아산시 둔포면<br/>Email: support@siyaem.kr</p>
-    <div class="center"><button class="btn-primary" data-close>Закрыть</button></div>
-  </div>
-</div>
-
-<!-- Гейт: гость / партнёр -->
-<div class="modal" id="partnerGate">
-  <div class="box">
-    <h3>Добро пожаловать!</h3>
-    <p>Выберите роль, чтобы продолжить.</p>
-    <div class="center">
-      <button class="btn-primary" id="enterGuest">Зайти как гость</button>
-      <button class="btn" data-open="#partnerForm">Стать партнёром</button>
-    </div>
-  </div>
-</div>
-
-<!-- Анкета партнёра (заглушка, без бэка) -->
-<div class="modal" id="partnerForm">
-  <div class="box">
-    <h3>Анкета партнёра</h3>
-    <p class="tiny">* Полная интеграция с Google Sheets добавляется позже; пока используем email.</p>
-    <div class="field">
-      <label>Название</label>
-      <input id="pfName" type="text" placeholder="Напр.: Mr. Cook" />
-    </div>
-    <div class="field">
-      <label>Email / Kakao / Телефон</label>
-      <input id="pfContact" type="text" placeholder="Контакт для связи" />
-    </div>
-    <div class="field">
-      <label>Коротко о месте</label>
-      <textarea id="pfDesc" placeholder="Описание, категория, адрес"></textarea>
-    </div>
-    <div class="center">
-      <button class="btn-primary" id="pfSend">Отправить</button>
-      <button class="btn" data-close>Отмена</button>
-    </div>
-    <div id="pfResult" class="tiny" style="margin-top:8px;color:var(--ok);display:none">Заявка отправлена. Мы свяжемся в течение 24 ч.</div>
-  </div>
-</div>
-
-<!-- Отзыв -->
-<div class="modal" id="reviewModal">
-  <div class="box">
-    <h3 id="revTitle">Оставить отзыв</h3>
-    <div class="field">
-      <label>Оценка</label>
-      <div id="revStars" class="stars"></div>
-    </div>
-    <div class="field">
-      <label>Комментарий</label>
-      <textarea id="revText" placeholder="Коротко о впечатлении"></textarea>
-    </div>
-    <div class="center">
-      <button class="btn-primary" id="revSend">Сохранить</button>
-      <button class="btn" data-close>Отмена</button>
-    </div>
-  </div>
-</div>
-
-<!-- Чат -->
-<div class="modal" id="chatModal">
-  <div class="box">
-    <h3 id="chatTitle">Чат</h3>
-    <div id="chatList" style="border:1px solid rgba(2,8,23,.12);border-radius:12px;padding:10px;max-height:40vh;overflow:auto;margin-bottom:10px"></div>
-    <div class="row">
-      <input id="chatMsg" type="text" placeholder="Сообщение..." style="flex:1" />
-      <button class="btn-primary" id="chatSend">Отправить</button>
-    </div>
-    <div class="center" style="margin-top:8px">
-      <button class="btn" data-close>Закрыть</button>
-    </div>
-  </div>
-</div>
-
-<script>
-/* ======= УТИЛЫ ======= */
-const $ = s => document.querySelector(s);
-const $$ = s => document.querySelectorAll(s);
-const LS = (k,v)=> (v===undefined? JSON.parse(localStorage.getItem(k)||'null') : localStorage.setItem(k,JSON.stringify(v)));
-const THEME_KEY = 'siyaem_theme';
-const LANG_KEY  = 'siyaem_lang';
-const GUEST_KEY = 'siyaem_gate';
-const RATING_KEY= id => `rate_${id}`;
-const FAV_KEY   = 'fav_places';
-const CHAT_KEY  = id => `chat_${id}`;
-
-/* ======= ТЕМА / ЯЗЫК ======= */
-(function initTheme(){
-  const theme = LS(THEME_KEY) || 'light';
-  document.documentElement.setAttribute('data-theme', theme);
-  $('#themeToggle').onclick = ()=>{
-    const t = document.documentElement.getAttribute('data-theme')==='light' ? 'dark':'light';
-    document.documentElement.setAttribute('data-theme', t);
-    LS(THEME_KEY, t);
-  };
-})();
-(function initLang(){
-  const lang = LS(LANG_KEY)||'RU';
-  $('#langToggle').textContent = lang;
-  $('#langToggle').onclick = ()=>{
-    const nv = ({RU:'EN',EN:'KO',KO:'RU'})[ $('#langToggle').textContent ];
-    $('#langToggle').textContent = nv; LS(LANG_KEY,nv);
-  };
-})();
-
-/* ======= МОДАЛКИ ======= */
-$$('[data-open]').forEach(b=>b.addEventListener('click',()=>{ $(`${b.getAttribute('data-open')}`).classList.add('show'); }));
-$$('[data-close]').forEach(b=>b.addEventListener('click',()=>{ b.closest('.modal').classList.remove('show'); }));
-$$('.modal').forEach(m=>m.addEventListener('click',(e)=>{ if(e.target===m) m.classList.remove('show'); }));
-
-/* ГЕЙТ при первом заходе */
-(function gate(){
-  if(LS(GUEST_KEY)) return;
-  $('#partnerGate').classList.add('show');
-  $('#enterGuest').onclick=()=>{ LS(GUEST_KEY,true); $('#partnerGate').classList.remove('show'); };
-})();
-
-/* Анкета (заглушка) */
-$('#pfSend').onclick = ()=>{
-  $('#pfResult').style.display='block';
-  setTimeout(()=>$('#partnerForm').classList.remove('show'),1400);
-};
-
-/* ======= ФАКТЫ ======= */
-const facts = [
-  {t:'Самый длинный зафиксированный полёт курицы — около 13 секунд. Да, это правда!', s:'fun fact'},
-  {t:'Первые палочки для еды появились в Китае более 3000 лет назад.', s:'history of food'},
-  {t:'Кофе — второй по обороту товар в мире после нефти.', s:'coffee stats'},
-  {t:'В кимчи более 100 разновидностей, и у каждой — свой сезон.', s:'kimchi'}
-];
-(function rotateFacts(i=0){
-  const f = facts[i%facts.length];
-  $('#factText').textContent = f.t;
-  $('#factSrc').textContent = f.s;
-  setTimeout(()=>rotateFacts(i+1), 7000);
-})();
-
-/* ======= ПОДГРУЗКА ПАРТНЁРОВ ======= */
-let partners = [];
-let filtered  = [];
-const favs = new Set(LS(FAV_KEY)||[]);
-
-async function loadPartners(){
-  try{
-    const res = await fetch('partners.json', {cache:'no-cache'});
-    partners = (await res.json()).filter(x=>x.approved===true);
-  }catch(e){
-    // fallback
-    partners = [{
-      id:'mr_cook',
-      name:'Мистер Кук (Mr. Cook)',
-      category:'Еда',
-      subcategories:['Корейская кухня','Столовая'],
-      rating:4.6,
-      province_ru:'Чхунчхоннам-до',
-      city_ru:'Асан-си, Донпо-мён',
-      address:'405-20 Dunpo-ri, Dunpo-myeon, Asan-si, Chungcheongnam-do',
-      lat:36.9305, lng:127.0458
-    }];
-  }
-  fillFilters();
-  applyFilters();
-}
-loadPartners();
-
-/* ======= ФИЛЬТРЫ ======= */
-function fillFilters(){
-  const prov = new Set(partners.map(p=>p.province_ru).filter(Boolean));
-  const city = new Set(partners.map(p=>p.city_ru).filter(Boolean));
-  prov.forEach(v => $('#fProvince').insertAdjacentHTML('beforeend', `<option>${v}</option>`));
-  city.forEach(v => $('#fCity').insertAdjacentHTML('beforeend', `<option>${v}</option>`));
-}
-$('#applyFilters').onclick = applyFilters;
-
-function applyFilters(){
-  const p = $('#fProvince').value;
-  const c = $('#fCity').value;
-  const k = $('#fCategory').value.replace(/ .*/,''); // только слово
-  filtered = partners.filter(x=>
-     (!p || x.province_ru===p) &&
-     (!c || x.city_ru===c) &&
-     (!k || (x.category||'').includes(k))
-  );
-  renderPartners();
-}
-
-/* ======= РЕНДЕР ======= */
-function starRow(v, size=16){
-  const n = Math.round((v||0)*2)/2;
-  let s=''; for(let i=1;i<=5;i++){
-    if(i<=Math.floor(n)) s+=`<span class="star">★</span>`;
-    else if(i-.5===n)  s+=`<span class="star" style="opacity:.6">★</span>`;
-    else               s+=`<span class="star" style="opacity:.25">★</span>`;
-  }
-  return `<span class="stars" style="font-size:${size}px">${s}</span>`;
-}
-
-function renderPartners(){
-  const el = $('#partnersList'); el.innerHTML='';
-  if(!filtered.length){ el.innerHTML='<div class="tiny">Ничего не найдено по фильтрам</div>'; return; }
-
-  filtered.forEach(p=>{
-    const rid = LS(RATING_KEY(p.id))||{avg:p.rating||0,count: p.rating?1:0};
-    const topPick = (rid.avg>=4.5 && rid.count>=3) ? `<span class="badge" title="Высокий рейтинг">Выбор SiyaEm 🏆</span>`:'';
-    const favAct = favs.has(p.id) ? 'active' : '';
-    const cat = (p.category||'') + (p.subcategories?.length? ' — '+p.subcategories.join(', '):'');
-
-    el.insertAdjacentHTML('beforeend', `
-      <div class="partner" data-id="${p.id}">
-        <div class="logo">🏷️</div>
-        <div>
-          <h4>${p.name} ${topPick}</h4>
-          <div class="meta">${p.province_ru||''} • ${p.city_ru||''}</div>
-          <div class="meta">${cat}</div>
-          <div class="meta">${p.address||''}</div>
-          <div class="row" style="align-items:center">
-            ${starRow(rid.avg)} <span class="tiny">(${rid.count})</span>
+<!-- ========== КАТАЛОГ ========== -->
+<div class="wrap">
+  <section class="glass catalog">
+    <h2 style="margin:0 0 8px">Партнёры (модерировано)</h2>
+    <div class="cards" id="cards">
+      <!-- пример карточки -->
+      <article class="card">
+        <div class="logo" style="background-image:url('https://i.imgur.com/R0b0S6X.png')"></div>
+        <div class="meta">
+          <div style="font-weight:800">Мистер Кук (Mr. Cook)</div>
+          <small>Чхунчхоннам-до • Асан-си, Донпо-мён • Еда — Корейская кухня, Столовая</small>
+          <div class="stars" data-id="mr_cook">
+            <span class="star" data-v="1">★</span>
+            <span class="star" data-v="2">★</span>
+            <span class="star" data-v="3">★</span>
+            <span class="star" data-v="4">★</span>
+            <span class="star" data-v="5">★</span>
+            <small class="hint" style="margin-left:6px">(оценок: <b id="r-mr_cook">1</b>)</small>
+          </div>
+          <div class="actions">
+            <button class="btn" data-review="mr_cook">Оставить отзыв</button>
+            <button class="btn map" data-map="36.9305,127.0458">Показать на карте</button>
           </div>
         </div>
-        <div class="p-actions">
-          <button class="btn" data-review>Оставить отзыв</button>
-          <button class="btn" data-map>Показать на карте</button>
-          <button class="btn" data-route>Маршрут</button>
-          <div class="fav ${favAct}" title="В избранное" data-fav>❤</div>
-          <button class="btn" data-chat>Чат</button>
-        </div>
-      </div>
-    `);
+      </article>
+
+      <!-- сюда можно добавлять новые карточки по образцу -->
+    </div>
+  </section>
+</div>
+
+<!-- ========== БЛОКИ (Notion-style) ========== -->
+<div class="wrap">
+  <section class="blocks">
+    <div class="block note">
+      <h3>Заметка: как мы проверяем партнёров</h3>
+      Мы запрашиваем фото лицензии, сверяем адрес с картой и делаем тестовый визит. Только после этого точка появляется в каталоге и на карте.
+    </div>
+    <div class="block fact">
+      <h3>Факт дня</h3>
+      Дольше всего курица летела ~13 секунд (зафиксировано в 1954 году). Добавь такие факты в промо — это поднимает вовлечённость 😉
+    </div>
+    <div class="block recipe">
+      <h3>Рецепт мини-контента</h3>
+      1) Фото (портрет блюда) 2) История (2–3 строки) 3) Цена-якорь 4) Призыв «забронировать стол». Повторять раз в 3–4 дня.
+    </div>
+  </section>
+</div>
+
+<!-- ========== ДЛЯ КОГО ========== -->
+<div class="wrap">
+  <section class="glass">
+    <h2 style="margin:16px 16px 0">Для кого это</h2>
+    <div class="forwho">
+      <div class="tile">🍜 Кафе и рестораны <br><small>фото-карточки, купоны, геометки</small></div>
+      <div class="tile">💅 Салоны красоты <br><small>портфолио, запись, прайс</small></div>
+      <div class="tile">🚗 Автомеханики <br><small>виды работ, срочные заявки</small></div>
+      <div class="tile">🎓 Школы, кружки <br><small>расписание, наборы, отзывы</small></div>
+    </div>
+  </section>
+</div>
+
+<!-- ========== MAP MODAL ========== -->
+<div class="modal" id="mapModal">
+  <div class="box">
+    <div class="map-header">
+      <strong>Карта</strong>
+      <button class="close" id="closeMap">Закрыть</button>
+    </div>
+    <div id="map" class="map-body"></div>
+  </div>
+</div>
+
+<footer>© 2025 SiyaEm Korea • Светлая/тёмная темы, живые градиенты и быстрый каталог</footer>
+
+<script>
+/* ---------- Тёмная/светлая ---------- */
+const themeBtn = document.getElementById('themeToggle');
+themeBtn.addEventListener('click',()=>document.documentElement.classList.toggle('light'));
+
+/* ---------- Автопечать (Hero) ---------- */
+const typingEl = document.getElementById('typing');
+const phrases = ["большие возможности.", "настоящие партнёры.", "места, которым доверяешь."];
+let pi = 0, ci = 0, forward = true;
+function typeLoop(){
+  const p = phrases[pi];
+  typingEl.textContent = p.slice(0,ci);
+  ci += forward ? 1 : -1;
+  if(ci === p.length + 12) forward = false;
+  if(ci === 0){ forward = true; pi = (pi+1) % phrases.length; }
+  setTimeout(typeLoop, forward ? 70 : 40);
+}
+typeLoop();
+
+/* ---------- Рейтинг звёздами ---------- */
+const ratings = {}; // можно заменить на загрузку/сохранение в partners.json + API
+document.querySelectorAll('.stars').forEach(group=>{
+  const id = group.dataset.id;
+  ratings[id] = ratings[id] || 4.0; // старт
+  group.querySelectorAll('.star').forEach(s=>{
+    s.addEventListener('click', ()=>{
+      const v = Number(s.dataset.v);
+      ratings[id] = (ratings[id] * 1 + v) / 2; // простая усреднёнка
+      const counter = document.getElementById('r-'+id);
+      counter.textContent = Number(counter.textContent) + 1;
+      paint(group, ratings[id]);
+    });
   });
-
-  // навесить события
-  $$('#partnersList [data-review]').forEach(b=>b.onclick=()=>openReview(b));
-  $$('#partnersList [data-map]').forEach(b=>b.onclick=()=>openMap(b));
-  $$('#partnersList [data-route]').forEach(b=>b.onclick=()=>openRoute(b));
-  $$('#partnersList [data-chat]').forEach(b=>b.onclick=()=>openChat(b));
-  $$('#partnersList [data-fav]').forEach(b=>b.onclick=()=>toggleFav(b));
+  paint(group, ratings[id]);
+});
+function paint(group, value){
+  group.querySelectorAll('.star').forEach(st=>{
+    st.style.opacity = Number(st.dataset.v) <= Math.round(value) ? '1' : '.35';
+  });
 }
 
-function partnerByBtn(btn){
-  const id = btn.closest('.partner').getAttribute('data-id');
-  return filtered.find(x=>x.id===id) || partners.find(x=>x.id===id);
+/* ---------- Модалка карты ---------- */
+const mapModal = document.getElementById('mapModal');
+document.getElementById('openMap').onclick = ()=>openMapAt(36.9305,127.0458);
+document.querySelectorAll('[data-map]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const [lat,lng] = b.dataset.map.split(',').map(Number);
+    openMapAt(lat,lng);
+  });
+});
+document.getElementById('closeMap').onclick = ()=> mapModal.classList.remove('show');
+function openMapAt(lat,lng){
+  mapModal.classList.add('show');
+  ensureMap(lat,lng);
 }
 
-/* ======= ОТЗЫВЫ ======= */
-function openReview(btn){
-  const p = partnerByBtn(btn);
-  $('#revTitle').textContent = `Отзыв: ${p.name}`;
-  $('#reviewModal').classList.add('show');
-  // генерим кликабельные звёзды
-  const row = $('#revStars'); row.innerHTML='';
-  for(let i=1;i<=5;i++){
-    const s = document.createElement('span'); s.textContent='★'; s.className='star';
-    s.style.cursor='pointer'; s.dataset.v=i;
-    s.onclick = ()=>{ row.querySelectorAll('.star').forEach((x,j)=>x.style.opacity = (j<i)?1:.3 ); row.dataset.score=i; };
-    row.appendChild(s);
+/* Подключение Google Maps: вставь свой ключ ниже (place YOUR_KEY_HERE) */
+let _map,_marker,_mapsLoaded=false;
+function ensureMap(lat,lng){
+  if(!_mapsLoaded){
+    const s = document.createElement('script');
+    s.src = "https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE&callback=__initMap";
+    s.async = true; window.__initMap = ()=>{ _mapsLoaded=true; initMap(lat,lng); };
+    document.body.appendChild(s);
+  } else initMap(lat,lng);
+}
+function initMap(lat,lng){
+  const c = {lat,lng};
+  if(!_map){
+    _map = new google.maps.Map(document.getElementById('map'),{
+      center:c, zoom:15, disableDefaultUI:false,
+      styles:[{featureType:"poi",stylers:[{visibility:"off"}]}]
+    });
+    _marker = new google.maps.Marker({position:c,map:_map});
+  }else{
+    _map.setCenter(c); _marker.setPosition(c);
   }
-  $('#revText').value='';
-  $('#revSend').onclick = ()=>{
-    const score = +($('#revStars').dataset.score||0);
-    const memo  = LS(RATING_KEY(p.id)) || {avg:p.rating||0,count: p.rating?1:0};
-    if(score>0){
-      const total = memo.avg*memo.count + score;
-      memo.count += 1; memo.avg = +(total/memo.count).toFixed(2);
-      LS(RATING_KEY(p.id), memo);
-      applyFilters();
-    }
-    $('#reviewModal').classList.remove('show');
-  };
 }
 
-/* ======= ИЗБРАННОЕ ======= */
-function toggleFav(b){
-  const p = partnerByBtn(b);
-  if(favs.has(p.id)) favs.delete(p.id); else favs.add(p.id);
-  LS(FAV_KEY, Array.from(favs));
-  b.classList.toggle('active');
-}
-
-/* ======= КАРТА / МАРШРУТ ======= */
-function openMap(btn){
-  const p = partnerByBtn(btn);
-  const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.address||p.name)}`;
-  window.open(url,'_blank');
-}
-function openRoute(btn){
-  const p = partnerByBtn(btn);
-  const q = encodeURIComponent(`${p.name} ${p.address||''}`);
-  const g = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
-  const k = `https://map.kakao.com/?q=${q}`;
-  const n = `https://map.naver.com/v5/search/${q}`;
-  const win = window.open('','_blank');
-  win.document.write(`
-    <meta charset="utf-8" />
-    <title>Маршрут</title>
-    <div style="font-family:Inter,system-ui; padding:20px">
-      <h3>Выберите навигатор</h3>
-      <p><a href="${g}" target="_self">Google Maps</a></p>
-      <p><a href="${k}" target="_self">Kakao Map</a></p>
-      <p><a href="${n}" target="_self">Naver Map</a></p>
-    </div>`);
-}
-
-/* ======= ЧАТ ======= */
-let currentChatId = null;
-function openChat(btn){
-  const p = partnerByBtn(btn);
-  currentChatId = p.id;
-  $('#chatTitle').textContent = `Чат: ${p.name}`;
-  renderChat();
-  $('#chatModal').classList.add('show');
-}
-function renderChat(){
-  const list = $('#chatList'); list.innerHTML='';
-  const msgs = LS(CHAT_KEY(currentChatId))||[];
-  msgs.forEach(m=>{
-    list.insertAdjacentHTML('beforeend', `
-      <div style="margin:8px 0; ${m.me?'text-align:right':''}">
-        <div style="display:inline-block;background:${m.me?'var(--brand)':'var(--chip)'};color:${m.me?'#fff':'inherit'};padding:8px 10px;border-radius:12px;max-width:75%">${m.text}</div>
-      </div>
-    `);
-  });
-  list.scrollTop = list.scrollHeight;
-}
-$('#chatSend').onclick = ()=>{
-  const t = $('#chatMsg').value.trim(); if(!t) return;
-  const key = CHAT_KEY(currentChatId);
-  const msgs = LS(key)||[]; msgs.push({me:true,text:t,ts:Date.now()});
-  LS(key,msgs); $('#chatMsg').value='';
-  renderChat();
+/* ---------- CTA «Стать партнёром» (пока заглушка) ---------- */
+document.getElementById('bePartner').onclick = ()=>{
+  alert("Короткая анкета откроется здесь (Google Forms/Sheets). Мы подключим это к JSON/таблице и карта будет обновляться автоматически.");
 };
 
-/* ======= СТАРТ ======= */
+/* ---------- Загрузка карточек из partners.json (опционально) ----------
+ * Если у тебя уже есть /partners.json, раскомментируй fetch ниже.
+ * Формат используем твой: [{ id, name, category, province_ru, city_ru, address, lat, lng, rating, ... }]
+ */
+/*
+fetch('partners.json').then(r=>r.json()).then(list=>{
+  const host = document.getElementById('cards');
+  host.innerHTML = '';
+  list.filter(x=>x.approved).forEach(p=>{
+    host.insertAdjacentHTML('beforeend', `
+      <article class="card">
+        <div class="logo" style="background-image:url('${(p.logo||'')}')"></div>
+        <div class="meta">
+          <div style="font-weight:800">${p.name}</div>
+          <small>${p.province_ru} • ${p.city_ru} • ${p.category}</small>
+          <div class="stars" data-id="${p.id}">
+            ${[1,2,3,4,5].map(v=>`<span class="star" data-v="${v}">★</span>`).join('')}
+            <small class="hint" style="margin-left:6px">(оценок: <b id="r-${p.id}">${p.rating_count||0}</b>)</small>
+          </div>
+          <div class="actions">
+            <button class="btn" data-review="${p.id}">Оставить отзыв</button>
+            <button class="btn map" data-map="${p.lat},${p.lng}">Показать на карте</button>
+          </div>
+        </div>
+      </article>
+    `);
+  });
+  // Повторно навесим звёзды и кнопки карты:
+  document.querySelectorAll('.stars').forEach(group=>{
+    const id = group.dataset.id;
+    ratings[id] = ratings[id] || 4;
+    group.querySelectorAll('.star').forEach(s=>{
+      s.addEventListener('click', ()=>{
+        const v = Number(s.dataset.v);
+        ratings[id] = (ratings[id] * 1 + v) / 2;
+        const counter = document.getElementById('r-'+id);
+        counter.textContent = Number(counter.textContent) + 1;
+        paint(group, ratings[id]);
+      });
+    });
+    paint(group, ratings[id]);
+  });
+  document.querySelectorAll('[data-map]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const [lat,lng] = b.dataset.map.split(',').map(Number);
+      openMapAt(lat,lng);
+    });
+  });
+});
+*/
 </script>
 </body>
 </html>
