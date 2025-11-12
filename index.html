@@ -1,224 +1,480 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SiyaEm Korea — проверенные русскоязычные места</title>
-<meta name="description" content="Проверенные русскоязычные заведения в Корее: еда, салоны, авто-сервисы, развлечения. Модерация и лицензии. Рейтинг, отзывы, контакты.">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SiyaEm — проверенные русскоязычные места в Корее</title>
+<meta name="description" content="Карта и каталог проверенных русскоязычных мест в Корее: кафе, салоны, автомеханики, школы, церкви и др. Только лицензированные партнёры."/>
 <style>
-/* --- стили базовые --- */
-:root{
-  --bg:#0f1629;--bg-2:#101827;--text:#e7ecf5;--muted:#9fb1cc;
-  --card:#111c2d;--line:#22324b;--acc:#4f8cff;--acc-2:#ffd266;
-  --good:#10b981;--radius:16px;--shadow:0 8px 26px rgba(0,0,0,.25);
-}
-[data-theme="light"]{
-  --bg:#f7f9fc;--bg-2:#fff;--card:#fff;--text:#0b1a2c;--muted:#5b6f87;
-  --line:#e7edf5;--acc:#3c74ff;--acc-2:#ffb400;--shadow:0 10px 22px rgba(13,36,65,.10);
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}
-.wrap{max-width:1100px;margin:0 auto;padding:20px}
-header{position:sticky;top:0;z-index:20;background:color-mix(in hsl,var(--bg) 82%,transparent);
-  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
-.nav{display:flex;justify-content:space-between;align-items:center;padding:12px 0}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800}
-.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--acc-2);
-  box-shadow:0 0 18px var(--acc-2)}
-.btn{border:1px solid var(--line);background:var(--bg-2);color:var(--text);
-  border-radius:12px;padding:9px 14px;cursor:pointer;font-weight:700}
-.btn:hover{border-color:color-mix(in hsl,var(--acc) 45%,var(--line))}
-.btn-primary{background:var(--acc);border-color:var(--acc);color:#fff}
-.btn-primary:hover{filter:brightness(1.08)}
-.filters,.block{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-  box-shadow:var(--shadow);padding:14px;margin-top:16px}
-select,input[type="text"]{width:100%;background:var(--bg-2);border:1px solid var(--line);
-  color:var(--text);border-radius:12px;padding:10px 12px}
-.ads3,.gallery3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:16px 0}
-.ad{position:relative;overflow:hidden;border-radius:18px;border:1px solid var(--line);
-  box-shadow:var(--shadow)}
-.ad img{width:100%;height:300px;object-fit:cover}
-.ad .tag{position:absolute;top:12px;left:12px;background:var(--bg-2);
-  border:1px solid var(--line);padding:6px 10px;border-radius:999px;font-size:12px}
-.partner{display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;
-  background:linear-gradient(180deg,color-mix(in hsl,var(--acc) 6%,var(--bg-2)),var(--bg-2));
-  border:1px solid color-mix(in hsl,var(--acc) 18%,var(--line));border-radius:14px;padding:12px}
-.logo{width:72px;height:72px;border-radius:12px;display:grid;place-items:center;
-  background:linear-gradient(140deg,color-mix(in hsl,var(--acc) 25%,transparent),
-  color-mix(in hsl,var(--acc-2) 25%,transparent));border:1px solid var(--line)}
-.logo img{max-width:90%;max-height:90%}
-.row{display:flex;gap:8px;flex-wrap:wrap}
-.stars{color:#ffb400}
-.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.fact{border:1px solid var(--line);border-radius:14px;background:var(--bg-2);
-  padding:12px;box-shadow:var(--shadow)}
-.recipe img{width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:8px}
-.contact{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;
-  border:1px solid var(--line);border-radius:12px;background:var(--bg-2);padding:10px}
-.contact .links a{margin-left:8px;color:var(--acc);text-decoration:none}
-footer{padding:32px 0;color:var(--muted);text-align:center}
-@media(max-width:900px){.ads3,.gallery3,.facts{grid-template-columns:1fr}}
+  :root{
+    --brand:#2f6af2;         /* мягкий aviasales-синий */
+    --brand-2:#5b8aff;
+    --bg:#f4f6fb;            /* светлый фон */
+    --card:#ffffff;
+    --text:#0f172a;
+    --muted:#64748b;
+    --accent:#0ea5e9;
+    --good:#10b981;
+    --warn:#f59e0b;
+    --danger:#ef4444;
+    --ring:#dbe4ff;
+    --radius:18px;
+    --shadow:0 10px 24px rgba(15, 23, 42, .08);
+    --chip:#eef2ff;
+  }
+  [data-theme="dark"]{
+    --bg:#0b1221;
+    --card:#101827;
+    --text:#e5e7eb;
+    --muted:#9ca3af;
+    --brand:#3a79ff;
+    --brand-2:#6b92ff;
+    --ring:#1f2a44;
+    --chip:#122042;
+    --shadow:0 10px 24px rgba(0,0,0,.55);
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+
+  /* Header (Aviasales-like) */
+  .hero-head{
+    background:linear-gradient(180deg, var(--brand), var(--brand-2));
+    color:#fff;
+    padding:18px 0 32px;
+    position:sticky;top:0;z-index:50;
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
+  }
+  .topbar{display:flex;align-items:center;gap:12px;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:#ffd166;box-shadow:0 0 16px #ffd166}
+  .actions{display:flex;gap:8px;align-items:center}
+  .chip{
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.25);
+    color:#fff;border-radius:999px;padding:8px 12px;font-weight:700;cursor:pointer
+  }
+  .ghost{background:transparent;border:1px solid rgba(255,255,255,.4)}
+  .toggle{
+    background:#0b122133;border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:999px;
+    padding:8px 12px;cursor:pointer
+  }
+
+  /* Search row */
+  .search-card{
+    margin-top:18px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:12px;border:1px solid var(--ring)
+  }
+  .search-row{display:flex;gap:10px;flex-wrap:wrap}
+  .pill{
+    display:flex;align-items:center;gap:10px;background:var(--chip);
+    border:1px solid var(--ring);border-radius:12px;padding:10px 12px;color:var(--text)
+  }
+  select,.input{
+    background:transparent;border:none;color:inherit;font:inherit;outline:none;min-width:160px
+  }
+  .btn{
+    background:#fff;color:var(--brand);font-weight:800;border:2px solid var(--brand);
+    border-radius:12px;padding:10px 16px;cursor:pointer
+  }
+  .btn:hover{filter:brightness(1.05)}
+  .btn-brand{
+    background:var(--brand);border-color:var(--brand);color:#fff
+  }
+
+  /* Triple banners like aviasales */
+  .triple{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:16px 0}
+  .slot{
+    position:relative;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);background:#0002;
+    border:1px solid var(--ring);min-height:280px
+  }
+  .slot>img{width:100%;height:100%;object-fit:cover;filter:contrast(1.06) saturate(1.05)}
+  .slot .label{
+    position:absolute;left:10px;top:10px;background:#ffffffdd;color:#111;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800
+  }
+  .slot .ribbon{
+    position:absolute;right:10px;top:10px;width:8px;height:8px;background:#ff4d67;border-radius:50%;box-shadow:0 0 14px #ff4d67
+  }
+
+  /* Partners list */
+  .section{margin:18px 0}
+  .section h3{margin:0 0 10px}
+  .card{background:var(--card);border:1px solid var(--ring);border-radius:16px;padding:12px;box-shadow:var(--shadow)}
+  .partner{
+    display:grid;grid-template-columns:70px 1fr auto;gap:12px;align-items:center;
+    border:1px dashed var(--ring);border-radius:14px;padding:10px;background:linear-gradient(0deg, rgba(255,255,255,.02), rgba(255,255,255,0))
+  }
+  .logo{
+    width:70px;height:70px;border-radius:12px;display:grid;place-items:center;background:#fff;border:1px solid var(--ring);overflow:hidden
+  }
+  .logo img{width:100%;height:100%;object-fit:cover}
+  .meta small{color:var(--muted)}
+  .stars{display:flex;gap:2px;align-items:center}
+  .star{font-size:18px;cursor:pointer;color:#eab308}
+  .cta{display:flex;gap:8px}
+  .btn-mini{padding:8px 12px;border-radius:10px;border:1px solid var(--brand);color:var(--brand);background:transparent;font-weight:700;cursor:pointer}
+  .btn-mini.brand{background:var(--brand);color:#fff}
+
+  /* Gallery / promos */
+  .gallery{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  .gal{border-radius:16px;overflow:hidden;border:1px solid var(--ring);box-shadow:var(--shadow)}
+  .gal img{height:220px;width:100%;object-fit:cover}
+  .gal .cap{padding:10px;background:var(--card)}
+
+  /* Facts & Recipe */
+  .facts{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+  .fact, .recipe{border-radius:16px;border:1px solid var(--ring);box-shadow:var(--shadow);padding:14px;background:var(--card)}
+  .fact ul{margin:0;padding-left:18px}
+  .badge{display:inline-block;background:#fff;border:1px solid var(--ring);padding:4px 8px;border-radius:8px;margin-right:6px}
+  .recipe img{border-radius:10px;border:1px solid var(--ring)}
+
+  /* Business CTA */
+  .biz{display:grid;grid-template-columns:.9fr 1.1fr;gap:14px}
+  .panel{border-radius:16px;border:1px solid var(--ring);box-shadow:var(--shadow);padding:14px;background:var(--card)}
+  .list{display:grid;gap:8px}
+  .row{display:flex;gap:10px;align-items:center}
+  .row .dot{width:8px;height:8px;background:var(--good);border-radius:50%}
+
+  /* Footer */
+  footer{padding:24px 0 36px;color:var(--muted);text-align:center}
+
+  /* Modal */
+  .modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,.6);backdrop-filter:blur(6px);z-index:100}
+  .modal.show{display:grid}
+  .box{background:var(--card);border:1px solid var(--ring);border-radius:16px;padding:14px;max-width:720px;width:calc(100vw - 32px);max-height:80vh;overflow:auto;box-shadow:var(--shadow)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  input,textarea,select{width:100%;background:#fff0;border:1px solid var(--ring);border-radius:10px;padding:10px 12px;color:var(--text);outline:none}
+  textarea{min-height:110px;resize:vertical}
+  .center{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
 </style>
 </head>
-<body data-theme="dark">
-<header>
-  <div class="wrap nav">
-    <div class="brand"><span class="dot"></span><span>SiyaEm Korea</span></div>
-    <div class="row">
-      <button class="btn" data-open="#about">О нас</button>
-      <button class="btn" data-open="#partnerForm">Стать партнёром</button>
-      <button id="themeBtn" class="btn">🌓</button>
+<body>
+
+  <!-- HEADER -->
+  <div class="hero-head" id="top">
+    <div class="wrap topbar">
+      <div class="brand"><span class="dot"></span> <span>SiyaEm Korea</span></div>
+      <div class="actions">
+        <button class="chip ghost" data-open="#guest">Гость</button>
+        <button class="chip" data-open="#partner">Стать партнёром</button>
+        <button class="toggle" id="themeBtn">Светлая/тёмная</button>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="search-card">
+        <div style="font-weight:800;margin:2px 4px 8px;color:#0b1221aa">Проверенные русскоязычные места в Корее</div>
+        <div class="search-row">
+          <div class="pill"><span>Провинция</span><select id="fProv"><option value="">Любая</option><option>Чхунчхоннам-до</option><option>Сеул</option><option>Кёнги-до</option></select></div>
+          <div class="pill"><span>Город</span><select id="fCity"><option value="">Любой</option><option>Асан-си</option><option>Сеул</option><option>Инчхон</option></select></div>
+          <div class="pill"><span>Категория</span><select id="fCat"><option value="">Все</option><option>Еда</option><option>Салоны</option><option>Автомеханики</option><option>Школы</option><option>Церкви</option></select></div>
+          <button class="btn btn-brand" id="apply">Найти</button>
+        </div>
+      </div>
     </div>
   </div>
-</header>
 
-<main class="wrap">
-
-<section class="filters">
-  <select id="fProvince"></select><select id="fCity"></select><select id="fCategory"></select>
-  <button id="applyFilters" class="btn btn-primary">Показать</button>
-  <div style="grid-column:1/-1;color:var(--muted);font-size:13px">
-    Отображаем только проверенные лицензированные заведения.
+  <!-- PROMO SLOTS -->
+  <div class="wrap">
+    <div class="triple">
+      <div class="slot"><span class="label">Реклама · слот #1</span><span class="ribbon"></span>
+        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1600&auto=format&fit=crop" alt="">
+      </div>
+      <div class="slot"><span class="label">Реклама · слот #2</span><span class="ribbon"></span>
+        <img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=1600&auto=format&fit=crop" alt="">
+      </div>
+      <div class="slot"><span class="label">Реклама · слот #3</span><span class="ribbon"></span>
+        <img src="https://images.unsplash.com/photo-1519751138087-5a2a31c1c8a0?q=80&w=1600&auto=format&fit=crop" alt="">
+      </div>
+    </div>
   </div>
-</section>
 
-<section class="ads3">
-  <div class="ad"><span class="tag">Реклама #1</span>
-    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1600&auto=format&fit=crop">
+  <!-- PARTNERS -->
+  <div class="wrap section">
+    <h3>Партнёры (модерировано)</h3>
+    <div class="card" id="partners"></div>
   </div>
-  <div class="ad"><span class="tag">Реклама #2</span>
-    <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=1600&auto=format&fit=crop">
+
+  <!-- GALLERY PROMOS -->
+  <div class="wrap section">
+    <h3>Промо / галерея</h3>
+    <div class="gallery">
+      <div class="gal"><img src="https://images.unsplash.com/photo-1541542684-4a8b6a70d53d?q=80&w=1600&auto=format&fit=crop"><div class="cap">Новый интерьер партнёра</div></div>
+      <div class="gal"><img src="https://images.unsplash.com/photo-1543351611-58f69d7c1888?q=80&w=1600&auto=format&fit=crop"><div class="cap">Сезонное меню</div></div>
+      <div class="gal"><img src="https://images.unsplash.com/photo-1542444459-db63c66a4d58?q=80&w=1600&auto=format&fit=crop"><div class="cap">Семейные выходные</div></div>
+    </div>
   </div>
-  <div class="ad"><span class="tag">Реклама #3</span>
-    <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1600&auto=format&fit=crop">
+
+  <!-- FACTS + RECIPE -->
+  <div class="wrap section">
+    <div class="facts">
+      <div class="fact">
+        <h3>А вы знали?</h3>
+        <ul>
+          <li><span class="badge">Факт</span> Самый длинный зафиксированный полёт курицы — около 13 секунд 🐔</li>
+          <li><span class="badge">Факт</span> В Корее более 100 тыс. кафе, но русский сервис — редкость.</li>
+          <li><span class="badge">Факт</span> Мы принимаем только точки с лицензией и контактами.</li>
+        </ul>
+      </div>
+      <div class="recipe">
+        <h3>Рецепт дня: ттокпокки</h3>
+        <img src="https://images.unsplash.com/photo-1617191518004-0d9c7bf9b2b7?q=80&w=1600&auto=format&fit=crop" alt="">
+        <div style="margin-top:8px;color:var(--muted)">Рисовые палочки, соус кочудян, чеснок, зелёный лук. 8–10 минут — готово!</div>
+      </div>
+    </div>
   </div>
-</section>
 
-<section class="block">
-  <h3>Партнёры (модерировано)</h3>
-  <div id="partnersList"></div>
-</section>
-
-<section class="block" id="for-partners">
-  <h3>Партнёрам — почему с нами выгодно</h3>
-  <div class="facts">
-    <div class="fact"><b>Лиды без шума.</b> Только верифицированные пользователи, фильтр от спама.</div>
-    <div class="fact"><b>Рейтинг и доверие.</b> Отзывы, бейдж лицензии и гео-привязка.</div>
-    <div class="fact"><b>Аналитика.</b> Видно клики “Маршрут”, “Звонок”, “Акции”.</div>
+  <!-- BUSINESS VALUE (для презентации спонсорам) -->
+  <div class="wrap section">
+    <h3>Зачем бизнесу входить в экосистему SiyaEm</h3>
+    <div class="biz">
+      <div class="panel">
+        <h4>Кому подходит</h4>
+        <div class="list">
+          <div class="row"><span class="dot"></span> Кафе и рестораны (русская кухня, кейтеринг)</div>
+          <div class="row"><span class="dot"></span> Бьюти-салоны, барбершопы, маникюр</div>
+          <div class="row"><span class="dot"></span> Автосервисы, эвакуатор, детейлинг</div>
+          <div class="row"><span class="dot"></span> Школы/курсы (языковые, вождение), церкви/сообщества</div>
+        </div>
+      </div>
+      <div class="panel">
+        <h4>Что получает партнёр</h4>
+        <div class="list">
+          <div class="row"><span class="dot"></span> Премиум-карточка в каталоге + рекламные слоты</div>
+          <div class="row"><span class="dot"></span> Фильтрация по провинции/городу/категории</div>
+          <div class="row"><span class="dot"></span> Чаты с гостями и рейтинги со звёздами</div>
+          <div class="row"><span class="dot"></span> Верификация лицензии (доверие ↑)</div>
+        </div>
+        <div class="center" style="margin-top:10px">
+          <button class="btn btn-brand" data-open="#partner">Стать партнёром</button>
+          <a class="btn" href="#tariffs">Тарифы</a>
+        </div>
+      </div>
+    </div>
   </div>
-  <h4 class="mt16">Тарифы</h4>
-  <div class="facts">
-    <div class="fact"><b>Starter</b><br>49 000₩ / мес<br>1 баннер + аналитика + 1 акция.</div>
-    <div class="fact"><b>Pro</b><br>99 000₩ / мес<br>3 баннера + фото-сессия + рейтинги.</div>
-    <div class="fact"><b>City Top</b><br>249 000₩ / мес<br>Топ-позиция + соцсети + менеджер.</div>
+
+  <!-- TARIFFS -->
+  <div class="wrap section" id="tariffs">
+    <h3>Тарифы</h3>
+    <div class="gallery">
+      <div class="panel">
+        <h4>Базовый · 0₩</h4>
+        <div class="list">
+          <div class="row"><span class="dot"></span> Карточка в каталоге (после модерации)</div>
+          <div class="row"><span class="dot"></span> Приём отзывов и звёзд</div>
+        </div>
+      </div>
+      <div class="panel">
+        <h4>Продвижение · 79 000₩/мес</h4>
+        <div class="list">
+          <div class="row"><span class="dot"></span> Выше в выдаче + 1 промо-слот</div>
+          <div class="row"><span class="dot"></span> Фото-сессия (1 раз)</div>
+        </div>
+      </div>
+      <div class="panel">
+        <h4>Премиум · 149 000₩/мес</h4>
+        <div class="list">
+          <div class="row"><span class="dot"></span> 2 промо-слота, отметка «Выбор SiyaEm»</div>
+          <div class="row"><span class="dot"></span> Реферальные кампании + посты</div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="row mt16">
-    <button class="btn btn-primary" data-open="#partnerForm">Подать заявку</button>
+
+  <footer>© 2025 SiyaEm Korea • Экосистема лицензированных русскоязычных заведений</footer>
+
+  <!-- MODALS -->
+  <div class="modal" id="guest">
+    <div class="box">
+      <h3>Вход гостя</h3>
+      <div class="grid2">
+        <div><label>Имя</label><input id="g_name" placeholder="Имя"></div>
+        <div><label>Телефон</label><input id="g_phone" placeholder="+82-10-..."></div>
+      </div>
+      <div style="margin-top:8px"><label>Зачем заходите?</label>
+        <select id="g_purpose"><option>Поиск кафе</option><option>Салоны</option><option>Автосервис</option><option>Другое</option></select>
+      </div>
+      <div class="center" style="margin-top:12px">
+        <button class="btn btn-brand" id="g_save">Продолжить</button>
+        <button class="btn" data-close>Отмена</button>
+      </div>
+    </div>
   </div>
-</section>
 
-<section class="block">
-  <h3>Реферальная программа</h3>
-  <div class="facts">
-    <div class="fact"><b>Для владельцев.</b> Приведи друга — получи месяц Starter бесплатно.</div>
-    <div class="fact"><b>Для гостей.</b> Оставь отзыв — получи купон от партнёра.</div>
-    <div class="fact"><b>Как подключить.</b> Напиши в заявке “Рефералка”.</div>
+  <div class="modal" id="partner">
+    <div class="box">
+      <h3>Стать партнёром</h3>
+      <div class="grid2">
+        <div><label>Название заведения *</label><input id="p_title" required></div>
+        <div><label>Категория *</label>
+          <select id="p_cat"><option>Еда</option><option>Салоны</option><option>Автомеханики</option><option>Школы</option><option>Церкви</option></select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div><label>Провинция *</label><input id="p_prov" placeholder="Чхунчхоннам-до"></div>
+        <div><label>Город *</label><input id="p_city" placeholder="Асан-си"></div>
+      </div>
+      <div><label>Адрес (как в лицензии) *</label><input id="p_addr" placeholder="Полный адрес"></div>
+      <div class="grid2">
+        <div><label>Телефон *</label><input id="p_phone"></div>
+        <div><label>Сайт/Instagram</label><input id="p_link" placeholder="https://..."></div>
+      </div>
+      <div class="center" style="margin-top:12px">
+        <button class="btn btn-brand" id="p_send">Отправить</button>
+        <button class="btn" data-close>Закрыть</button>
+      </div>
+      <div id="p_result" style="margin-top:8px;color:var(--good);display:none">Заявка отправлена. Модерация 10–60 минут.</div>
+    </div>
   </div>
-</section>
 
-<section class="block">
-  <h3>Бизнес-план SiyaEm Korea (коротко)</h3>
-  <ul>
-    <li><b>Цель:</b> создать платформу для объединения русскоязычных сервисов в Корее.</li>
-    <li><b>Модель:</b> подписка + баннеры + контент-съёмка + рефералка.</li>
-    <li><b>Сегменты:</b> еда, салоны, авто, школы, развлечения, церкви.</li>
-    <li><b>Ценность:</b> простая карта, отзывы, аналитика, лиды без шума.</li>
-    <li><b>Доход:</b> 50–250 тыс ₩ / мес с точки × 100 точек = 5–25 млн ₩.</li>
-    <li><b>Расширение:</b> Seoul / Busan / Daegu / Jeju → Premium аккаунты с приложением.</li>
-  </ul>
-</section>
-
-<section class="block">
-  <h3>Промо / Галерея</h3>
-  <div class="gallery3">
-    <div class="ad"><img src="https://images.unsplash.com/photo-1541542684-4a66f7d9c163?q=80&w=1500&auto=format&fit=crop"></div>
-    <div class="ad"><img src="https://images.unsplash.com/photo-1505577060968-6ce26a3a09e9?q=80&w=1500&auto=format&fit=crop"></div>
-    <div class="ad"><img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=1500&auto=format&fit=crop"></div>
+  <div class="modal" id="mapModal">
+    <div class="box">
+      <h3 id="mapTitle">На карте</h3>
+      <div style="aspect-ratio:16/9;border:1px solid var(--ring);border-radius:12px;overflow:hidden">
+        <iframe id="mapFrame" src="" style="border:0;width:100%;height:100%" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="center" style="margin-top:10px">
+        <button class="btn" data-close>Закрыть</button>
+      </div>
+    </div>
   </div>
-</section>
-
-<section class="block">
-  <h3>А вы знали?</h3>
-  <div id="facts"></div>
-</section>
-
-<section class="block">
-  <h3>Рецепты</h3>
-  <div id="recipes"></div>
-</section>
-
-<section class="block">
-  <h3>Записная книга</h3>
-  <input id="bookSearch" type="text" placeholder="Поиск по названию / городу">
-  <div id="book"></div>
-</section>
-
-</main>
-
-<footer>© 2025 SiyaEm Korea | Все права защищены</footer>
-
-<!-- модалка партнёра -->
-<div id="partnerForm" class="block" style="display:none;position:fixed;inset:10%;background:var(--card);overflow:auto">
-  <h3>Анкета партнёра</h3>
-  <p>Укажи название, адрес и телефон — мы свяжемся для верификации.</p>
-  <input placeholder="Название"><br><input placeholder="Город"><br><input placeholder="Телефон">
-  <button class="btn btn-primary" onclick="alert('Заявка отправлена!')">Отправить</button>
-  <button class="btn" onclick="this.parentElement.style.display='none'">Закрыть</button>
-</div>
 
 <script>
-const DATA={provinces:["Чхунчхоннам-до","Сеул","Пусан"],
-categories:["Еда","Салоны","Автосервис","Развлечения","Услуги"],
-partners:[{id:"mr_cook",name:"Мистер Кук (Mr. Cook)",category:"Еда",
-city_ru:"Асан-си, Донпо-мён",province_ru:"Чхунчхоннам-до",
-address:"405-20 Dunpo-ri, Asan-si",phone:"+82-10-9809-1703",rating:4.6,reviews:1}],
-facts:[{t:"Самый длинный полет курицы — 13 секунд (100 м)."},
-{t:"Рамён в Корее появился в 1963 году."},
-{t:"Перец чили попал в Корею в XVI веке и изменил вкус кимчи."}],
-recipes:[{title:"Пибимбап",img:"https://images.unsplash.com/photo-1553621042-f6e147245754?q=80&w=1400&auto=format&fit=crop",short:"Рис, овощи, яйцо, гочуджан."},
-{title:"Кимчи-боке-паб",img:"https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1400&auto=format&fit=crop",short:"Жареный рис с кимчи и беконом."}]};
+/* ============ THEME ============ */
+const applyTheme = t => document.documentElement.setAttribute('data-theme', t);
+const savedTheme = localStorage.getItem('theme') || 'light';
+applyTheme(savedTheme);
+document.getElementById('themeBtn').onclick = () => {
+  const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  applyTheme(t); localStorage.setItem('theme', t);
+};
 
-const fp=document.getElementById('fProvince'),fc=document.getElementById('fCity'),fcat=document.getElementById('fCategory');
-fp.innerHTML="<option value=''>Провинция</option>"+DATA.provinces.map(x=>`<option>${x}</option>`).join('');
-fc.innerHTML="<option value=''>Город</option>"+[...new Set(DATA.partners.map(x=>x.city_ru))].map(x=>`<option>${x}</option>`).join('');
-fcat.innerHTML="<option value=''>Категория</option>"+DATA.categories.map(x=>`<option>${x}</option>`).join('');
+/* ============ MODALS ============ */
+document.querySelectorAll('[data-open]').forEach(b=>{
+  b.onclick=()=>document.querySelector(b.dataset.open).classList.add('show');
+});
+document.querySelectorAll('[data-close]').forEach(b=>{
+  b.onclick=()=>b.closest('.modal').classList.remove('show');
+});
+document.querySelectorAll('.modal').forEach(m=>{
+  m.addEventListener('click',(e)=>{ if(e.target===m) m.classList.remove('show'); });
+});
 
-function renderPartners(){
-const list=document.getElementById('partnersList');
-const arr=DATA.partners.filter(p=>
-(!fp.value||p.province_ru===fp.value)&&(!fc.value||p.city_ru===fc.value)&&(!fcat.value||p.category===fcat.value));
-list.innerHTML=arr.map(p=>`<div class='partner'>
-<div class='logo'>🍲</div>
-<div><b>${p.name}</b><br><small>${p.category} • ${p.city_ru}</small><br>
-<span class='stars'>${'★'.repeat(Math.round(p.rating))}</span> (${p.reviews})</div>
-<div class='row'><button class='btn' onclick="window.open('tel:${p.phone}')">Позвонить</button></div>
-</div>`).join('')||"<div>Нет результатов</div>";
+/* ============ SAMPLE DATA (partners) ============ */
+const PARTNERS = [
+  {
+    id:'mr_cook',
+    title:'Мистер Кук (Mr. Cook)',
+    category:'Еда',
+    province:'Чхунчхоннам-до',
+    city:'Асан-си',
+    address:'405-20 Dunpo-ri, Dunpo-myeon, Asan-si, Chungcheongnam-do',
+    lat:36.9305, lng:127.0458,
+    logo:'https://images.unsplash.com/photo-1542444459-db63c66a4d58?q=80&w=800&auto=format&fit=crop',
+    rating:4.6, votes:1
+  }
+];
+
+/* ============ RENDER PARTNERS (Aviasales-like card) ============ */
+const partnersEl = document.getElementById('partners');
+function renderPartners(list){
+  partnersEl.innerHTML = '';
+  list.forEach(p=>{
+    const card = document.createElement('div');
+    card.className='partner';
+    card.innerHTML = `
+      <div class="logo"><img src="${p.logo}" alt=""></div>
+      <div class="meta">
+        <div style="font-weight:800">${p.title}</div>
+        <small>${p.province} • ${p.city} — <b>${p.category}</b></small><br>
+        <small>${p.address}</small>
+        <div class="stars" data-id="${p.id}" style="margin-top:4px"></div>
+      </div>
+      <div class="cta">
+        <button class="btn-mini" data-map="${p.id}">Показать на карте</button>
+        <button class="btn-mini brand" data-review="${p.id}">Оставить отзыв</button>
+      </div>`;
+    partnersEl.appendChild(card);
+    buildStars(p);
+  });
 }
-document.getElementById('applyFilters').onclick=renderPartners;renderPartners();
-
-document.getElementById('facts').innerHTML=DATA.facts.map(x=>`<div class='fact'>${x.t}</div>`).join('');
-document.getElementById('recipes').innerHTML=DATA.recipes.map(x=>`<div class='fact'><img src='${x.img}'><b>${x.title}</b><br>${x.short}</div>`).join('');
-
-function renderBook(){
-const q=(bookSearch.value||'').toLowerCase();
-document.getElementById('book').innerHTML=DATA.partners.filter(p=>p.name.toLowerCase().includes(q)||p.city_ru.toLowerCase().includes(q))
-.map(p=>`<div class='contact'><div>${p.name}<br><small>${p.city_ru}</small></div><div class='links'><a href='tel:${p.phone}'>📞</a></div></div>`).join('');
+function buildStars(p){
+  const wrap = document.querySelector(`.stars[data-id="${p.id}"]`);
+  const saved = JSON.parse(localStorage.getItem('ratings') || '{}');
+  const my = saved[p.id] ?? 0;
+  const avg = calcAvg(p.rating, p.votes, my);
+  wrap.innerHTML =
+    `<span title="средняя">${'★'.repeat(Math.round(avg))}${'☆'.repeat(5-Math.round(avg))}</span>
+     <small style="color:var(--muted)">&nbsp;(${p.votes + (my?1:0)})</small>
+     <span style="margin-left:8px;color:var(--muted)">ваша оценка:</span>`;
+  // interactive stars
+  for(let i=1;i<=5;i++){
+    const s = document.createElement('span');
+    s.className='star'; s.textContent = i <= my ? '★':'☆';
+    s.onclick = ()=>rate(p.id, i);
+    wrap.appendChild(s);
+  }
 }
-bookSearch.oninput=renderBook;renderBook();
+function calcAvg(base, votes, my){ return (base*votes + (my||0)) / (votes + (my?1:0)); }
+function rate(id, val){
+  const saved = JSON.parse(localStorage.getItem('ratings') || '{}');
+  saved[id] = val; localStorage.setItem('ratings', JSON.stringify(saved));
+  renderPartners(filterPartners());
+}
 
-document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>document.querySelector(b.dataset.open).style.display='block');
-document.getElementById('themeBtn').onclick=()=>document.body.dataset.theme=document.body.dataset.theme==='dark'?'light':'dark';
+/* ============ FILTERS ============ */
+function filterPartners(){
+  const prov = document.getElementById('fProv').value;
+  const city = document.getElementById('fCity').value;
+  const cat  = document.getElementById('fCat').value;
+  return PARTNERS.filter(p =>
+    (!prov || p.province===prov) &&
+    (!city || p.city===city) &&
+    (!cat  || p.category===cat)
+  );
+}
+document.getElementById('apply').onclick = ()=> renderPartners(filterPartners());
+
+/* ============ MAP MODAL (no API, just iframe) ============ */
+document.addEventListener('click', (e)=>{
+  if(e.target.dataset.map){
+    const p = PARTNERS.find(x=>x.id===e.target.dataset.map);
+    if(!p) return;
+    const url = `https://maps.google.com/maps?q=${p.lat},${p.lng}&t=m&z=16&output=embed`;
+    document.getElementById('mapTitle').textContent = p.title;
+    document.getElementById('mapFrame').src = url;
+    document.getElementById('mapModal').classList.add('show');
+  }
+  if(e.target.dataset.review){
+    alert('Спасибо! Форма отзывов подключается к Google Sheets/Forms. (Можно подключить позже.)');
+  }
+});
+
+/* ============ GUEST SAVE ============ */
+document.getElementById('g_save').onclick = ()=>{
+  const data = {
+    name: document.getElementById('g_name').value.trim(),
+    phone: document.getElementById('g_phone').value.trim(),
+    purpose: document.getElementById('g_purpose').value
+  };
+  localStorage.setItem('guest', JSON.stringify(data));
+  document.getElementById('guest').classList.remove('show');
+  alert('Готово! Фильтрация и рейтинг доступны. Для чата/уведомлений позже подключим Telegram/Notion/Sheets.');
+};
+
+/* ============ PARTNER SEND (mock) ============ */
+document.getElementById('p_send').onclick = ()=>{
+  const ok = ['p_title','p_cat','p_prov','p_city','p_addr','p_phone'].every(id => document.getElementById(id).value.trim());
+  if(!ok){ alert('Заполните обязательные поля *'); return; }
+  document.getElementById('p_result').style.display='block';
+  setTimeout(()=>document.getElementById('partner').classList.remove('show'), 800);
+};
+
+/* init */
+renderPartners(PARTNERS);
 </script>
 </body>
 </html>
-
