@@ -1,85 +1,477 @@
-<!-- SiyaEm: единый скрипт карты -->
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SiyaEm Korea — проверенные русскоязычные места</title>
+<meta name="description" content="Проверенные русскоязычные заведения в Корее: еда, салоны, авто-сервисы, развлечения. Модерация и лицензии. Рейтинг, отзывы, контакты.">
+<style>
+  :root{
+    --bg: #0f1629;
+    --bg-2:#101827;
+    --text:#e7ecf5;
+    --muted:#9fb1cc;
+    --card:#111c2d;
+    --line:#22324b;
+    --acc:#4f8cff;
+    --acc-2:#ffd266;
+    --good:#10b981;
+    --bad:#ef4444;
+    --radius:16px;
+    --shadow: 0 8px 26px rgba(0,0,0,.25);
+  }
+  [data-theme="light"]{
+    --bg:#f7f9fc;
+    --bg-2:#fff;
+    --card:#fff;
+    --text:#0b1a2c;
+    --muted:#5b6f87;
+    --line:#e7edf5;
+    --acc:#3c74ff;
+    --acc-2:#ffb400;
+    --shadow: 0 10px 22px rgba(13,36,65,.10);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 50% -200px, rgba(79,140,255,.18), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:20px}
+  header{
+    position:sticky;top:0;z-index:30;
+    backdrop-filter: blur(10px);
+    background: color-mix(in hsl, var(--bg) 82%, transparent);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--acc-2);box-shadow:0 0 18px var(--acc-2)}
+  .menu{display:flex;flex-wrap:wrap;gap:8px}
+  .btn{
+    border:1px solid var(--line);background:var(--bg-2);color:var(--text);
+    border-radius:12px;padding:9px 14px;cursor:pointer;font-weight:700;letter-spacing:.2px;
+  }
+  .btn:hover{border-color:color-mix(in hsl, var(--acc) 45%, var(--line))}
+  .btn-primary{background:var(--acc);border-color:var(--acc);color:#fff}
+  .btn-primary:hover{filter:brightness(1.08)}
+  .btn-ghost{background:transparent}
+
+  .filters, .block{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;
+  }
+  .filters{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:center}
+  select, input[type="text"]{
+    width:100%;background:var(--bg-2);border:1px solid var(--line);color:var(--text);
+    border-radius:12px;padding:10px 12px;outline:none;
+  }
+
+  .ads3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:16px 0}
+  .ad{
+    position:relative;overflow:hidden;border-radius:18px;background:linear-gradient(180deg, color-mix(in hsl, var(--acc) 22%, transparent), color-mix(in hsl, var(--bg) 90%, transparent));
+    border:1px solid var(--line);box-shadow:var(--shadow);
+  }
+  .ad img{display:block;width:100%;height:320px;object-fit:cover}
+  .ad .tag{
+    position:absolute;top:12px;left:12px;background:color-mix(in hsl, var(--bg) 70%, var(--acc) 30%);
+    border:1px solid var(--line);padding:6px 10px;border-radius:999px;font-size:12px;color:var(--text)
+  }
+
+  .partners{margin:18px 0}
+  .partner{
+    display:grid;grid-template-columns:72px 1fr auto;gap:12px;align-items:center;
+    border:1px solid var(--line);background:var(--bg-2);border-radius:14px;padding:12px;box-shadow:var(--shadow)
+  }
+  .logo{
+    width:72px;height:72px;border-radius:12px;display:grid;place-items:center;
+    background:linear-gradient(140deg, color-mix(in hsl, var(--acc) 25%, transparent), color-mix(in hsl, var(--acc-2) 25%, transparent));
+    border:1px solid var(--line)
+  }
+  .logo img{max-width:90%;max-height:90%}
+  .chips{color:#fff;background:linear-gradient(90deg, var(--acc) 0%, #7aa8ff 100%);padding:3px 9px;border-radius:999px;font-size:12px}
+  .row{display:flex;gap:8px;flex-wrap:wrap}
+  .stars{color:#ffb400}
+  .partners-grid{display:grid;gap:12px}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg-2);font-size:13px}
+  .gallery3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .frame{
+    border-radius:18px;border:1px solid var(--line);overflow:hidden;box-shadow:var(--shadow);
+    background:radial-gradient(600px 200px at 50% -100px, color-mix(in hsl, var(--acc) 15%, transparent), transparent)
+  }
+  .frame img{display:block;width:100%;height:220px;object-fit:cover}
+
+  .facts, .recipes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .fact, .recipe{
+    border:1px solid var(--line);border-radius:14px;background:var(--bg-2);padding:12px;box-shadow:var(--shadow)
+  }
+  .fact b{color:var(--acc)}
+  .recipe img{width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:8px}
+
+  .book{display:grid;gap:12px}
+  .contact{
+    display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;
+    border:1px solid var(--line);border-radius:12px;background:var(--bg-2);padding:10px
+  }
+  .contact .t{font-weight:700}
+  .contact .links a{margin-left:8px;color:var(--acc);text-decoration:none}
+
+  .modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,10,25,.6);backdrop-filter:blur(6px);z-index:50}
+  .modal.show{display:grid}
+  .box{width:min(720px,calc(100vw - 28px));max-height:80vh;overflow:auto;background:var(--card);
+        border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px}
+  textarea{width:100%;background:var(--bg-2);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px}
+  .stars-input .s{font-size:22px;cursor:pointer;color:#cbd5e1}
+  .stars-input .s.on{color:#ffb400}
+  .mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}
+
+  footer{padding:32px 0;color:var(--muted);text-align:center}
+  @media (max-width:900px){
+    .filters{grid-template-columns:1fr 1fr;grid-auto-rows:auto}
+    .ads3,.gallery3,.facts,.recipes{grid-template-columns:1fr}
+    .partner{grid-template-columns:56px 1fr}
+  }
+</style>
+</head>
+<body data-theme="dark">
+<header>
+  <div class="wrap nav">
+    <div class="brand"><span class="dot"></span><span>SiyaEm Korea</span></div>
+    <div class="menu">
+      <button class="btn-ghost btn" data-open="#about">О нас</button>
+      <button class="btn-ghost btn" data-open="#services">Услуги</button>
+      <button class="btn btn-primary" data-open="#partnerForm">Стать партнёром</button>
+      <div class="row">
+        <button id="guestBtn" class="btn">Гость</button>
+        <button id="themeBtn" class="btn-ghost btn" title="Тёмная/светлая">🌓</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="filters block">
+    <select id="fProvince"></select>
+    <select id="fCity"></select>
+    <select id="fCategory"></select>
+    <button id="applyFilters" class="btn btn-primary">Показать</button>
+    <div style="grid-column:1/-1;color:var(--muted);font-size:13px">
+      Отображаем только те заведения, которые прошли ручную модерацию и предоставили лицензию.
+    </div>
+  </section>
+
+  <section class="ads3">
+    <article class="ad"><span class="tag">Реклама — слот #1</span>
+      <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1600&auto=format&fit=crop" alt="">
+    </article>
+    <article class="ad"><span class="tag">Реклама — слот #2</span>
+      <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=1600&auto=format&fit=crop" alt="">
+    </article>
+    <article class="ad"><span class="tag">Реклама — слот #3</span>
+      <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=1600&auto=format&fit=crop" alt="">
+    </article>
+  </section>
+
+  <section class="partners block">
+    <h3 style="margin:0 0 10px">Партнёры (модерировано)</h3>
+    <div id="partnersList" class="partners-grid"></div>
+  </section>
+
+  <section class="block">
+    <h3 style="margin:0 0 10px">Промо / Галерея</h3>
+    <div class="gallery3">
+      <div class="frame"><img src="https://images.unsplash.com/photo-1541542684-4a66f7d9c163?q=80&w=1500&auto=format&fit=crop" alt=""></div>
+      <div class="frame"><img src="https://images.unsplash.com/photo-1505577060968-6ce26a3a09e9?q=80&w=1500&auto=format&fit=crop" alt=""></div>
+      <div class="frame"><img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=1500&auto=format&fit=crop" alt=""></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h3 style="margin:0 0 10px">А вы знали?</h3>
+    <div id="facts" class="facts"></div>
+  </section>
+
+  <section class="block">
+    <h3 style="margin:0 0 10px">Рецепты</h3>
+    <div id="recipes" class="recipes"></div>
+  </section>
+
+  <section class="block">
+    <h3 style="margin:0 0 10px">Записная книга (контакты партнёров)</h3>
+    <input id="bookSearch" type="text" placeholder="Поиск по названию / городу / категории…">
+    <div id="book" class="book mt12"></div>
+  </section>
+</main>
+
+<footer>© 2025 SiyaEm Korea. Все права защищены.</footer>
+
+<!-- Модалки -->
+<div class="modal" id="about"><div class="box">
+  <h3>О нас</h3>
+  <p style="color:var(--muted)">Мы собираем и продвигаем <b>только русскоязычные</b> и <b>легальные</b> места в Корее. Каждая точка проходит проверку лицензии и базовую модерацию.</p>
+  <div class="row mt12"><button class="btn btn-primary" data-close>Ок</button></div>
+</div></div>
+
+<div class="modal" id="services"><div class="box">
+  <h3>Услуги</h3>
+  <ul>
+    <li>Проверка лицензий и модерация партнёров</li>
+    <li>Продвижение на сайте и в соцсетях</li>
+    <li>Фотосъёмка, оформление карточек, контент</li>
+  </ul>
+  <div class="row mt12"><button class="btn btn-primary" data-close>Понятно</button></div>
+</div></div>
+
+<div class="modal" id="partnerForm"><div class="box">
+  <h3>Анкета партнёра</h3>
+  <p class="mt8" style="color:var(--muted)">Упростил форму — позже подключим Google Forms/Sheets. Сейчас — демо.</p>
+  <div class="row mt12">
+    <input type="text" id="pfTitle" placeholder="Название заведения *">
+    <input type="text" id="pfOwner" placeholder="ФИО владельца *">
+    <input type="text" id="pfPhone" placeholder="Телефон *">
+    <input type="text" id="pfAddress" placeholder="Адрес (как в лицензии) *">
+  </div>
+  <div class="row mt12">
+    <select id="pfProvince"></select>
+    <input type="text" id="pfCity" placeholder="Город *">
+  </div>
+  <div class="row mt12">
+    <select id="pfCategory"></select>
+    <input type="text" id="pfSubcats" placeholder="Подкатегории (через запятую)">
+  </div>
+  <textarea id="pfDesc" class="mt12" placeholder="Описание / история (по желанию)"></textarea>
+  <div class="row mt16">
+    <button id="pfSend" class="btn btn-primary">Отправить</button>
+    <button class="btn" data-close>Отмена</button>
+  </div>
+  <div id="pfResult" class="mt12" style="display:none;color:var(--good)"><b>Готово!</b> Заявка отправлена на модерацию (10–60 минут).</div>
+</div></div>
+
+<div class="modal" id="reviewModal"><div class="box">
+  <h3>Оставить отзыв</h3>
+  <div id="revFor" style="color:var(--muted)"></div>
+  <div class="stars-input mt12" id="revStars"></div>
+  <textarea id="revText" class="mt12" placeholder="Ваш отзыв…"></textarea>
+  <div class="row mt16">
+    <button id="revSend" class="btn btn-primary">Отправить</button>
+    <button class="btn" data-close>Отмена</button>
+  </div>
+  <div id="revDone" class="mt12" style="display:none;color:var(--good)">Спасибо! Отзыв учтён.</div>
+</div></div>
+
+<div class="modal" id="guest"><div class="box">
+  <h3>Войти как гость</h3>
+  <div class="row mt12">
+    <input type="text" id="gName" placeholder="Ваше имя *">
+    <input type="text" id="gEmail" placeholder="Email *">
+  </div>
+  <div class="row mt16">
+    <button id="gSave" class="btn btn-primary">Сохранить</button>
+    <button class="btn" data-close>Отмена</button>
+  </div>
+  <div id="gOk" class="mt12" style="display:none;color:var(--good)">Добро пожаловать! Данные сохранены.</div>
+</div></div>
+
 <script>
-(function(){
-  // Стили — плющим все сторонние POI/иконки
-  const SIYAEM_MAP_STYLES = [
-    { featureType: "poi", stylers: [{ visibility: "off" }] },
-    { featureType: "poi.business", stylers: [{ visibility: "off" }] },
-    { featureType: "poi.attraction", stylers: [{ visibility: "off" }] },
-    { featureType: "poi.medical", stylers: [{ visibility: "off" }] },
-    { featureType: "poi.government", stylers: [{ visibility: "off" }] },
-    { featureType: "poi.school", stylers: [{ visibility: "off" }] },
-    { featureType: "poi.sports_complex", stylers: [{ visibility: "off" }] }
-  ];
-
-  // Глобальный init для callback
-  window.initSiyaem = async function () {
-    const center = { lat: 36.9305, lng: 127.0458 }; // Dunpo (Асан)
-
-    const map = new google.maps.Map(document.getElementById("map"), {
-      center,
-      zoom: 15,
-      styles: SIYAEM_MAP_STYLES,
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullscreenControl: false,
-    });
-
-    // Грузим partners.json (лежит в корне репозитория)
-    let items = [];
-    try {
-      const res = await fetch("partners.json", { cache: "no-cache" });
-      if (!res.ok) throw new Error("partners.json not found");
-      items = await res.json();
-    } catch (e) {
-      console.error("Не удалось загрузить partners.json:", e);
-      return; // карта останется пустой
+/* ===== ДАННЫЕ (можно заменить на fetch) ===== */
+const DATA = {
+  provinces: ["Чхунчхоннам-до","Сеул","Кёнги-до","Пусан"],
+  categories: ["Еда","Салоны","Автосервис","Развлечения","Услуги"],
+  partners: [
+    {
+      id:"mr_cook",
+      name:"Мистер Кук (Mr. Cook)",
+      category:"Еда",
+      subcategories:["Корейская кухня","Столовая"],
+      rating:4.6,
+      reviews:1,
+      province_ru:"Чхунчхоннам-до",
+      city_ru:"Асан-си, Донпо-мён",
+      address:"405-20 Dunpo-ri, Dunpo-myeon, Asan-si, Chungcheongnam-do",
+      lat:36.9305, lng:127.0458,
+      phone:"+82-10-9809-1703",
+      site:"",
+      instagram:"",
+      logo:"https://raw.githubusercontent.com/kandrphkorea-cmd/siyaem-site2/main/mr-cook-logo.png"
     }
+  ],
+  facts: [
+    {t:"Самый длинный зафиксированный полёт курицы — **13 секунд** и около **100 метров**."},
+    {t:"Лапша **рамён** появилась в Корее в 1963 году — как доступная еда в тяжёлые времена."},
+    {t:"Перец чили попал в Корею в XVI веке и навсегда изменил вкус кимчи."},
+  ],
+  recipes: [
+    {title:"Пибимбап — быстрый", img:"https://images.unsplash.com/photo-1553621042-f6e147245754?q=80&w=1400&auto=format&fit=crop", short:"Рис, овощи, яйцо, гочуджан. Всё смешать — готово."},
+    {title:"Кимчи-боке-паб", img:"https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1400&auto=format&fit=crop", short:"Жареный рис с кимчи и беконом — 10 минут."},
+    {title:"Ттокпокки", img:"https://images.unsplash.com/photo-1572610299316-ffad036dfe1d?q=80&w=1400&auto=format&fit=crop", short:"Рисовые палочки в сладко-остром соусе."}
+  ]
+};
 
-    const approved = Array.isArray(items)
-      ? items.filter(x => x && x.approved === true)
-      : [];
+/* ===== ТЕМА ===== */
+const themeBtn = document.getElementById('themeBtn');
+function setTheme(t){ document.body.setAttribute('data-theme', t); localStorage.setItem('theme', t); }
+setTheme(localStorage.getItem('theme') || 'dark');
+themeBtn.onclick = ()=> setTheme(document.body.getAttribute('data-theme')==='dark'?'light':'dark');
 
-    const bounds = new google.maps.LatLngBounds();
-    let any = false;
+/* ===== МОДАЛКИ ===== */
+document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>document.querySelector(b.getAttribute('data-open')).classList.add('show')));
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>b.closest('.modal').classList.remove('show')));
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));
 
-    approved.forEach(place => {
-      const lat = Number(place.lat), lng = Number(place.lng);
-      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+/* ===== ФИЛЬТРЫ ===== */
+const fp = document.getElementById('fProvince');
+const fc = document.getElementById('fCity');
+const fcat = document.getElementById('fCategory');
+fp.innerHTML = `<option value="">Провинция: все</option>` + DATA.provinces.map(x=>`<option>${x}</option>`).join('');
+fc.innerHTML = `<option value="">Город: все</option>` + [...new Set(DATA.partners.map(x=>x.city_ru))].map(x=>`<option>${x}</option>`).join('');
+fcat.innerHTML = `<option value="">Категория: все</option>` + DATA.categories.map(x=>`<option>${x}</option>`).join('');
 
-      const pos = { lat, lng };
-      const marker = new google.maps.Marker({
-        position: pos,
-        map,
-        title: place.name
-      });
+/* ===== ПАРТНЁРЫ ===== */
+const partnersList = document.getElementById('partnersList');
+function makePartnerCard(p){
+  const logo = p.logo ? `<img alt="logo" src="${p.logo}" />` : '🍲';
+  const store = getStoreReviews()[p.id];
+  const rating = store?.avg ?? p.rating;
+  const reviewsLen = store?.len ?? p.reviews;
+  return `
+  <article class="partner">
+    <div class="logo">${logo}</div>
+    <div class="meta">
+      <div class="row" style="align-items:center;gap:10px">
+        <strong>${p.name}</strong> <span class="chips">${p.category}${p.subcategories?.length?` — ${p.subcategories.join(', ')}`:''}</span>
+      </div>
+      <small>${p.province_ru} • ${p.city_ru}</small><br>
+      <small>${p.address}</small><br>
+      <div class="row mt8"><span class="stars">${'★'.repeat(Math.round(rating))}${'☆'.repeat(5-Math.round(rating))}</span>
+        <small>(${reviewsLen})</small>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn" data-review="${p.id}">Оставить отзыв</button>
+      <button class="btn" data-map="${p.id}">Показать на карте</button>
+    </div>
+  </article>`;
+}
+function renderPartners(){
+  const filtered = DATA.partners.filter(p=>
+     (!fp.value || p.province_ru===fp.value) &&
+     (!fc.value || p.city_ru===fc.value) &&
+     (!fcat.value || p.category===fcat.value)
+  );
+  partnersList.innerHTML = filtered.map(makePartnerCard).join('') || `<div class="pill">Ничего не найдено 🙈 Измени фильтры.</div>`;
+  partnersList.querySelectorAll('[data-map]').forEach(b=>{
+    b.onclick = ()=>{
+      const p = DATA.partners.find(x=>x.id===b.dataset.map);
+      const q = p.lat && p.lng ? `${p.lat},${p.lng}` : encodeURIComponent(p.address);
+      window.open(`https://www.google.com/maps?q=${q}`,'_blank');
+    };
+  });
+  partnersList.querySelectorAll('[data-review]').forEach(b=>{ b.onclick = ()=> openReview(b.dataset.review); });
+}
+document.getElementById('applyFilters').onclick = renderPartners;
 
-      const infoHtml = `
-        <div style="max-width:260px">
-          <strong>${place.name ?? ""}</strong><br/>
-          <small>${place.province_ru ?? ""} • ${place.city_ru ?? ""}</small><br/>
-          <div>Категория: ${place.category ?? "—"}${place.subcategories?.length ? " — " + place.subcategories.join(", ") : ""}</div>
-          <div>Рейтинг: ${place.rating ?? "—"}</div>
-          <div style="margin-top:6px">${place.address ?? ""}</div>
-        </div>
-      `;
-      const iw = new google.maps.InfoWindow({ content: infoHtml });
-      marker.addListener("click", () => iw.open({ anchor: marker, map }));
+/* ===== ФАКТЫ и РЕЦЕПТЫ ===== */
+document.getElementById('facts').innerHTML = DATA.facts.map(x=>`<div class="fact"><b>Факт:</b> ${x.t}</div>`).join('');
+document.getElementById('recipes').innerHTML = DATA.recipes.map(x=>`
+  <article class="recipe">
+    <img src="${x.img}" alt="">
+    <strong>${x.title}</strong>
+    <div class="mt8" style="color:var(--muted)">${x.short}</div>
+  </article>`).join('');
 
-      bounds.extend(pos);
-      any = true;
-    });
+/* ===== ЗАПИСНАЯ КНИГА ===== */
+const book = document.getElementById('book');
+const bookSearch = document.getElementById('bookSearch');
+function renderBook(){
+  const q=(bookSearch.value||'').trim().toLowerCase();
+  const items = DATA.partners.filter(p=>{
+    const hay=[p.name,p.city_ru,p.province_ru,p.category,(p.subcategories||[]).join(' ')].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+  book.innerHTML = items.map(p=>`
+    <div class="contact">
+      <div>
+        <div class="t">${p.name}</div>
+        <div style="color:var(--muted);font-size:13px">${p.category}${p.subcategories?.length?` — ${p.subcategories.join(', ')}`:''} • ${p.city_ru}</div>
+      </div>
+      <div class="links">
+        ${p.phone?`<a href="tel:${p.phone}">📞 Позвонить</a>`:''}
+        ${p.site?`<a href="${p.site}" target="_blank">🌐 Сайт</a>`:''}
+        ${p.instagram?`<a href="${p.instagram}" target="_blank">📷 Instagram</a>`:''}
+      </div>
+    </div>
+  `).join('');
+}
+bookSearch.oninput = renderBook;
 
-    if (any) {
-      if (approved.length === 1) { map.setCenter(bounds.getCenter()); map.setZoom(17); }
-      else { map.fitBounds(bounds); }
-    } else {
-      map.setCenter(center);
-      map.setZoom(14);
-    }
+/* ===== ОТЗЫВЫ (localStorage) ===== */
+const LS_KEY = 'siyaem_reviews_v1';
+function getStoreReviews(){ try { return JSON.parse(localStorage.getItem(LS_KEY))||{} } catch(_){ return {} } }
+function setStoreReviews(obj){ localStorage.setItem(LS_KEY, JSON.stringify(obj)) }
+
+let currentReviewId = null;
+const revModal = document.getElementById('reviewModal');
+const revFor = document.getElementById('revFor');
+const revStars = document.getElementById('revStars');
+const revText = document.getElementById('revText');
+const revDone = document.getElementById('revDone');
+function openReview(id){
+  currentReviewId = id;
+  revFor.innerHTML = `Для: <b>${DATA.partners.find(p=>p.id===id).name}</b>`;
+  revStars.innerHTML = Array.from({length:5},(_,i)=>`<span class="s" data-v="${i+1}">★</span>`).join('');
+  let cur = 0;
+  revStars.querySelectorAll('.s').forEach(s=>{
+    s.onclick = ()=>{ cur = +s.dataset.v; setOn(); };
+    s.onmouseenter = ()=>{ setOn(+s.dataset.v) };
+    s.onmouseleave = ()=>{ setOn(cur) };
+  });
+  function setOn(k=cur){ revStars.querySelectorAll('.s').forEach((x,i)=>x.classList.toggle('on', i<k)); }
+  revText.value = '';
+  revDone.style.display='none';
+  revModal.classList.add('show');
+  document.getElementById('revSend').onclick = ()=>{
+    const stars = cur || 5;
+    const text = (revText.value||'').trim();
+    const base = getStoreReviews();
+    const p = DATA.partners.find(p=>p.id===id);
+    const old = base[id] || {avg: p.rating, len: p.reviews};
+    const sum = old.avg*old.len + stars;
+    const len = old.len + 1;
+    base[id] = {avg: sum/len, len, last:text};
+    setStoreReviews(base);
+    revDone.style.display='block';
+    setTimeout(()=>{ revModal.classList.remove('show'); renderPartners(); renderBook(); }, 700);
   };
-})();
-</script>
+}
 
-<!-- Единственная загрузка Google Maps с правильным callback -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro&callback=initSiyaem"></script>
+/* ===== ГОСТЬ ===== */
+document.getElementById('guestBtn').onclick = ()=>document.getElementById('guest').classList.add('show');
+document.getElementById('gSave').onclick = ()=>{
+  const n = (document.getElementById('gName').value||'').trim();
+  const e = (document.getElementById('gEmail').value||'').trim();
+  if(!n||!e){ alert('Заполни имя и email.'); return; }
+  localStorage.setItem('siyaem_guest', JSON.stringify({n,e,ts:Date.now()}));
+  document.getElementById('gOk').style.display='block';
+  setTimeout(()=>document.getElementById('guest').classList.remove('show'), 800);
+};
+
+/* ===== АНКЕТА ПАРТНЁРА (демо) ===== */
+const pfProvince = document.getElementById('pfProvince');
+const pfCategory = document.getElementById('pfCategory');
+pfProvince.innerHTML = DATA.provinces.map(x=>`<option>${x}</option>`).join('');
+pfCategory.innerHTML = DATA.categories.map(x=>`<option>${x}</option>`).join('');
+document.getElementById('pfSend').onclick = ()=>{
+  document.getElementById('pfResult').style.display='block';
+  setTimeout(()=>document.getElementById('partnerForm').classList.remove('show'),1000);
+};
+
+/* ===== INIT ===== */
+const themeBtnInit = localStorage.getItem('theme')||'dark';
+renderPartners();
+renderBook();
+</script>
+</body>
+</html>
