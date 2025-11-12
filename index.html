@@ -120,6 +120,23 @@ a{color:var(--acc);text-decoration:none}
 .pr-card h4{margin:0}
 .pr-card ul{margin:10px 0 0;padding-left:18px}
 .pr-cta{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+
+/* APPLY MODAL (микро-фрагмент) */
+.m-apply{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,.6);backdrop-filter:blur(6px);z-index:1000}
+.m-apply.show{display:grid}
+.m-apply .abox{width:min(680px,calc(100vw - 28px));background:var(--bg-2);color:var(--text);border:1px solid var(--line);border-radius:16px;padding:18px}
+.m-apply h3{margin:0 0 10px;font-size:20px}
+.m-apply .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.m-apply .field{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.m-apply input,.m-apply textarea,.m-apply select{
+  width:100%;background:#0f172a;border:1px solid var(--line);color:var(--text);border-radius:10px;padding:10px 12px;outline:none
+}
+:root.light .m-apply input,:root.light .m-apply textarea,:root.light .m-apply select{background:#f3f4f9;color:#0f1222}
+.m-apply textarea{min-height:110px;resize:vertical}
+.m-apply .hint{color:var(--muted);font-size:12px}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn-primary{background:linear-gradient(90deg,#4b7bff,#8ab4ff);color:#fff;border:none}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
 </style>
 </head>
 <body>
@@ -184,7 +201,7 @@ a{color:var(--acc);text-decoration:none}
             <small class="hint" style="margin-left:6px">(оценок: <b id="r-mr_cook">1</b>)</small>
           </div>
           <div class="actions">
-            <button class="btn" data-review="mr_cook">Оставить отзыв</button>
+            <button class="btn" data-apply="Заявка: Мистер Кук">Оставить заявку</button>
             <button class="btn map" data-map="36.9305,127.0458">Показать на карте</button>
           </div>
         </div>
@@ -228,17 +245,50 @@ a{color:var(--acc);text-decoration:none}
   <div class="box">
     <div class="pr-head">
       <div class="pr-title">Подборки для: <strong id="prTyping" class="typing"></strong></div>
-      <div class="pr-tabs" id="prTabs"><!-- табы подкатегорий --></div>
+      <div class="pr-tabs" id="prTabs"></div>
     </div>
-    <div class="pr-grid" id="prGrid"><!-- карточки подкатегории --></div>
+    <div class="pr-grid" id="prGrid"></div>
     <div style="display:flex;justify-content:flex-end;padding:0 16px 16px">
       <button class="close" id="closePricing">Закрыть</button>
     </div>
   </div>
 </div>
 
+<!-- APPLY MODAL (микро-фрагмент: заявки летят на вашу почту) -->
+<div id="applyModal" class="m-apply" aria-hidden="true">
+  <div class="abox">
+    <h3>Оставить заявку</h3>
+    <form id="applyForm" action="https://formsubmit.co/ignatka220033@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="Заявка с SiyaEm Korea">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://kandrphkorea-cmd.github.io/siyaem-site2/#thanks">
+      <input type="hidden" id="f-context" name="Контекст" value="Заявка с сайта">
+      <div class="row">
+        <div class="field"><label>Имя*</label><input type="text" name="Имя" required placeholder="Как вас зовут"></div>
+        <div class="field"><label>Телефон / KakaoTalk*</label><input type="text" name="Телефон" required placeholder="+82-10-XXXX-XXXX / Kakao ID"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label>E-mail</label><input type="email" name="Email" placeholder="example@mail.com"></div>
+        <div class="field"><label>Категория</label>
+          <select name="Категория">
+            <option>Еда</option><option>Салоны / красота</option><option>Автомеханики</option>
+            <option>Образование</option><option>Развлечения</option><option>Другое</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Комментарий</label><textarea name="Комментарий" placeholder="Пару слов о запросе, удобное время для связи…"></textarea></div>
+      <div class="hint">Нажимая «Отправить», вы соглашаетесь с обработкой персональных данных.</div>
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" id="applyClose">Отмена</button>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <footer>© 2025 SiyaEm Korea</footer>
 
+<!-- ========= JS #1 (основной; НЕ менял дизайн) ========= -->
 <script>
 /* THEME */
 document.getElementById('themeToggle').onclick=()=>document.documentElement.classList.toggle('light');
@@ -268,8 +318,8 @@ function openMapAt(lat,lng){mapModal.classList.add('show');ensureMap(lat,lng)}
 function ensureMap(lat,lng){
   if(!_mapsLoaded){
     const s=document.createElement('script');
-    /* ВСТАВЬ СВОЙ КЛЮЧ ↓↓↓ */
-    s.src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE&callback=__initMap";
+    /* КЛЮЧ ПОДСТАВЛЕН */
+    s.src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro&callback=__initMap";
     s.async=true; window.__initMap=()=>{_mapsLoaded=true;initMap(lat,lng)}; document.body.appendChild(s);
   } else initMap(lat,lng);
 }
@@ -279,87 +329,68 @@ function initMap(lat,lng){
   else{_map.setCenter(c);_marker.setPosition(c)}
 }
 
-/* CTA partner */
-document.getElementById('bePartner').onclick=()=>alert("Подключим Google Forms/Sheets — анкета → модерация → автоматическое появление на карте.");
+/* CTA partner (демо) */
+document.getElementById('bePartner').onclick=()=>document.getElementById('applyModal').classList.add('show');
 
 /* --------- PRICING (категории как у Notion Pricing) --------- */
 const pricingModal=document.getElementById('pricingModal');
 const closePricing=document.getElementById('closePricing');
 closePricing.onclick=()=>pricingModal.classList.remove('show');
 
-/* структура секций + подкатегорий */
 const sections={
-  food:{
-    title:"Еда",
-    tabs:["Фастфуд","Лапша","Супы","Мясо","Десерты"],
-    items:{
-      "Фастфуд":[{title:"Бургеры/Картошка",points:["Русское меню","Доставка","Купоны"],tags:["Еда","Фастфуд"],cat:"Еда,Фастфуд"},
-                 {title:"Курица/Пицца",points:["Семейные сеты","Остро/не остро","Поздно до 02:00"],tags:["Еда","Фастфуд"],cat:"Еда,Фастфуд"},
-                 {title:"Кофе/Сэндвич",points:["Утренние наборы","Выгодно студентам"],tags:["Еда","Кафе"],cat:"Еда,Фастфуд"}],
-      "Лапша":[{title:"Кальгуксу",points:["Домашняя лапша","Большие порции"],tags:["Еда","Лапша"],cat:"Еда,Лапша"},
-               {title:"Рамен",points:["Авторские бульоны","Острый уровень 1–5"],tags:["Еда","Лапша"],cat:"Еда,Лапша"},
-               {title:"Фо/Удон",points:["Вьет/Японские","Быстро готовим"],tags:["Еда","Лапша"],cat:"Еда,Лапша"}],
-      "Супы":[{title:"Кимчи-чиге",points:["Очень горячо","Сытно"],tags:["Еда","Супы"],cat:"Еда,Супы"},
-              {title:"Сундубу",points:["Мягкий тофу","Нежно"],tags:["Еда","Супы"],cat:"Еда,Супы"},
-              {title:"Борщ/Щи",points:["Домашний вкус"],tags:["Еда","Супы"],cat:"Еда,Супы"}],
-      "Мясо":[{title:"Самгёпсаль",points:["На углях","Салаты включены"],tags:["Еда","Мясо"],cat:"Еда,Мясо"},
-              {title:"Говядина",points:["Маринованная/чистая"],tags:["Еда","Мясо"],cat:"Еда,Мясо"},
-              {title:"Шашлык",points:["Русская классика"],tags:["Еда","Мясо"],cat:"Еда,Мясо"}],
-      "Десерты":[{title:"Торты/Эклеры",points:["На заказ","Персональный дизайн"],tags:["Еда","Десерты"],cat:"Еда,Десерты"},
-                 {title:"Пирожные",points:["Каждый день свежие"],tags:["Еда","Десерты"],cat:"Еда,Десерты"},
-                 {title:"Мороженое",points:["Домашнее","Необычные вкусы"],tags:["Еда","Десерты"],cat:"Еда,Десерты"}]
-    }
-  },
-  salon:{
-    title:"Салоны",
-    tabs:["Маникюр","Парикмахер","Косметология"],
-    items:{
-      "Маникюр":[{title:"Маникюр + покрытие",points:["Палитра 200+","Стерильность"],tags:["Салоны"],cat:"Салоны"},
-                 {title:"Дизайн",points:["Аэрография","Стразы"],tags:["Салоны"],cat:"Салоны"}],
-      "Парикмахер":[{title:"Стрижка/Окрашивание",points:["Колористика","Keratin"],tags:["Салоны"],cat:"Салоны"}],
-      "Косметология":[{title:"Чистка/Массаж",points:["Аппаратная/мануальная"],tags:["Салоны"],cat:"Салоны"}]
-    }
-  },
-  auto:{
-    title:"Авто",
-    tabs:["СТО","Детейлинг","Шины"],
-    items:{
-      "СТО":[{title:"Диагностика",points:["Сканер/электрика"],tags:["Авто"],cat:"Авто"}],
-      "Детейлинг":[{title:"Полировка/Защита",points:["Керамика","Матовые плёнки"],tags:["Авто"],cat:"Авто"}],
-      "Шины":[{title:"Шиномонтаж",points:["Хранение сезонное"],tags:["Авто"],cat:"Авто"}]
-    }
-  },
-  edu:{
-    title:"Образование",
-    tabs:["Языки","Подготовка","Кружки"],
-    items:{
-      "Языки":[{title:"Корейский A0–B2",points:["Группы/индивидуально"],tags:["Образование"],cat:"Образование"}],
-      "Подготовка":[{title:"TOPIK",points:["Пробные тесты"],tags:["Образование"],cat:"Образование"}],
-      "Кружки":[{title:"Танцы/Музыка",points:["Детские/взрослые"],tags:["Образование"],cat:"Образование"}]
-    }
-  }
+  food:{ title:"Еда", tabs:["Фастфуд","Лапша","Супы","Мясо","Десерты"], items:{
+    "Фастфуд":[{title:"Бургеры/Картошка",points:["Русское меню","Доставка","Купоны"],cat:"Еда,Фастфуд"},
+               {title:"Курица/Пицца",points:["Семейные сеты","Поздно до 02:00"],cat:"Еда,Фастфуд"},
+               {title:"Кофе/Сэндвич",points:["Утренние наборы","Студентам"],cat:"Еда,Фастфуд"}],
+    "Лапша":[{title:"Кальгуксу",points:["Домашняя лапша","Большие порции"],cat:"Еда,Лапша"},
+             {title:"Рамен",points:["Авторские бульоны","Острота 1–5"],cat:"Еда,Лапша"},
+             {title:"Фо/Удон",points:["Вьет/Япония","Быстро"],cat:"Еда,Лапша"}],
+    "Супы":[{title:"Кимчи-чиге",points:["Очень горячо","Сытно"],cat:"Еда,Супы"},
+            {title:"Сундубу",points:["Мягкий тофу","Нежно"],cat:"Еда,Супы"},
+            {title:"Борщ/Щи",points:["Домашний вкус"],cat:"Еда,Супы"}],
+    "Мясо":[{title:"Самгёпсаль",points:["На углях","Салаты включены"],cat:"Еда,Мясо"},
+            {title:"Говядина",points:["Марин/чистая"],cat:"Еда,Мясо"},
+            {title:"Шашлык",points:["Русская классика"],cat:"Еда,Мясо"}],
+    "Десерты":[{title:"Торты/Эклеры",points:["На заказ","Дизайн"],cat:"Еда,Десерты"},
+               {title:"Пирожные",points:["Свежие ежедневно"],cat:"Еда,Десерты"},
+               {title:"Бингсу",points:["Манго/Матча"],cat:"Еда,Десерты"}]
+  }},
+  salon:{ title:"Салоны", tabs:["Маникюр","Парикмахер","Косметология"], items:{
+    "Маникюр":[{title:"Маникюр + покрытие",points:["Палитра 200+","Стерильность"],cat:"Салоны"}],
+    "Парикмахер":[{title:"Стрижка/Окрашивание",points:["Колористика","Keratin"],cat:"Салоны"}],
+    "Косметология":[{title:"Чистка/Массаж",points:["Аппаратная/мануальная"],cat:"Салоны"}]
+  }},
+  auto:{ title:"Авто", tabs:["СТО","Детейлинг","Шины"], items:{
+    "СТО":[{title:"Диагностика",points:["Сканер/электрика"],cat:"Авто"}],
+    "Детейлинг":[{title:"Полировка/Защита",points:["Керамика","Матовые плёнки"],cat:"Авто"}],
+    "Шины":[{title:"Шиномонтаж",points:["Хранение сезонное"],cat:"Авто"}]
+  }},
+  edu:{ title:"Образование", tabs:["Языки","Подготовка","Кружки"], items:{
+    "Языки":[{title:"Корейский A0–B2",points:["Группы/индивидуально"],cat:"Образование"}],
+    "Подготовка":[{title:"TOPIK",points:["Пробные тесты"],cat:"Образование"}],
+    "Кружки":[{title:"Танцы/Музыка",points:["Детские/взрослые"],cat:"Образование"}]
+  }}
 };
 
 const openPricingBtns=document.querySelectorAll('.open-pricing');
 const prTabs=document.getElementById('prTabs');
 const prGrid=document.getElementById('prGrid');
 const prTyping=document.getElementById('prTyping');
-
 openPricingBtns.forEach(b=>b.onclick=()=>openSection(b.dataset.section));
 
 function openSection(key){
   const sec=sections[key]; if(!sec) return;
   pricingModal.classList.add('show');
-  // typing title
+  // typing title (мягкий)
   const words=[sec.title,"лучшие подборки","рядом с вами"];
   let i=0,j=0,fw=true;
   (function t(){const w=words[i];prTyping.textContent=w.slice(0,j);j+=fw?1:-1;
     if(j===w.length+10)fw=false; if(j===0){fw=true;i=(i+1)%words.length} setTimeout(t, fw?75:45)})();
   // tabs
   prTabs.innerHTML='';
-  sec.tabs.forEach((t,idx)=>{
-    const el=document.createElement('button'); el.className='tab'+(idx===0?' active':''); el.textContent=t;
-    el.onclick=()=>{prTabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); el.classList.add('active');renderTab(sec,t)};
+  sec.tabs.forEach((tname,idx)=>{
+    const el=document.createElement('button'); el.className='tab'+(idx===0?' active':''); el.textContent=tname;
+    el.onclick=()=>{prTabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); el.classList.add('active');renderTab(sec,tname)};
     prTabs.appendChild(el);
   });
   renderTab(sec,sec.tabs[0]);
@@ -375,15 +406,14 @@ function renderTab(sec,tab){
       <ul>${card.points.map(p=>`<li>${p}</li>`).join('')}</ul>
       <div class="pr-cta">
         <button class="btn map">Показать точки</button>
-        <button class="btn">Оставить заявку</button>
+        <button class="btn" data-apply="${sec.title} · ${card.title}">Оставить заявку</button>
       </div>`;
     div.querySelector('.map').onclick=()=>{
-      // фильтрация каталога по категориям карточки (простая подсветка)
       const cats=(card.cat||'').split(',').map(s=>s.trim());
       document.querySelectorAll('#cards .card').forEach(c=>{
-        const has = (c.dataset.cat||'').split(',').some(v=>cats.includes(v.trim()));
-        c.style.outline = has ? '2px solid #6aa3ff' : 'none';
-        c.style.opacity = has ? '1' : '0.55';
+        const has=(c.dataset.cat||'').split(',').some(v=>cats.includes(v.trim()));
+        c.style.outline=has?'2px solid #6aa3ff':'none';
+        c.style.opacity=has?'1':'0.55';
       });
       pricingModal.classList.remove('show');
       openMapAt(36.9305,127.0458);
@@ -391,131 +421,44 @@ function renderTab(sec,tab){
     prGrid.appendChild(div);
   });
 }
-
 document.getElementById('closePricing').onclick=()=>pricingModal.classList.remove('show');
 
-/* подсветку убрать по клику вне */
+/* очистка подсветки */
 document.addEventListener('click',e=>{
   if(!e.target.closest('.pr-card') && !e.target.closest('.open-pricing')){
     document.querySelectorAll('#cards .card').forEach(c=>{c.style.outline='none';c.style.opacity='1'})
   }
 });
 </script>
-</body><script>
+
+<!-- ========= JS #2 (no-conflict: модалки/клики/самолётик) ========= -->
+<script>
 (function(){
   'use strict';
-
-  // Хелперы
   const $=(s,r=document)=>r.querySelector(s);
 
-  // ==== Плавный тайпер (без наложений). Работает только если есть #prTyping ====
-  (function(){
-    const el = $('#prTyping'); if(!el) return;
-    let timer=null;
-    function stop(){ if(timer){clearTimeout(timer); timer=null;} }
-    function start(words){
-      stop();
-      let i=0,j=0,fwd=true;
-      const type=90, erase=45, holdFull=1000, holdEmpty=450;
-      (function tick(){
-        const w=words[i]; el.textContent=w.slice(0,j);
-        if(fwd){
-          if(j<w.length){ j++; timer=setTimeout(tick,type); }
-          else { fwd=false; timer=setTimeout(tick,holdFull); }
-        }else{
-          if(j>0){ j--; timer=setTimeout(tick,erase); }
-          else { fwd=true; i=(i+1)%words.length; timer=setTimeout(tick,holdEmpty); }
-        }
-      })();
-      return stop;
-    }
-    // Если у вас есть массив слов — запустите так:
-    // window.startPricingTyping = (words)=> start(words);
-    // Чтобы не менять текущую логику, просто мягко стартанём с дефолтными словами:
-    window.addEventListener('pricing-open', ()=> start(['Прайс','выгодные тарифы','рядом с вами']));
-    window.addEventListener('pricing-close', stop);
-  })();
-
-  // ==== Делегаторы кнопок (НЕ меняют верстку) ====
-  document.addEventListener('click', (e)=>{
-    const a = e.target.closest('[data-apply]');
+  /* Делегаторы: открыть заявку из любой кнопки с data-apply */
+  document.addEventListener('click',(e)=>{
+    const a=e.target.closest('[data-apply]');
     if(a){
-      const m = $('#applyModal');
-      if(m){
-        const ctx = a.getAttribute('data-apply') || a.textContent.trim();
-        const ctxField = $('#f-context'); if(ctxField) ctxField.value = ctx;
+      const m=$('#applyModal'); if(m){
+        const ctx=a.getAttribute('data-apply')||a.textContent.trim();
+        const ctxField=$('#f-context'); if(ctxField) ctxField.value=ctx;
         m.classList.add('show');
-      }else{
-        // Фallback, если модалки нет: не ломаем страницу
-        console.warn('applyModal не найден');
-      }
-    }
-
-    const p = e.target.closest('[data-pricing]');
-    if(p){
-      const m = $('#pricingModal');
-      if(m){
-        m.classList.add('show');
-        window.dispatchEvent(new Event('pricing-open'));
-      }else{
-        console.warn('pricingModal не найден');
       }
     }
   });
+  /* Закрытие модалки заявки */
+  const applyModal=$('#applyModal'), applyClose=$('#applyClose');
+  if(applyClose) applyClose.addEventListener('click',()=>applyModal.classList.remove('show'));
+  if(applyModal) applyModal.addEventListener('click',(e)=>{if(e.target===applyModal) applyModal.classList.remove('show')});
 
-  // ==== Закрытия (по вашим существующим id) ====
-  const closePricing = $('#closePricing');
-  if(closePricing){
-    closePricing.addEventListener('click', ()=>{
-      const m = $('#pricingModal'); if(m){ m.classList.remove('show'); window.dispatchEvent(new Event('pricing-close')); }
-    });
-  }
-  const pricingModal = $('#pricingModal');
+  /* Прайс: безопасное закрытие по клику вне */
+  const pricingModal=$('#pricingModal');
   if(pricingModal){
-    pricingModal.addEventListener('click', (e)=>{
-      if(e.target===pricingModal){ pricingModal.classList.remove('show'); window.dispatchEvent(new Event('pricing-close')); }
-    });
+    pricingModal.addEventListener('click',(e)=>{if(e.target===pricingModal) pricingModal.classList.remove('show')});
   }
-  const applyClose = $('#applyClose');
-  if(applyClose){
-    applyClose.addEventListener('click', ()=>{
-      const m = $('#applyModal'); if(m) m.classList.remove('show');
-    });
-  }
-  const applyModal = $('#applyModal');
-  if(applyModal){
-    applyModal.addEventListener('click', (e)=>{
-      if(e.target===applyModal){ applyModal.classList.remove('show'); }
-    });
-  }
-
-  // ==== Самолётик (мягко следует за курсором), только если есть #plane и #prWrap ====
-  (function(){
-    const plane = $('#plane'); const wrap = $('#prWrap');
-    if(!plane || !wrap) return;
-    let tx=0,ty=0,x=0,y=0,raf;
-    wrap.addEventListener('mousemove', (e)=>{
-      const r=wrap.getBoundingClientRect();
-      tx=e.clientX-r.left-20; ty=e.clientY-r.top-20;
-      if(!raf) raf=requestAnimationFrame(loop);
-    });
-    function loop(){
-      x+=(tx-x)*0.18; y+=(ty-y)*0.18;
-      plane.style.transform=`translate(${x}px,${y}px) rotate(${(tx-x)*0.05}deg)`;
-      if(Math.abs(tx-x)>0.5 || Math.abs(ty-y)>0.5) raf=requestAnimationFrame(loop); else raf=null;
-    }
-  })();
-
-  // ==== Поддержка формы заявок FormSubmit (ничего не меняем, просто подсказка) ====
-  const applyForm = $('#applyForm');
-  if(applyForm){
-    // Ничего не трогаем: FormSubmit сам отправит на email. Можно повесить «спасибо» после сабмита, если нужно.
-    applyForm.addEventListener('submit', ()=> {
-      // оставить пустым, чтобы не мешать стандартной отправке
-    });
-  }
-
 })();
 </script>
-
+</body>
 </html>
