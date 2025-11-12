@@ -1,215 +1,372 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SiyaEm Korea — Партнёры и Рестораны</title>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SiyaEm Korea — русскоязычные места в Корее</title>
 <style>
-:root{
-  --bg:#f5f7fb;
-  --text:#0f172a;
-  --muted:#5b6b82;
-  --primary:#3b82f6;
-  --primary-2:#60a5fa;
-  --surface:#ffffff;
-  --surface-2:#eef3ff;
-  --border:#e6ecf7;
-  --radius:16px;
-}
-[data-theme="dark"]{
-  --bg:#0f1629;
-  --text:#e7ecf7;
-  --muted:#a7b3c7;
-  --primary:#6ea8ff;
-  --primary-2:#93c5fd;
-  --surface:#111a2e;
-  --surface-2:#0f1830;
-  --border:#1e2a43;
-}
-body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;padding:0}
-h2{margin:0 0 12px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:16px auto;max-width:900px;box-shadow:0 4px 20px rgba(0,0,0,.04)}
-.btn{appearance:none;border:none;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer}
-.btn-primary{background:var(--primary);color:#fff}
-.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
-.partner-card{
-  display:grid;grid-template-columns:72px 1fr;gap:16px;
-  background:linear-gradient(180deg,var(--surface-2),var(--surface) 40%);
-  border:1px solid var(--border);border-radius:18px;padding:16px;
-  box-shadow:0 6px 18px rgba(59,130,246,.06);
-}
-.partner-avatar{
-  width:72px;height:72px;border-radius:16px;
-  background:linear-gradient(135deg,var(--primary),var(--primary-2));
-  display:grid;place-items:center;color:#fff;font-weight:900;font-size:20px;
-  overflow:hidden;
-}
-.partner-avatar img{width:100%;height:100%;object-fit:cover;border-radius:inherit}
-.partner-title{font-weight:800;margin:0;color:var(--text)}
-.partner-sub{color:var(--muted);margin:4px 0 8px}
-.stars{color:#f59e0b;font-size:14px}
-.promo-rail{display:flex;gap:16px;overflow:auto;scroll-snap-type:x mandatory;padding:8px 4px}
-.promo-card{
-  min-width:240px;max-width:240px;scroll-snap-align:start;
-  background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden
-}
-.promo-card img{width:100%;height:148px;object-fit:cover;display:block}
-.promo-body{padding:12px}
-.promo-title{font-weight:800;margin:0 0 4px}
-.promo-sub{color:var(--muted);font-size:13px}
-.modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,.55);backdrop-filter:blur(6px);z-index:50}
-.modal.show{display:grid}
-.modal .box{width:min(720px,calc(100vw - 28px));background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px}
-.field{display:flex;flex-direction:column;gap:6px;margin:10px 0}
-input,textarea{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text)}
-.theme-toggle{position:fixed;right:14px;bottom:14px;background:var(--surface);border:1px solid var(--border)}
-#map{height:420px;width:100%;border-radius:12px;margin-top:12px}
+  :root{
+    --bg:#0f172a;           /* тёмно-синий фон */
+    --bg-2:#0b132b;
+    --card:#111827;         /* карточки */
+    --stroke:#1f2937;       /* линии */
+    --text:#e5e7eb;         /* белый мягкий */
+    --muted:#9ca3af;
+    --accent:#2563eb;       /* королевский синий */
+    --accent-2:#60a5fa;
+    --gold:#fbbf24;         /* для звёзд */
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; color:var(--text);
+    background:linear-gradient(180deg,var(--bg-2),var(--bg) 35% 65%,#0c1224);
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  }
+  .wrap{max-width:1200px;margin:0 auto;padding:20px}
+  header{
+    position:sticky; top:0; z-index:20;
+    background:rgba(15,23,42,.65); backdrop-filter: blur(12px);
+    border-bottom:1px solid var(--stroke);
+  }
+  .nav{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 0}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.3px; font-size:18px}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:#fbbf24;box-shadow:0 0 16px #fbbf24}
+  .menu{display:flex; gap:8px; flex-wrap:wrap}
+  .menu a{
+    text-decoration:none; color:var(--text); opacity:.85; padding:10px 14px; border-radius:12px;
+    border:1px solid transparent; transition:.2s; font-weight:700;
+  }
+  .menu a:hover{border-color:#2f467a; color:#dbeafe}
+
+  /* Hero панель как у авиасейлс */
+  .hero{
+    margin:26px 0 16px; border:1px solid var(--stroke); border-radius:var(--radius);
+    background:rgba(17,24,39,.75); padding:22px;
+  }
+  .hero h1{margin:0 0 8px; font-size:40px; font-weight:900; letter-spacing:.2px}
+  .hero p{margin:0; color:var(--muted); font-size:16px}
+
+  /* Вкладки */
+  .tabs{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap}
+  .tab{
+    background:#0b1221; border:1px solid #1f2a44; color:#cfe2ff;
+    padding:12px 16px; border-radius:14px; font-weight:800; font-size:15px; cursor:pointer; transition:.2s;
+  }
+  .tab.active, .tab:hover{border-color:#3256b8; background:#0f1d3f; color:#ffffff}
+
+  /* Поисковая панель */
+  .search{
+    margin-top:14px; display:grid; grid-template-columns: 2fr 2fr 2fr 1fr;
+    gap:10px; align-items:stretch;
+  }
+  .field{
+    background:#0b1221; border:1px solid var(--stroke); border-radius:14px; padding:10px 12px; display:flex; flex-direction:column; gap:6px
+  }
+  .field label{font-size:12px; color:#9fb0c7}
+  .field select, .field input{
+    width:100%; border:none; outline:none; background:transparent; color:var(--text); font-size:16px; font-weight:700
+  }
+  .btn{appearance:none; border:none; cursor:pointer; padding:12px 16px; border-radius:14px; font-weight:900; font-size:16px}
+  .btn-primary{background:var(--accent); color:#fff}
+  .btn-primary:hover{filter:brightness(1.06)}
+  .btn-ghost{background:transparent; color:#cfe2ff; border:1px solid #2b3f72}
+  .btn-ghost:hover{border-color:#3b57a2}
+
+  /* Результаты */
+  .results{margin-top:18px; display:grid; grid-template-columns:repeat(3, 1fr); gap:12px}
+  @media (max-width:980px){ .results{grid-template-columns:1fr 1fr} }
+  @media (max-width:640px){ .results{grid-template-columns:1fr} .search{grid-template-columns:1fr} }
+  .card{
+    background:rgba(17,24,39,.85); border:1px solid var(--stroke); border-radius:16px; padding:14px
+  }
+  .card h3{margin:0 0 6px; font-size:18px}
+  .card small{color:#9fb0c7}
+  .stars{display:inline-flex; gap:2px; margin-top:6px}
+  .star{color:#475569; font-size:18px}
+  .star.on{color:var(--gold)}
+
+  .hr{height:1px; background:var(--stroke); margin:18px 0}
+
+  /* Модалка карты */
+  .modal{position:fixed; inset:0; display:none; place-items:center; z-index:50; background:rgba(2,6,23,.65); backdrop-filter: blur(6px)}
+  .modal.show{display:grid}
+  .box{width:min(1100px, calc(100vw - 28px)); background:var(--card); border:1px solid var(--stroke); border-radius:18px; padding:16px}
+  #map{height:580px; border-radius:12px; overflow:hidden}
 </style>
 </head>
 <body>
+<header>
+  <div class="wrap nav">
+    <div class="brand"><span class="dot"></span><span>SiyaEm Korea</span></div>
+    <nav class="menu">
+      <a href="#" onclick="openAbout();return false;">О компании</a>
+      <a href="#" onclick="openInvest();return false;">Инвесторам</a>
+      <a href="#" onclick="openSupport();return false;">Поддержка</a>
+    </nav>
+  </div>
+</header>
 
-<!-- Панель входа -->
-<section class="card" style="text-align:center">
-  <h2>Добро пожаловать в SiyaEm Korea</h2>
-  <p style="color:var(--muted)">Зайдите как гость, чтобы оценивать и оставлять отзывы.</p>
-  <button class="btn btn-primary" data-open="#signin">Войти как гость</button>
-</section>
+<main class="wrap">
+  <section class="hero">
+    <h1>Тут находят русскоязычные места в Корее</h1>
+    <p>Партнёры с лицензией. Только проверенные точки. Выбирай провинцию, город и категорию — и смотри результат.</p>
 
-<!-- Карта -->
-<section class="card">
-  <h2>Карта партнёров</h2>
-  <div id="map"></div>
-</section>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-cat="">Все</button>
+      <button class="tab" data-cat="Еда">🍜 Еда</button>
+      <button class="tab" data-cat="Развлечения">🎯 Развлечения</button>
+      <button class="tab" data-cat="Салоны">💅 Салоны</button>
+      <button class="tab" data-cat="Транспорт">🚖 Транспорт</button>
+    </div>
 
-<!-- Партнёр -->
-<section class="card" id="partners">
-  <h2>Партнёры (модерировано)</h2>
-  <div class="partner-card">
-    <div class="partner-avatar"><img src="img/mr-cook.jpg" alt="Mr. Cook"></div>
-    <div>
-      <h3 class="partner-title">Мистер Кук (Mr. Cook)</h3>
-      <div class="partner-sub">Чхунчхоннам-до • Асан-си, Донпо-мён · Еда — Корейская кухня, Столовая</div>
-      <div class="stars">★★★★★ <span style="color:var(--muted)">(1)</span></div>
-      <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-primary" data-open="#review">Оставить отзыв</button>
-        <button class="btn btn-ghost" data-show-on-map="mr_cook">Показать на карте</button>
+    <div class="search">
+      <div class="field">
+        <label>Провинция</label>
+        <select id="provinceSelect"><option value="">Любая</option></select>
+      </div>
+      <div class="field">
+        <label>Город</label>
+        <select id="citySelect"><option value="">Любой</option></select>
+      </div>
+      <div class="field">
+        <label>Категория</label>
+        <select id="categorySelect">
+          <option value="">Любая</option>
+          <option>Еда</option>
+          <option>Развлечения</option>
+          <option>Салоны</option>
+          <option>Транспорт</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="btnSearch">Найти</button>
+    </div>
+
+    <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap">
+      <button class="btn btn-ghost" id="btnShowMap">Показать на карте</button>
+      <button class="btn btn-ghost" onclick="openPartner()">Стать партнёром</button>
+    </div>
+  </section>
+
+  <div class="results" id="results"></div>
+  <div class="hr"></div>
+  <p style="opacity:.8">Совет: открой «Показать на карте», чтобы увидеть все результаты на карте. Карта загружается только по твоему запросу — экономим трафик и ускоряем загрузку.</p>
+</main>
+
+<!-- Модалка карты -->
+<div class="modal" id="mapModal">
+  <div class="box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+      <strong>Карта результатов</strong>
+      <div>
+        <button class="btn btn-ghost" onclick="closeMap()">Закрыть</button>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- Витрина -->
-<section class="card" id="promo">
-  <h2>План на уикенд</h2>
-  <div class="promo-rail" id="promoRail">
-    <article class="promo-card">
-      <img src="img/mr-cook.jpg" alt="Mr. Cook">
-      <div class="promo-body">
-        <div class="promo-title">Mr. Cook</div>
-        <div class="promo-sub">Домашняя корейская кухня от русскоязычных хозяев</div>
-      </div>
-    </article>
-  </div>
-</section>
-
-<!-- Модалка входа -->
-<div class="modal" id="signin">
-  <div class="box">
-    <h3 style="margin:0 0 8px">Войти как гость</h3>
-    <p style="color:var(--muted);margin:0 0 12px">Укажите имя и e-mail, чтобы оставлять оценки и отзывы.</p>
-    <form id="guestForm">
-      <div class="field">
-        <label>Имя</label>
-        <input required name="name" placeholder="Ваше имя">
-      </div>
-      <div class="field">
-        <label>E-mail</label>
-        <input required type="email" name="email" placeholder="you@example.com">
-      </div>
-      <div style="display:flex;gap:10px;margin-top:12px">
-        <button class="btn btn-primary" type="submit">Продолжить</button>
-        <button class="btn btn-ghost" type="button" data-close>Отмена</button>
-      </div>
-    </form>
+    <div id="map"></div>
   </div>
 </div>
 
-<!-- Переключатель темы -->
-<button class="btn theme-toggle" id="themeT">🌓 Тема</button>
-
 <script>
-const markersById = new Map();
-function showOnMap(id){
-  const m = markersById.get(id);
-  if(!m){ alert('Маркер пока не загружен'); return; }
-  m.getMap().panTo(m.getPosition());
-  m.getMap().setZoom(17);
-  google.maps.event.trigger(m, "click");
-}
-document.addEventListener('click',(e)=>{
-  const btn = e.target.closest('[data-show-on-map]');
-  if(!btn) return;
-  showOnMap(btn.getAttribute('data-show-on-map'));
-});
-
-async function afterMapReady(map){
-  const res = await fetch('partners.json',{cache:'no-cache'});
-  const partners = await res.json();
-  partners.filter(p=>p.approved).forEach(place=>{
-    const m = new google.maps.Marker({
-      position:{lat:place.lat,lng:place.lng},
-      map,title:place.name,
-      icon:{path:google.maps.SymbolPath.CIRCLE,scale:9,fillColor:"#3b82f6",fillOpacity:.95,strokeWeight:2,strokeColor:"#93c5fd"}
-    });
-    const info = new google.maps.InfoWindow({
-      content:`<div style="max-width:260px"><strong>${place.name}</strong><br/>
-      <small>${place.province_ru} • ${place.city_ru}</small><br/>${place.address}</div>`
-    });
-    m.addListener('click',()=>info.open({anchor:m,map}));
-    markersById.set(place.id,m);
-  });
-}
-function initMap(){
-  const map = new google.maps.Map(document.getElementById("map"),{
-    center:{lat:36.9305,lng:127.0458},zoom:13,mapTypeControl:false
-  });
-  afterMapReady(map);
-}
-
-const themeBtn=document.getElementById('themeT');
-if(themeBtn){
-  themeBtn.onclick=()=>{
-    const d=document.documentElement;
-    const next=d.getAttribute('data-theme')==='dark'?'':'dark';
-    if(next)d.setAttribute('data-theme','dark');else d.removeAttribute('data-theme');
-    localStorage.setItem('theme',next?'dark':'light');
+  // ======= Глобальное состояние =======
+  const state = {
+    partners: [],
+    filtered: [],
+    currentTab: "",      // активная вкладка (категория)
+    province: "",
+    city: "",
+    category: ""
   };
-}
-(function applySavedTheme(){
-  const t=localStorage.getItem('theme');
-  if(t==='dark')document.documentElement.setAttribute('data-theme','dark');
-})();
-document.querySelectorAll('[data-open]').forEach(b=>{
-  b.addEventListener('click',()=>document.querySelector(b.dataset.open).classList.add('show'));
-});
-document.querySelectorAll('[data-close]').forEach(b=>{
-  b.addEventListener('click',()=>b.closest('.modal').classList.remove('show'));
-});
-const guestForm=document.getElementById('guestForm');
-if(guestForm){
-  guestForm.addEventListener('submit',e=>{
-    e.preventDefault();
-    const fd=new FormData(guestForm);
-    localStorage.setItem('guest',JSON.stringify({name:fd.get('name'),email:fd.get('email')}));
-    guestForm.closest('.modal').classList.remove('show');
-    alert('Добро пожаловать, '+fd.get('name')+'!');
-  });
-}
+
+  const els = {
+    province: document.getElementById('provinceSelect'),
+    city: document.getElementById('citySelect'),
+    category: document.getElementById('categorySelect'),
+    results: document.getElementById('results'),
+    tabs: document.getElementById('tabs'),
+    btnSearch: document.getElementById('btnSearch'),
+    btnMap: document.getElementById('btnShowMap'),
+    mapModal: document.getElementById('mapModal')
+  };
+
+  // ======= Инициализация =======
+  init();
+  async function init(){
+    // грузим партнёров
+    try{
+      const res = await fetch('partners.json', {cache:'no-cache'});
+      state.partners = await res.json();
+    }catch(e){
+      console.error('partners.json не найден или пуст:', e);
+      state.partners = [];
+    }
+
+    // populate selects
+    const provinces = [...new Set(state.partners.map(p=>p.province_ru).filter(Boolean))].sort();
+    provinces.forEach(p=>{
+      const o = document.createElement('option'); o.value=o.textContent=p; els.province.appendChild(o);
+    });
+
+    els.province.addEventListener('change', ()=>{
+      state.province = els.province.value;
+      rebuildCityOptions();
+    });
+    els.city.addEventListener('change', ()=>{ state.city = els.city.value; });
+    els.category.addEventListener('change', ()=>{ state.category = els.category.value; });
+
+    // вкладки
+    els.tabs.addEventListener('click', (e)=>{
+      const b = e.target.closest('.tab'); if(!b) return;
+      els.tabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      state.currentTab = b.dataset.cat || "";
+      runSearch(); 
+    });
+
+    // кнопки
+    els.btnSearch.onclick = runSearch;
+    els.btnMap.onclick = openMap;
+
+    // первый рендер (без фильтров)
+    runSearch();
+  }
+
+  function rebuildCityOptions(){
+    els.city.innerHTML = '<option value="">Любой</option>';
+    let pool = state.partners;
+    if(state.province) pool = pool.filter(p=>p.province_ru===state.province);
+    const cities = [...new Set(pool.map(p=>p.city_ru).filter(Boolean))].sort();
+    cities.forEach(c=>{
+      const o = document.createElement('option'); o.value=o.textContent=c; els.city.appendChild(o);
+    });
+  }
+
+  // ======= Поиск/фильтрация =======
+  function runSearch(){
+    let arr = [...state.partners];
+    if(state.currentTab) arr = arr.filter(p=>p.category===state.currentTab);
+    if(state.category)   arr = arr.filter(p=>p.category===state.category);
+    if(state.province)   arr = arr.filter(p=>p.province_ru===state.province);
+    if(state.city)       arr = arr.filter(p=>p.city_ru===state.city);
+    // показываем только одобренные
+    arr = arr.filter(p=>p.approved===true);
+
+    state.filtered = arr;
+    renderResults(arr);
+  }
+
+  // ======= Рендер карточек =======
+  function renderResults(list){
+    els.results.innerHTML = '';
+    if(list.length===0){
+      els.results.innerHTML = '<div class="card" style="grid-column:1/-1">Ничего не найдено. Попробуй другие фильтры.</div>';
+      return;
+    }
+    list.forEach(p=>{
+      const card = document.createElement('div');
+      card.className='card';
+      card.innerHTML = `
+        <h3>${escapeHtml(p.name||'Без названия')}</h3>
+        <small>${escapeHtml(p.province_ru||'—')}${p.city_ru?(' • '+escapeHtml(p.city_ru)):""}</small>
+        <div class="stars">${buildStars(p.rating)}</div>
+        <div style="margin-top:8px">${escapeHtml(p.address||'')}</div>
+        <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap">
+          <button class="btn btn-primary" onclick='focusOnMap(${p.lat||0}, ${p.lng||0}, ${JSON.stringify(p).replaceAll("'","&#39;")})'>На карте</button>
+          <button class="btn btn-ghost" onclick='openPartner()'>Стать партнёром</button>
+        </div>
+      `;
+      els.results.appendChild(card);
+    });
+  }
+
+  function buildStars(r){
+    const v = Number(r)||0; let html='';
+    for(let i=1;i<=5;i++){
+      html += `<span class="star ${i<=Math.round(v)?'on':''}">★</span>`;
+    }
+    return html;
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  }
+
+  // ======= Модалка карты и ленивая загрузка Google Maps =======
+  let gMap, gMarkers=[];
+  async function openMap(){
+    els.mapModal.classList.add('show');
+    if(!window.google || !window.google.maps){
+      await loadGoogleMaps();  // подгружаем только по требованию
+    }
+    setTimeout(initOrUpdateMap, 0);
+  }
+  function closeMap(){ els.mapModal.classList.remove('show'); }
+
+  async function loadGoogleMaps(){
+    const KEY = 'YOUR_GOOGLE_MAPS_KEY_HERE'; /* ← ВСТАВЬ СВОЙ КЛЮЧ */
+    const url = `https://maps.googleapis.com/maps/api/js?key=${KEY}&callback=__gmInit`;
+    await new Promise((resolve)=>{
+      window.__gmInit = ()=>resolve();
+      const s = document.createElement('script');
+      s.src = url; s.async = true; document.head.appendChild(s);
+    });
+  }
+
+  function initOrUpdateMap(){
+    const target = document.getElementById('map');
+    if(!gMap){
+      gMap = new google.maps.Map(target,{
+        center:{lat:36.9305, lng:127.0458}, zoom: 12,
+        styles: [
+          { featureType: "poi", stylers:[{visibility:"off"}] },
+          { featureType: "poi.business", stylers:[{visibility:"off"}] },
+          { featureType: "poi.attraction", stylers:[{visibility:"off"}] },
+          { featureType: "poi.medical", stylers:[{visibility:"off"}] },
+          { featureType: "poi.government", stylers:[{visibility:"off"}] },
+          { featureType: "poi.school", stylers:[{visibility:"off"}] },
+          { featureType: "poi.sports_complex", stylers:[{visibility:"off"}] }
+        ],
+        mapTypeControl:false, streetViewControl:false, fullscreenControl:true
+      });
+    }
+    // почистить старые маркеры
+    gMarkers.forEach(m=>m.setMap(null)); gMarkers=[];
+
+    const bounds = new google.maps.LatLngBounds();
+    (state.filtered.length?state.filtered:state.partners.filter(p=>p.approved)).forEach(p=>{
+      if(!(p.lat&&p.lng)) return;
+      const m = new google.maps.Marker({
+        position:{lat:p.lat, lng:p.lng}, map:gMap, title: p.name || ''
+      });
+      const iw = new google.maps.InfoWindow({content: `
+        <div style="max-width:240px">
+          <strong>${escapeHtml(p.name||'')}</strong><br/>
+          <small>${escapeHtml(p.province_ru||'')}${p.city_ru?(' • '+escapeHtml(p.city_ru)):""}</small><br/>
+          <div class="stars" style="margin-top:6px">${buildStars(p.rating)}</div>
+          <div style="margin-top:6px">${escapeHtml(p.address||'')}</div>
+        </div>
+      `});
+      m.addListener('click', ()=>iw.open({anchor:m, map:gMap}));
+      gMarkers.push(m);
+      bounds.extend(m.getPosition());
+    });
+    if(!bounds.isEmpty()) gMap.fitBounds(bounds);
+  }
+
+  // клик «На карте» из карточки
+  function focusOnMap(lat, lng, place){
+    openMap();
+    // дождёмся и сфокусируем
+    setTimeout(()=>{
+      if(gMap && lat && lng){
+        gMap.setCenter({lat, lng}); gMap.setZoom(16);
+      }
+    }, 350);
+  }
+
+  // Заглушки: модалки «О компании / Инвесторам / Партнёру»
+  function openAbout(){ alert('SEO-страница «О компании» будет добавлена на следующем шаге.'); }
+  function openInvest(){ alert('Страница для инвесторов/спонсоров — на следующем шаге.'); }
+  function openPartner(){ alert('Анкета партнёра уже была — подключим сюда позже (или откроем отдельной страницей).'); }
 </script>
-
-<!-- Google Maps -->
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initMap" async defer></script>
-
 </body>
 </html>
