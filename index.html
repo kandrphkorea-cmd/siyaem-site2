@@ -351,6 +351,41 @@ function paint(g,val){g.querySelectorAll('.star').forEach(st=>st.style.opacity=(
 const mapModal=document.getElementById('mapModal');
 document.getElementById('openMap').onclick=()=>openMapAt(36.9305,127.0458);
 document.querySelectorAll('[data-map]').forEach(b=>b.onclick=()=>{const [lat,lng]=b.dataset.map.split(',').map(Number);openMapAt(lat,lng)});
+  // ===== ОТПРАВКА ЗАЯВКИ =====
+const applyForm = document.getElementById('applyForm');
+if (applyForm) {
+  applyForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const fd = new FormData(applyForm);
+    const payload = {
+      name: fd.get('Имя') || '',
+      phone: fd.get('Телефон') || '',
+      email: fd.get('Email') || '',
+      category: fd.get('Категория') || '',
+      message: fd.get('Комментарий') || '',
+      ua: navigator.userAgent,
+      page: location.href
+    };
+
+    try {
+      const res = await fetch(GAS_ENDPOINT, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      alert('✅ Заявка успешно отправлена!');
+      applyForm.reset();
+      document.getElementById('applyModal')?.classList.remove('show');
+    } catch (err) {
+      console.error(err);
+      alert('⚠️ Ошибка при отправке. Проверьте подключение.');
+    }
+  });
+}
+
 document.getElementById('closeMap').onclick=()=>mapModal.classList.remove('show');
 let _map,_marker,_mapsLoaded=false;
 function openMapAt(lat,lng){mapModal.classList.add('show');ensureMap(lat,lng)}
