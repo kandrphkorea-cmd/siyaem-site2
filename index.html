@@ -1,819 +1,1170 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>SiyaEm — русскоязычные места в Корее</title>
-<meta name="description" content="Каталог и карта проверенных русскоязычных мест в Корее: еда, салоны, авто, образование. Партнёрство и продвижение." />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SiyaEm Korea — русскоязычные места и помощь в Корее</title>
+  <meta name="description" content="SiyaEm Korea — карта русскоязычных мест, проверенные партнёры, экстренная помощь, страховки и реальные истории без мошенников." />
 
-<style>
-/* ---------- THEME ---------- */
-:root{
-  --bg:#0b1020; --bg-2:#0e1228; --text:#ecf0ff; --muted:#aab3d3;
-  --card:rgba(255,255,255,.06); --line:rgba(255,255,255,.12);
-  --chip:#1f2a60; --acc:#6aa3ff; --acc-2:#ffd166;
-  --good:#10b981; --warn:#f59e0b; --bad:#ef4444;
-  --radius:18px; --shadow:0 8px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05); --blur:16px;
-}
-:root.light{
-  --bg:#f6f7fb; --bg-2:#ffffff; --text:#0f1222; --muted:#4a5476;
-  --card:rgba(255,255,255,.85); --line:rgba(0,0,0,.08);
-  --chip:#eef2ff; --acc:#2557ff; --acc-2:#ffb703;
-  --shadow:0 8px 24px rgba(10,14,34,.08); --blur:8px;
-}
-*{box-sizing:border-box}
-body{
-  margin:0; color:var(--text);
-  background:
-    radial-gradient(1200px 800px at 20% -10%, #1a2b6f55 0%, transparent 60%),
-    radial-gradient(900px 700px at 120% 10%, #3f126955 0%, transparent 60%),
-    linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 60%, var(--bg) 100%);
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  letter-spacing:.2px;
-}
-a{color:var(--acc);text-decoration:none}
-.wrap{max-width:1200px;margin:0 auto;padding:22px}
-.glass{background:var(--card);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-.row{display:grid;grid-template-columns:1fr;gap:18px}
-@media (min-width:960px){.row{grid-template-columns:repeat(12,1fr)}}
+  <style>
+    :root{
+      --bg:#050816;
+      --bg-2:#070b1e;
+      --card:#0b1024;
+      --card-soft:#0d1226;
+      --accent:#4f7cff;
+      --accent2:#ffb703;
+      --danger:#ef4444;
+      --ok:#10b981;
+      --text:#e5ecff;
+      --muted:#9ca3c7;
+      --line:#1f2937;
+      --radius:18px;
+      --shadow:0 18px 40px rgba(0,0,0,.55);
+    }
+    :root.light{
+      --bg:#f3f4ff;
+      --bg-2:#ffffff;
+      --card:#ffffff;
+      --card-soft:#f6f7ff;
+      --accent:#2557ff;
+      --accent2:#ff9900;
+      --text:#111827;
+      --muted:#4b5563;
+      --line:#d1d5db;
+      --shadow:0 12px 30px rgba(15,23,42,.15);
+    }
 
-/* HEADER */
-.header{position:sticky;top:0;z-index:50;background:linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,0));backdrop-filter:saturate(1.2) blur(10px)}
-.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800}
-.badge-dot{width:10px;height:10px;border-radius:50%;background:var(--acc-2);box-shadow:0 0 12px var(--acc-2)}
-.theme-toggle{appearance:none;border:1px solid var(--line);background:var(--chip);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:700}
-.theme-toggle:hover{filter:brightness(1.05)}
-.header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(1000px 600px at 0% 0%, #1d2a7a55 0%, transparent 60%),
+        radial-gradient(800px 600px at 100% 0%, #621c8b55 0%, transparent 60%),
+        linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 60%,var(--bg) 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+    a{color:var(--accent);text-decoration:none}
+    button{font:inherit}
 
-/* MASCOTS */
-.mascots{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:10px}
-.face{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 30% 25%, #fff 0%, #e9ecff 35%, #c7cff9 70%, #aab3ee 100%);border:2px solid #0003;display:grid;place-items:center;box-shadow:0 4px 18px rgba(0,0,0,.18)}
-.face svg{width:22px;height:22px}
+    .wrap{max-width:1180px;margin:0 auto;padding:18px 16px 40px}
 
-/* HERO */
-.hero{padding:24px;margin-top:10px}
-.h1{
-  font-size:clamp(26px,5vw,46px);
-  line-height:1.08;font-weight:900;margin:4px 0 10px;
-  min-height:3.1em; /* фикс от "прыгания" на телефоне */
-}
-.h1 strong{background:linear-gradient(90deg,#8ab4ff,#cba6ff,#ffcd7a);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hint{color:var(--muted)}
-.typing{display:inline-block;border-right:2px solid var(--acc);padding-right:4px;animation:blink 1s step-end infinite}
-@keyframes blink{50%{border-color:transparent}}
+    .screen{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-/* FILTERS + CTA */
-.filters{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.chip{background:var(--chip);border:1px solid var(--line);padding:10px 12px;border-radius:999px;color:var(--text);cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-weight:700}
-.primary{background:linear-gradient(90deg,#4b7bff,#8ab4ff);color:white;border:none}
-.primary:hover{filter:brightness(1.05)} .ghost{background:transparent}
+    /* ---------- AUTH ---------- */
+    .auth-card{
+      background:radial-gradient(circle at 0 0,rgba(79,124,255,.25),transparent 60%) ,
+                 radial-gradient(circle at 100% 0,rgba(239,68,68,.25),transparent 60%) ,
+                 var(--card);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(148,163,184,.35);
+      padding:22px 22px 18px;
+      width:100%;
+      max-width:480px;
+      color:var(--text);
+    }
+    .auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+    .auth-badge{
+      width:32px;height:32px;border-radius:50%;
+      background:conic-gradient(from 210deg,#4f7cff,#ffb703,#ec4899,#4f7cff);
+      display:grid;place-items:center;
+    }
+    .auth-badge span{
+      width:24px;height:24px;border-radius:50%;
+      background:#020617;display:block;
+    }
+    .auth-title{font-size:22px;font-weight:800}
+    .auth-sub{font-size:13px;color:var(--muted);margin-top:2px}
 
-/* ADS */
-.ads{margin-top:18px}
-.ad{aspect-ratio:4/3;border-radius:20px;overflow:hidden;position:relative;background:#0d142e;border:1px dashed #6aa3ff66;box-shadow:var(--shadow)}
-.ad::before{content:"Рекламный слот";position:absolute;top:10px;left:12px;font-size:12px;color:#fff8;background:#0006;padding:4px 8px;border-radius:999px}
-.ad img{width:100%;height:100%;object-fit:cover;filter:contrast(1.05) saturate(1.05)}
-.ad .frame{position:absolute;inset:0;pointer-events:none;border-radius:20px;border:2px solid transparent;background:linear-gradient(#0000,#0000) padding-box,linear-gradient(135deg,#6aa3ff66,#ffd16666) border-box}
+    .auth-tabs{margin:20px 0 14px;display:flex;border-radius:999px;background:rgba(15,23,42,.7);padding:3px;border:1px solid rgba(148,163,184,.45)}
+    .auth-tab{
+      flex:1;border-radius:999px;border:none;background:transparent;
+      color:var(--muted);padding:8px 0;font-size:13px;cursor:pointer;font-weight:600;
+    }
+    .auth-tab.active{
+      background:linear-gradient(90deg,var(--accent),#8ba6ff);
+      color:#fff;
+      box-shadow:0 6px 18px rgba(37,99,235,.8);
+    }
 
-/* CATALOG */
-.catalog{padding:20px}
-.cards{display:grid;grid-template-columns:1fr;gap:14px}
-@media (min-width:840px){.cards{grid-template-columns:repeat(2,1fr)}}
-.card{display:grid;grid-template-columns:78px 1fr;gap:14px;padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--card);box-shadow:var(--shadow)}
-.card .logo{width:78px;height:78px;border-radius:16px;background:#0d142e center/cover no-repeat;display:grid;place-items:center;border:1px solid var(--line)}
-.card .meta small{color:var(--muted)}
-.stars{display:flex;gap:4px;align-items:center;margin:6px 0}
-.star{width:18px;height:18px;display:inline-grid;place-items:center;color:#ffcc66;cursor:pointer;filter:drop-shadow(0 2px 4px #0003)}
-.card .actions{display:flex;gap:10px;flex-wrap:wrap}
-.btn{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--chip);color:var(--text);cursor:pointer;font-weight:700}
-.btn.map{background:linear-gradient(90deg,#3a78ff,#6aa3ff);color:#fff;border:none}
+    .auth-form{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+    .field{display:flex;flex-direction:column;gap:4px}
+    .field label{font-size:13px;color:var(--muted)}
+    .field input{
+      border-radius:12px;border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.9);
+      color:var(--text);
+      padding:9px 11px;
+      font-size:14px;
+      outline:none;
+    }
+    :root.light .field input{
+      background:#f9fafb;
+    }
+    .field input:focus{border-color:var(--accent);box-shadow:0 0 0 1px rgba(59,130,246,.6)}
+    .auth-actions{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+    .btn{
+      border-radius:999px;
+      padding:9px 14px;
+      border:1px solid rgba(148,163,184,.6);
+      background:var(--card-soft);
+      color:var(--text);
+      cursor:pointer;
+      font-weight:700;
+      font-size:14px;
+    }
+    .btn-primary{
+      background:linear-gradient(90deg,var(--accent),#8ba6ff);
+      border:none;
+      color:#fff;
+      box-shadow:0 10px 24px rgba(37,99,235,.75);
+    }
+    .btn-outline{background:transparent}
+    .auth-note{margin-top:8px;font-size:12px;color:var(--muted);line-height:1.5}
+    .auth-error{margin-top:8px;font-size:12px;color:var(--danger);min-height:16px}
 
-/* BLOCKS */
-.blocks{padding:20px;display:grid;gap:14px;grid-template-columns:1fr}
-@media (min-width:960px){.blocks{grid-template-columns:2fr 1fr}}
-.block{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
-.block h3{margin:0 0 8px}
-.note{border-left:4px solid var(--acc);padding-left:12px}
-.fact{border-left:4px solid var(--acc-2);padding-left:12px}
-.recipe{border-left:4px solid var(--good);padding-left:12px}
+    .auth-footer{
+      margin-top:14px;
+      border-top:1px solid rgba(148,163,184,.35);
+      padding-top:8px;
+      font-size:11px;
+      color:var(--muted);
+    }
 
-/* FOR WHO */
-.forwho{padding:20px;display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
-@media (min-width:960px){.forwho{grid-template-columns:repeat(4,1fr)}}
-.tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
-.tile small{color:var(--muted)}
+    /* ---------- APP LAYOUT ---------- */
+    .header{
+      position:sticky;top:0;z-index:20;
+      backdrop-filter:blur(14px);
+      background:linear-gradient(180deg,rgba(2,6,23,.9),rgba(2,6,23,.6),transparent);
+    }
+    .nav{
+      max-width:1180px;margin:0 auto;
+      padding:10px 16px 8px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+    }
+    .brand{display:flex;align-items:center;gap:10px}
+    .brand-logo{
+      width:32px;height:32px;border-radius:12px;
+      background:radial-gradient(circle at 0 0,#4f7cff,transparent 60%),
+                 radial-gradient(circle at 100% 100%,#ec4899,transparent 60%);
+      display:grid;place-items:center;
+      border:1px solid rgba(148,163,184,.6);
+    }
+    .brand-logo span{
+      width:18px;height:18px;border-radius:50%;
+      background:#020617;
+      box-shadow:0 0 0 3px rgba(15,23,42,.9);
+    }
+    .brand-title{font-size:18px;font-weight:800}
+    .brand-caption{font-size:11px;color:var(--muted)}
 
-/* MAP MODAL */
-.modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.5);z-index:60}
-.modal.show{display:grid}
-.modal .box{width:min(900px,calc(100vw - 24px));background:var(--bg-2);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.map-header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
-.map-body{height:480px}
-.close{cursor:pointer;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--chip);font-weight:700}
+    .nav-right{display:flex;align-items:center;gap:8px}
+    .chip{
+      border-radius:999px;
+      padding:7px 11px;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.8);
+      color:var(--text);
+      font-size:12px;
+      cursor:pointer;
+      display:inline-flex;align-items:center;gap:6px;
+    }
+    .chip-ghost{background:transparent}
+    .chip-primary{
+      background:linear-gradient(90deg,var(--accent),#8ba6ff);
+      border:none;
+      color:#fff;
+      font-weight:700;
+    }
 
-/* PRICING MODAL */
-.pricing .box{width:min(1080px,calc(100vw - 24px))}
-.pr-head{padding:18px 18px 8px;border-bottom:1px solid var(--line)}
-.pr-title{font-size:clamp(28px,4.5vw,44px);font-weight:900}
-.pr-title .typing{border-right:2px solid var(--acc)}
-.pr-tabs{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px}
-.tab{padding:10px 12px;border-radius:999px;border:1px solid var(--line);background:var(--chip);cursor:pointer;font-weight:700}
-.tab.active{background:linear-gradient(90deg,#4b7bff,#8ab4ff);color:#fff;border:none}
-.pr-grid{display:grid;gap:12px;padding:16px}
-@media (min-width:960px){.pr-grid{grid-template-columns:repeat(3,1fr)}}
-.pr-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
-.pr-card h4{margin:0}
-.pr-card ul{margin:10px 0 0;padding-left:18px}
-.pr-cta{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+    .theme-toggle{
+      width:34px;height:34px;border-radius:999px;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.8);
+      display:grid;place-items:center;
+      color:#facc15;
+      cursor:pointer;
+    }
 
-/* APPLY MODAL (заявка) */
-.m-apply{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,6,23,.6);backdrop-filter:blur(6px);z-index:1000}
-.m-apply.show{display:grid}
-.m-apply .box{width:min(680px,calc(100vw - 28px));background:#0b1221;color:#e5e7eb;border:1px solid #1f2937;border-radius:16px;padding:18px}
-.m-apply h3{margin:0 0 10px;font-size:20px}
-.m-apply .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.m-apply .field{display:flex;flex-direction:column;gap:6px;margin:8px 0}
-.m-apply input,.m-apply textarea,.m-apply select{
-  width:100%;background:#0f172a;border:1px solid #1f2937;color:#e5e7eb;border-radius:10px;padding:10px 12px;outline:none
-}
-.m-apply textarea{min-height:110px;resize:vertical}
-.m-apply .hint{color:#9ca3af;font-size:12px}
+    main{padding:10px 16px 40px}
+    .grid-main{
+      max-width:1180px;margin:0 auto;
+      display:grid;grid-template-columns:1.7fr 1.1fr;
+      gap:18px;
+    }
+    @media (max-width:900px){
+      .grid-main{grid-template-columns:1fr}
+    }
 
-/* AUTH OVERLAY */
-.auth-screen{
-  position:fixed;inset:0;z-index:2000;display:grid;place-items:center;
-  background:radial-gradient(circle at 10% 0,#4b7bff55,transparent 60%),
-              radial-gradient(circle at 90% 100%,#ffb70355,transparent 60%),
-              #020617f0;
-  color:#e5e7eb;
-}
-.auth-box{
-  width:min(420px,calc(100vw - 32px));
-  background:#020617ee;
-  border-radius:20px;
-  border:1px solid #1f2937;
-  box-shadow:0 20px 40px rgba(0,0,0,.45);
-  padding:20px 18px 18px;
-}
-.auth-box h1{margin:0 0 8px;font-size:22px}
-.auth-box p{margin:0 0 14px;color:#9ca3af;font-size:14px}
-.auth-row{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
-.auth-row label{font-size:13px}
-.auth-box input{
-  width:100%;background:#020617;border:1px solid #1f2937;border-radius:10px;
-  padding:9px 11px;color:#e5e7eb;outline:none;
-}
-.auth-btn{
-  width:100%;margin-top:8px;padding:10px 14px;border-radius:12px;
-  border:none;background:linear-gradient(90deg,#4b7bff,#8ab4ff);
-  color:#fff;font-weight:700;cursor:pointer;
-}
-.auth-sub{font-size:12px;color:#9ca3af;margin-top:8px}
+    .card{
+      background:var(--card);
+      border-radius:18px;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      padding:18px 16px;
+    }
+    .card-soft{
+      background:var(--card-soft);
+    }
 
-/* PROFILE MODAL */
-.profile-modal .box{width:min(520px,calc(100vw - 32px));}
+    .hero-title{
+      font-size:clamp(24px,4.6vw,34px);
+      font-weight:900;
+      line-height:1.1;
+      margin-bottom:8px;
+    }
+    .hero-title span{
+      background:linear-gradient(90deg,#4f7cff,#ec4899,#ffb703);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .hero-sub{font-size:13px;color:var(--muted);line-height:1.6}
 
-/* Toast */
-.toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(90deg,#4b7bff,#8ab4ff);
-  color: #fff;
-  padding: 12px 22px;
-  border-radius: 12px;
-  font-weight: 700;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
-  z-index: 9999;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.toast.show { opacity: 1; }
+    .badges{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px}
+    .badge{
+      font-size:11px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.5);
+      background:rgba(15,23,42,.8);
+      color:var(--muted);
+    }
+    .hero-cta{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .hero-meta{
+      margin-top:10px;
+      font-size:11px;
+      color:var(--muted);
+      line-height:1.5;
+    }
 
-@media (max-width:600px){
-  .hero{padding:18px}
-  .mascots{display:none}
-  .auth-box{padding:18px 16px 16px}
-}
-</style>
+    .typing{
+      display:inline-block;
+      border-right:2px solid var(--accent2);
+      padding-right:2px;
+      min-height:1em;
+    }
+
+    /* Profile card */
+    .profile-name{font-weight:700;font-size:15px}
+    .profile-email{font-size:12px;color:var(--muted);margin-top:2px}
+    .profile-row{margin-top:10px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:8px;align-items:center}
+    .profile-row span{font-weight:600;color:var(--text)}
+    .profile-edit{
+      margin-top:10px;
+      display:flex;flex-direction:column;gap:6px;
+      font-size:12px;
+    }
+    .profile-edit input{
+      width:100%;
+      border-radius:10px;
+      border:1px solid rgba(148,163,184,.6);
+      background:rgba(15,23,42,.9);
+      color:var(--text);
+      padding:7px 9px;
+      font-size:12px;
+    }
+    :root.light .profile-edit input{background:#f9fafb;}
+    .profile-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+
+    /* Sections */
+    h2.section-title{
+      font-size:17px;
+      margin-bottom:10px;
+      display:flex;align-items:center;gap:8px;
+    }
+    h2.section-title span.icon{
+      width:24px;height:24px;border-radius:10px;
+      display:grid;place-items:center;
+      background:rgba(15,23,42,.9);
+    }
+    .section-text{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:8px}
+
+    .promo-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+    .promo-item{
+      border-radius:14px;
+      padding:10px 10px 9px;
+      border:1px solid var(--line);
+      background:var(--card-soft);
+      font-size:12px;
+    }
+    .promo-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+    .promo-name{font-weight:700}
+    .promo-tag{font-size:11px;padding:2px 6px;border-radius:999px;background:#022c22;color:#6ee7b7}
+    .promo-body{font-size:12px;color:var(--muted);line-height:1.5}
+    .promo-foot{margin-top:6px;font-size:11px;color:#a7f3d0}
+
+    .list{margin-top:6px;font-size:12px;color:var(--muted);line-height:1.6}
+    .list li{margin-left:16px;margin-bottom:4px}
+
+    .warning{
+      margin-top:8px;
+      padding:8px 10px;
+      border-radius:12px;
+      background:rgba(127,29,29,.4);
+      border:1px solid #b91c1c;
+      font-size:12px;
+      color:#fecaca;
+    }
+    :root.light .warning{
+      background:#fef2f2;
+      color:#7f1d1d;
+    }
+
+    /* Cards for info */
+    .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:6px}
+    .info-card{
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:var(--card-soft);
+      padding:10px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+    .info-card h3{font-size:13px;margin-bottom:4px;color:var(--text)}
+
+    /* Catalog mini */
+    .partners-list{margin-top:6px;display:grid;gap:8px}
+    .partner{
+      border-radius:14px;
+      border:1px solid var(--line);
+      padding:10px;
+      background:var(--card-soft);
+      display:flex;justify-content:space-between;gap:8px;
+      font-size:12px;
+    }
+    .partner-main{max-width:70%}
+    .partner-name{font-weight:700}
+    .partner-meta{color:var(--muted);margin-top:2px}
+    .partner-actions{display:flex;flex-direction:column;gap:4px;align-items:flex-end;justify-content:center}
+    .partner-pill{
+      font-size:11px;padding:2px 6px;border-radius:999px;
+      background:rgba(34,197,94,.18);color:#6ee7b7;
+      border:1px solid rgba(16,185,129,.5);
+    }
+
+    .scam-note{
+      margin-top:10px;
+      border-radius:12px;
+      border:1px dashed rgba(248,250,252,.35);
+      padding:8px 10px;
+      font-size:11px;
+      color:var(--muted);
+      background:rgba(15,23,42,.75);
+    }
+    :root.light .scam-note{background:#f9fafb;border-color:#e5e7eb;}
+
+    footer{
+      padding:14px 16px 30px;
+      font-size:11px;
+      text-align:center;
+      color:var(--muted);
+    }
+
+    /* ---------- MODALS & TOAST ---------- */
+    .modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      z-index:60;
+      background:rgba(15,23,42,.75);
+      backdrop-filter:blur(10px);
+      justify-content:center;
+      align-items:center;
+      padding:16px;
+    }
+    .modal.show{display:flex}
+    .modal-box{
+      width:100%;
+      max-width:520px;
+      background:var(--card);
+      border-radius:20px;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      padding:16px 16px 14px;
+    }
+    .modal-header{
+      display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;
+    }
+    .modal-title{font-size:16px;font-weight:700}
+    .modal-close{
+      border-radius:999px;border:1px solid var(--line);
+      background:rgba(15,23,42,.8);
+      color:var(--muted);font-size:12px;
+      padding:4px 8px;cursor:pointer;
+    }
+    .modal-body{font-size:13px;color:var(--muted);line-height:1.6;margin-top:2px}
+
+    .modal-form{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+    .modal-form .field label{font-size:12px}
+    .modal-form .field input,
+    .modal-form .field textarea,
+    .modal-form .field select{
+      width:100%;border-radius:10px;border:1px solid rgba(148,163,184,.7);
+      background:rgba(15,23,42,.9);color:var(--text);
+      padding:8px 10px;font-size:13px;outline:none;
+    }
+    :root.light .modal-form .field input,
+    :root.light .modal-form .field textarea,
+    :root.light .modal-form .field select{
+      background:#f9fafb;
+    }
+    .modal-form textarea{min-height:80px;resize:vertical}
+    .modal-actions{margin-top:10px;display:flex;justify-content:flex-end;gap:8px}
+
+    .hint{font-size:11px;color:var(--muted);margin-top:4px}
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:26px;
+      transform:translateX(-50%);
+      padding:10px 16px;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),#22c55e);
+      color:#fff;font-size:13px;font-weight:700;
+      box-shadow:0 10px 25px rgba(15,23,42,.8);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .25s ease;
+      z-index:80;
+    }
+    .toast.show{opacity:1}
+
+    @media (max-width:600px){
+      .auth-card{border-radius:0;box-shadow:none;border:none;min-height:100vh}
+      .nav{flex-wrap:wrap;gap:6px}
+      .nav-right{width:100%;justify-content:flex-end}
+    }
+  </style>
+
+  <!-- Firebase (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 </head>
 <body>
 
-<!-- AUTH: вход как в сервис -->
-<div id="authScreen" class="auth-screen">
-  <div class="auth-box">
-    <h1>Вход в SiyaEm Korea</h1>
-    <p>Личный кабинет для владельцев заведений и гостей. Без паролей — по имени и контакту.</p>
-    <form id="authForm">
-      <div class="auth-row">
-        <label>Имя или никнейм*</label>
-        <input id="authName" type="text" required placeholder="Как к вам обращаться">
+<!-- ========== ЭКРАН АВТОРИЗАЦИИ ========== -->
+<div id="authScreen" class="screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-badge"><span></span></div>
+      <div>
+        <div class="auth-title">SiyaEm Korea</div>
+        <div class="auth-sub">Ваш личный вход в&nbsp;проверённые русскоязычные места и безопасные сервисы в Корее.</div>
       </div>
-      <div class="auth-row">
-        <label>Телефон / KakaoTalk*</label>
-        <input id="authContact" type="text" required placeholder="+82-10-... или Kakao ID">
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin">Войти</button>
+      <button class="auth-tab" id="tabRegister">Создать аккаунт</button>
+    </div>
+
+    <form id="authForm" class="auth-form">
+      <div class="field">
+        <label for="authEmail">E-mail</label>
+        <input id="authEmail" type="email" autocomplete="email" required placeholder="you@example.com" />
       </div>
-      <button type="submit" class="auth-btn">Войти</button>
+      <div class="field">
+        <label for="authPassword">Пароль</label>
+        <input id="authPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="Минимум 6 символов" />
+      </div>
+      <div class="auth-actions">
+        <button type="submit" class="btn btn-primary" id="authSubmit">Войти</button>
+        <button type="button" class="btn btn-outline" id="authAnon">Зайти без регистрации</button>
+      </div>
     </form>
-    <div class="auth-sub">
-      Входя, вы подтверждаете, что используете платформу честно и не связаны с мошенническими схемами.
+    <div id="authError" class="auth-error"></div>
+
+    <div class="auth-note">
+      ⚠️ В Корее очень много мошенников. Мы не просим деньги за «волшебные оформлялки» и не продаём «схемы».
+      SiyaEm — живой сервис, где все места проверены, а за любую попытку обмана даём пожизненный бан.
+    </div>
+
+    <div class="auth-footer">
+      В экстренной ситуации всегда можно написать или позвонить: <b>010-9809-1703</b> (Россия/Казахстан — +82-10-9809-1703, KakaoTalk / Telegram).
     </div>
   </div>
 </div>
 
-<!-- HEADER -->
-<div class="header">
-  <div class="wrap nav">
-    <div class="brand">
-      <span class="badge-dot"></span>
-      <span>SiyaEm Korea</span>
-    </div>
-    <div class="header-right">
-      <div class="mascots">
-        <div class="face"><svg viewBox="0 0 24 24" fill="none" stroke="#1c2756" stroke-width="2"><circle cx="8" cy="9" r="1.8"/><circle cx="16" cy="9" r="1.8"/><path d="M6 16c2 2 10 2 12-2"/></svg></div>
-        <div class="face"><svg viewBox="0 0 24 24" fill="none" stroke="#1c2756" stroke-width="2"><path d="M4 9h16"/><path d="M7 9c0-3 10-3 10 0"/><circle cx="9" cy="13" r="1.5"/><circle cx="15" cy="13" r="1.5"/></svg></div>
-      </div>
-      <button class="theme-toggle" id="themeToggle">Светлая/Тёмная</button>
-      <button class="theme-toggle" id="openProfile">Личный кабинет</button>
-    </div>
-  </div>
-</div>
-
-<!-- HERO -->
-<div class="wrap">
-  <section class="glass hero">
-    <div class="h1">Один сервис. <strong id="typing" class="typing"></strong></div>
-    <div class="hint">
-      Показываем только проверенные русскоязычные места с лицензией. Помогаем партнёрам зарабатывать, гостям — быстро находить своё.
-      В Корее много мошенников — SiyaEm фильтрует их и дорожит репутацией: за обман — пожизненный бан.
-    </div>
-
-    <div class="filters">
-      <button class="chip open-pricing" data-section="food">🍜 Еда</button>
-      <button class="chip open-pricing" data-section="salon">💅 Салоны</button>
-      <button class="chip open-pricing" data-section="auto">🚗 Авто</button>
-      <button class="chip open-pricing" data-section="edu">🎓 Образование</button>
-      <button class="chip ghost" id="openMap">Показать на карте</button>
-      <button class="chip primary" data-apply="Главная — партнерство">Стать партнёром</button>
-    </div>
-
-    <div class="ads row">
-      <div class="ad glass" style="grid-column: span 4">
-        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1200&auto=format&fit=crop" alt="">
-        <div class="frame"></div>
-      </div>
-      <div class="ad glass" style="grid-column: span 4">
-        <img src="https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?q=80&w=1200&auto=format&fit=crop" alt="">
-        <div class="frame"></div>
-      </div>
-      <div class="ad glass" style="grid-column: span 4">
-        <img src="https://images.unsplash.com/photo-1543353071-087092ec393e?q=80&w=1200&auto=format&fit=crop" alt="">
-        <div class="frame"></div>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- КАТАЛОГ -->
-<div class="wrap">
-  <section class="glass catalog">
-    <h2 style="margin:0 0 8px">Партнёры (модерировано)</h2>
-    <p class="hint" style="margin:0 0 12px">
-      Здесь только те, кто прошёл проверку лицензии и базовой безопасности. Для каждого партнёра можно получить разовый промокод на скидку.
-    </p>
-    <div class="cards" id="cards">
-      <article class="card" data-cat="Еда,Лапша,Супы">
-        <div class="logo" style="background-image:url('https://i.imgur.com/R0b0S6X.png')"></div>
-        <div class="meta">
-          <div style="font-weight:800">Мистер Кук (Mr. Cook)</div>
-          <small>Чхунчхоннам-до • Асан-си, Донпо-мён • Еда — Корейская кухня, столовая</small>
-          <div class="stars" data-id="mr_cook">
-            <span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span>
-            <small class="hint" style="margin-left:6px">(оценок: <b id="r-mr_cook">1</b>)</small>
-          </div>
-          <div class="actions">
-            <button class="btn" data-apply="Карточка: Мистер Кук">Получить промокод -5%</button>
-            <button class="btn map" data-map="36.9305,127.0458">Показать на карте</button>
-          </div>
+<!-- ========== ОСНОВНОЙ САЙТ ========== -->
+<div id="appScreen" style="display:none">
+  <header class="header">
+    <div class="nav">
+      <div class="brand">
+        <div class="brand-logo"><span></span></div>
+        <div>
+          <div class="brand-title">SiyaEm Korea</div>
+          <div class="brand-caption">русскоязычные места · страховки · экстренная помощь</div>
         </div>
-      </article>
-      <!-- сюда позже добавишь новые заведения таким же блоком -->
+      </div>
+      <div class="nav-right">
+        <button class="chip chip-ghost" id="openApplyFromHeader">Стать партнёром</button>
+        <button class="chip chip-ghost" id="openEmergencyFromHeader">Экстренная помощь</button>
+        <button class="chip chip-primary" id="logoutBtn">Выйти</button>
+        <button class="theme-toggle" id="themeToggle" title="Светлая / тёмная тема">☾</button>
+      </div>
     </div>
-  </section>
+  </header>
+
+  <main>
+    <div class="grid-main wrap">
+      <!-- Левая колонка: герой + разделы -->
+      <div class="card card-soft">
+        <div class="hero-title">
+          Сервис, который <span>вскрывает схемы</span> и собирает только тех, кому можно доверять.
+        </div>
+        <div style="font-size:13px;margin-bottom:6px;">
+          <span class="typing" id="typingHero"></span>
+        </div>
+        <div class="hero-sub">
+          Кафе, салоны, авто-сервисы, страховки, агенты — всё это существует рядом с вами в Корее.  
+          Но среди них много откровенных мошенников. SiyaEm фильтрует их и оставляет только тех, за кого не стыдно.
+        </div>
+
+        <div class="badges">
+          <div class="badge">✔️ Проверяем лицензии и документы</div>
+          <div class="badge">✔️ Личные визиты и реальные отзывы</div>
+          <div class="badge">🚫 Пожизненный бан за любую схему</div>
+        </div>
+
+        <div class="hero-cta">
+          <button class="btn btn-primary" id="openApplyMain">Добавить своё заведение</button>
+          <button class="btn btn-outline" id="openEmergencyMain">Мне нужна экстренная помощь</button>
+        </div>
+
+        <div class="hero-meta">
+          ☝️ Любая заявка сначала попадает к нам на модерацию.  
+          Мы можем уточнить детали по телефону <b>010-9809-1703</b> или через KakaoTalk/Telegram, чтобы убедиться, что вы не мошенник.
+        </div>
+
+        <div class="warning" style="margin-top:12px;">
+          ⚠️ Важное правило: мы не обещаем «отмазать от штрафа», «сделать визу по чёрной схеме», «оформить страховку задним числом».
+          Всё, что нарушает законы Кореи, — мимо. Иначе мы теряем репутацию, а вы — свободу.
+        </div>
+
+        <!-- Раздел: подарочный промокод -->
+        <section style="margin-top:16px;">
+          <h2 class="section-title">
+            <span class="icon">🎁</span>Подарочный промокод от партнёров
+          </h2>
+          <p class="section-text">
+            Три заведения уже согласились дать разовый <b>5% промокод</b> для гостей, которые приходят через SiyaEm.  
+            Это не «акция на бумаге», а реальный маленький подарок за доверие.
+          </p>
+          <div class="promo-cards">
+            <article class="promo-item">
+              <div class="promo-head">
+                <div class="promo-name">Кафе «Мистер Кук» (Дунпо)</div>
+                <div class="promo-tag">Еда</div>
+              </div>
+              <div class="promo-body">
+                Разовый промокод на 5% скидку на основной чек.  
+                Для тех, кто покажет экран с отметкой SiyaEm или сообщение из нашего чата.
+              </div>
+              <div class="promo-foot">Как получить: оставить заявку и дождаться персонального кода.</div>
+            </article>
+
+            <article class="promo-item">
+              <div class="promo-head">
+                <div class="promo-name">Салон красоты (Асан / Чхonan)</div>
+                <div class="promo-tag">Салоны</div>
+              </div>
+              <div class="promo-body">
+                Скидка 5% на первое посещение — стрижка, окрашивание или маникюр.  
+                Только по персональному промокоду SiyaEm.
+              </div>
+              <div class="promo-foot">Мы отправим код после проверки записи.</div>
+            </article>
+
+            <article class="promo-item">
+              <div class="promo-head">
+                <div class="promo-name">Авто-сервис / детейлинг</div>
+                <div class="promo-tag">Авто</div>
+              </div>
+              <div class="promo-body">
+                Разовая скидка 5% на обслуживание или детейлинг.  
+                Для тех, кто записался через нашу форму и прошёл короткую консультацию.
+              </div>
+              <div class="promo-foot">Важно: скидка честная, без накрутки цен перед этим.</div>
+            </article>
+          </div>
+
+          <p class="section-text" style="margin-top:8px;">
+            <b>Условие для партнёров:</b> никаких «серых» схем, навязанных услуг и скрытых доплат.
+            Замечаем обман — отключаем промокод и выдаём бан в каталоге SiyaEm.
+          </p>
+        </section>
+
+        <!-- Раздел страховок -->
+        <section style="margin-top:18px;">
+          <h2 class="section-title">
+            <span class="icon">🛡️</span>Страховки, которые реально спасают
+          </h2>
+          <p class="section-text">
+            В Корее страховая система жёсткая. Не платить — значит рисковать не только деньгами, но и свободой.  
+            Мы объясняем простым языком, что будет, если:
+          </p>
+          <ul class="list">
+            <li>игнорировать государственную медстраховку;</li>
+            <li>ездить без страховки автомобиля;</li>
+            <li>сбить человека или попасть в серьёзное ДТП;</li>
+            <li>отказаться от КАСКО на дорогую машину.</li>
+          </ul>
+
+          <div class="info-grid">
+            <article class="info-card">
+              <h3>Гос. медстраховка</h3>
+              <p>
+                Не платите взносы — копится долг, могут заблокировать выезд или сильно усложнить продление визы.
+                В тяжёлой ситуации счёт из больницы может быть как цена автомобиля.
+              </p>
+            </article>
+            <article class="info-card">
+              <h3>Страховка авто</h3>
+              <p>
+                Без страховки вы фактически едете «голым».  
+                Сбили пешехода или повредили чужой автомобиль — платите всё сами. Сумма легко уходит в десятки миллионов вон.
+              </p>
+            </article>
+            <article class="info-card">
+              <h3>КАСКО и частные страховки</h3>
+              <p>
+                Для машин уровня AMG, M-серии, Genesis и т.п. полная КАСКО — не роскошь, а защита от «поймал бордюр — минус пол-зарплаты».
+                Мы подскажем, где оформить без лишнего развода.
+              </p>
+            </article>
+          </div>
+
+          <p class="section-text" style="margin-top:8px;">
+            У нас есть отдельные проверенные агенты Samsung / Hyundai и другие партнёры, которые работают по контракту,
+            а не по принципу «подписал на пять страховок и исчез».  
+            Через SiyaEm можно получить консультацию и оформить полис без навязанного мусора.
+          </p>
+        </section>
+
+      </div>
+
+      <!-- Правая колонка: профиль + партнёры + безопасность -->
+      <div class="card">
+        <!-- Профиль -->
+        <section>
+          <h2 class="section-title">
+            <span class="icon">👤</span>Ваш личный кабинет
+          </h2>
+          <div class="profile-name" id="profileName">Гость SiyaEm</div>
+          <div class="profile-email" id="profileEmail">email не указан</div>
+
+          <div class="profile-row">
+            <div>Телефон / KakaoTalk</div>
+            <span id="profilePhoneLabel">не добавлен</span>
+          </div>
+
+          <div class="profile-edit">
+            <label for="profilePhoneInput">Ваш номер в Корее (для связи по заявкам)</label>
+            <input id="profilePhoneInput" type="text" placeholder="Например: 010-9809-1703" />
+          </div>
+          <div class="profile-actions">
+            <button class="btn btn-primary" id="saveProfileBtn">Сохранить профиль</button>
+            <button class="btn btn-outline" id="openApplyProfile">Оставить заявку от своего имени</button>
+          </div>
+          <div class="hint">
+            Мы не передаём ваш номер кому попало. Сначала связываемся сами, спрашиваем, что случилось, и только потом подключаем партнёров.
+          </div>
+        </section>
+
+        <!-- Мини-каталог партнёров -->
+        <section style="margin-top:18px;">
+          <h2 class="section-title">
+            <span class="icon">📍</span>Проверенные партнёры
+          </h2>
+          <p class="section-text">
+            Эти места прошли ручную проверку. Мы видели их документы, были на месте и готовы сами туда прийти с близкими.
+          </p>
+
+          <div class="partners-list">
+            <article class="partner">
+              <div class="partner-main">
+                <div class="partner-name">Кафе «Мистер Кук» (Дунпо)</div>
+                <div class="partner-meta">
+                  Еда · домашняя корейская кухня.<br />
+                  Асан-си, Донпо-мён. Есть русскоязычное сопровождение.
+                </div>
+              </div>
+              <div class="partner-actions">
+                <div class="partner-pill">Промокод 5%</div>
+                <button class="btn btn-outline" data-open-apply="Кафе «Мистер Кук»">Записаться</button>
+              </div>
+            </article>
+
+            <article class="partner">
+              <div class="partner-main">
+                <div class="partner-name">Официальный страховщик (Samsung / Hyundai)</div>
+                <div class="partner-meta">
+                  Машины, здоровье, жизнь. Без «серых» схем и левых подписей.
+                  Документы можно проверить напрямую в компании.
+                </div>
+              </div>
+              <div class="partner-actions">
+                <div class="partner-pill" style="background:rgba(59,130,246,.18);color:#bfdbfe;border-color:rgba(59,130,246,.7);">Страховки</div>
+                <button class="btn btn-outline" data-open-apply="Страховка через SiyaEm">Хочу консультацию</button>
+              </div>
+            </article>
+
+            <article class="partner">
+              <div class="partner-main">
+                <div class="partner-name">Помощь с документами (пример: «Офис Дунпо»)</div>
+                <div class="partner-meta">
+                  Переводы, звонки, заполнение заявлений, объяснение, что именно вы подписываете.  
+                  Мы добавляем только тех, кто работает по белому и не берёт деньги за воздух.
+                </div>
+              </div>
+              <div class="partner-actions">
+                <div class="partner-pill" style="background:rgba(180,83,9,.18);color:#fed7aa;border-color:rgba(234,88,12,.7);">Документы</div>
+                <button class="btn btn-outline" data-open-apply="Помощь с документами">Нужна помощь</button>
+              </div>
+            </article>
+          </div>
+
+          <div class="scam-note">
+            ❗ Если вы хотя бы раз были замечены в обмане, продаже фейковых услуг или схем «заплачу штраф за тебя» —
+            мы не просто удалим карточку, но и предупредим других партнёров. Репутация важнее быстрых денег.
+          </div>
+        </section>
+
+        <!-- Блок безопасности -->
+        <section style="margin-top:18px;">
+          <h2 class="section-title">
+            <span class="icon">🚨</span>Экстренная помощь (только серьёзные случаи)
+          </h2>
+          <p class="section-text">
+            Этот раздел — не про «переведите, пожалуйста, меню бесплатно».  
+            Он для ситуаций, когда действительно страшно:
+          </p>
+          <ul class="list">
+            <li>авария, пострадавшие, полиция, скорый вызов;</li>
+            <li>госпитализация, срочная операция, потеря документов;</li>
+            <li>проблемы с ребёнком, который не говорит по-корейски;</li>
+            <li>мошенники, которые уже забрали или пытаются забрать деньги.</li>
+          </ul>
+          <p class="section-text" style="margin-top:4px;">
+            В таких случаях мы можем: позвонить, перевести, объяснить ситуацию по-корейски,  
+            помочь составить заявление или правильно донести информацию до полиции / больницы.
+          </p>
+          <div class="hero-cta" style="margin-top:6px;">
+            <button class="btn btn-primary" id="openEmergencyBlock">Сообщить о проблеме</button>
+            <button class="btn btn-outline" type="button" onclick="window.location.href='tel:01098091703'">Позвонить 010-9809-1703</button>
+          </div>
+          <div class="hint">
+            Мы оставляем за собой право отказать, если видим, что ситуация — «хочу халяву», а не реальная беда.
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    SiyaEm Korea · неофициальный, но честный сервис помощи русскоязычным в Корее.  
+    Мы не заменяем адвокатов, страховые компании или госорганы, а помогаем к ним добраться без обмана.
+  </footer>
 </div>
 
-<!-- БЛОКИ: доверие + страховки -->
-<div class="wrap">
-  <section class="blocks">
-    <div class="block note">
-      <h3>Как мы проверяем и кого баним</h3>
-      <p>В Корее много мошенников, поэтому SiyaEm:</p>
-      <ul>
-        <li>запрашивает фото лицензии и документов заведения;</li>
-        <li>сверяет адрес с картой и реальностью;</li>
-        <li>по возможности делает тестовый визит;</li>
-        <li>собирает реальные отзывы.</li>
-      </ul>
-      <p style="margin-top:6px">
-        Если выясняется, что заведение или «помощник» работает по схемам, кидает людей, берет деньги и пропадает —
-        <b>пожизненный бан</b>, удаление с карты и публичное предупреждение внутри сервиса.
+<!-- ========== МОДАЛЬНОЕ ОКНО ЗАЯВКИ (FormSubmit) ========== -->
+<div id="applyModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">Оставить заявку</div>
+      <button class="modal-close" data-close-modal="applyModal">Закрыть</button>
+    </div>
+    <div class="modal-body">
+      <p>
+        Расскажите коротко, кто вы и что нужно сделать.  
+        Заявка попадёт напрямую к команде SiyaEm на почту. Мы свяжемся с вами и подберём проверенное место или специалиста.
       </p>
-      <p style="margin-top:6px">SiyaEm дорожит репутацией и не участвует в мутных историях — только помощь и прозрачный сервис.</p>
-    </div>
 
-    <div class="block fact">
-      <h3>Почему важны страховки в Корее</h3>
-      <p><b>Автостраховка:</b> если не платить обязательную и попасть в ДТП, можно получить огромный долг, суд и запрет на выезд. Полная каско спасает при серьёзных авариях, угоне, грабеже.</p>
-      <p><b>Медстраховка:</b> без неё счёт из больницы может быть как стоимость машины. Частные страховки покрывают серьёзные операции и длительное лечение.</p>
-      <p style="margin-top:6px">
-        Мы не страховая, но можем подсказать, чем отличается государственная страховка, частная и полная каско — и направить к официальным агентам Samsung/Hyundai, которые реально помогают, а не наваливают «левые» полисы.
-      </p>
-      <p style="margin-top:4px;font-size:13px;color:var(--muted)">
-        Для консультации по страховкам через SiyaEm: <b>01098091703</b> (звонок / Kakao).
-      </p>
-    </div>
-
-    <div class="block recipe">
-      <h3>Подарок от партнёров</h3>
-      <p>Часть партнёров готова дать гостям SiyaEm разовую скидку <b>5%</b> по промокоду.</p>
-      <ul>
-        <li>Промокод живёт 1 раз на человека.</li>
-        <li>Получить код можно только через заявку на сайте.</li>
-        <li>Код привязывается к конкретному заведению.</li>
-        <li>Мы не продаём коды и не берём за них деньги с гостей.</li>
-      </ul>
-      <p style="margin-top:6px">
-        Для заведений это маркетинг без риска, для гостей — знак, что точка действительно сотрудничает с SiyaEm официально.
-      </p>
-    </div>
-  </section>
-</div>
-
-<!-- ДЛЯ КОГО ЭТО -->
-<div class="wrap">
-  <section class="glass">
-    <h2 style="margin:16px 16px 0">Для кого это</h2>
-    <div class="forwho">
-      <div class="tile">🍜 Кафе и рестораны <br><small>фото-карточки, купоны, геометки</small></div>
-      <div class="tile">💅 Салоны красоты <br><small>портфолио, запись, прайс</small></div>
-      <div class="tile">🚗 Автомеханики <br><small>виды работ, срочные заявки</small></div>
-      <div class="tile">🎓 Школы, кружки <br><small>расписание, наборы, отзывы</small></div>
-    </div>
-  </section>
-</div>
-
-<!-- MAP MODAL -->
-<div class="modal" id="mapModal">
-  <div class="box">
-    <div class="map-header"><strong>Карта</strong><button class="close" id="closeMap">Закрыть</button></div>
-    <div id="map" class="map-body"></div>
-  </div>
-</div>
-
-<!-- PRICING MODAL (категории) -->
-<div class="modal pricing" id="pricingModal">
-  <div class="box">
-    <div class="pr-head">
-      <div class="pr-title">Подборки для: <strong id="prTyping" class="typing"></strong></div>
-      <div class="pr-tabs" id="prTabs"></div>
-    </div>
-    <div class="pr-grid" id="prGrid"></div>
-    <div style="display:flex;justify-content:flex-end;padding:0 16px 16px">
-      <button class="close" id="closePricing">Закрыть</button>
-    </div>
-  </div>
-</div>
-
-<!-- APPLY MODAL (заявка -> FormSubmit) -->
-<div id="applyModal" class="m-apply" aria-hidden="true">
-  <div class="box">
-    <h3>Оставить заявку / получить промокод</h3>
-    <form id="applyForm" action="https://formsubmit.co/ignatka220033@gmail.com" method="POST">
-      <!-- FormSubmit настройки -->
-      <input type="hidden" name="_subject" value="Заявка с SiyaEm Korea">
-      <input type="hidden" name="_captcha" value="false">
-      <!-- после отправки вернёт обратно на сайт -->
-      <input type="hidden" name="_next" value="https://kandrphkorea-cmd.github.io/siyaem-site2/">
-      <!-- откуда нажали -->
-      <input type="hidden" id="f-context" name="Контекст" value="Заявка с сайта">
-
-      <div class="row">
+      <form id="applyForm" class="modal-form">
         <div class="field">
-          <label>Имя*</label>
-          <input id="f-name" type="text" name="Имя" required placeholder="Как вас зовут">
+          <label>Контекст (откуда заявка)</label>
+          <input id="applyContext" name="context" type="text" readonly value="Главная страница SiyaEm Korea" />
+        </div>
+        <div class="field">
+          <label>Ваше имя*</label>
+          <input name="name" type="text" required placeholder="Как к вам обращаться" />
         </div>
         <div class="field">
           <label>Телефон / KakaoTalk*</label>
-          <input id="f-phone" type="text" name="Телефон" required placeholder="+82-10-XXXX-XXXX / Kakao ID">
+          <input name="phone" type="text" required placeholder="010-XXXX-XXXX или Kakao ID" />
         </div>
-      </div>
-
-      <div class="row">
         <div class="field">
           <label>E-mail</label>
-          <input id="f-email" type="email" name="Email" placeholder="example@mail.com">
+          <input name="email" type="email" placeholder="Не обязательно, но удобно" />
         </div>
         <div class="field">
           <label>Категория</label>
-          <select id="f-cat" name="Категория">
-            <option>Еда</option>
+          <select name="category">
+            <option>Еда / кафе</option>
             <option>Салоны / красота</option>
-            <option>Автомеханики</option>
-            <option>Образование</option>
-            <option>Развлечения</option>
+            <option>Авто / сервис / права</option>
+            <option>Страховки</option>
+            <option>Документы / переводы</option>
             <option>Другое</option>
           </select>
         </div>
-      </div>
+        <div class="field">
+          <label>Что нужно сделать?*</label>
+          <textarea name="message" required placeholder="Кратко опишите запрос, город, удобное время."></textarea>
+        </div>
 
-      <div class="field">
-        <label>Комментарий</label>
-        <textarea id="f-msg" name="Комментарий" placeholder="Кратко: промокод / партнёрство / вопрос по страховкам / помощь и т.д."></textarea>
-      </div>
+        <div class="hint">
+          Нажимая «Отправить», вы соглашаетесь, что мы можем связаться с вами по указанным контактам.
+          Мы не передаём данные мошенникам и не продаём базы телефонов.
+        </div>
 
-      <div class="hint">Данные отправятся на почту SiyaEm. Мы не передаём информацию мошенникам и третьим лицам.</div>
-
-      <div class="actions">
-        <button type="button" class="btn btn-ghost" id="applyClose">Отмена</button>
-        <button type="submit" class="btn">Отправить</button>
-      </div>
-    </form>
-    <div id="applyResult" class="hint" style="margin-top:8px;display:none"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" data-close-modal="applyModal">Отмена</button>
+          <button type="submit" class="btn btn-primary">Отправить заявку</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
-<!-- PROFILE MODAL -->
-<div class="modal profile-modal" id="profileModal">
-  <div class="box">
-    <div class="map-header">
-      <strong>Личный кабинет</strong>
-      <button class="close" id="closeProfile">Закрыть</button>
+<!-- ========== МОДАЛЬНОЕ ОКНО ЭКСТРЕННОЙ ПОМОЩИ (FormSubmit) ========== -->
+<div id="emergencyModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">Экстренная помощь</div>
+      <button class="modal-close" data-close-modal="emergencyModal">Закрыть</button>
     </div>
-    <div style="padding:14px 16px">
-      <p class="hint" id="profileWelcome" style="margin-top:0"></p>
-      <div class="row" style="grid-template-columns:1fr 1fr">
-        <div class="field">
-          <label>Имя / никнейм</label>
-          <input id="p-name" type="text" placeholder="Имя">
-        </div>
-        <div class="field">
-          <label>Телефон / Kakao</label>
-          <input id="p-contact" type="text" placeholder="+82-10-... / Kakao ID">
-        </div>
-      </div>
-      <div class="field">
-        <label>Роль</label>
-        <select id="p-role">
-          <option value="guest">Гость / клиент</option>
-          <option value="owner">Владелец заведения</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Коротко о себе / заведении</label>
-        <textarea id="p-about" placeholder="Например: «владелец кафе возле станции..., хотим принимать гостей через SiyaEm»"></textarea>
-      </div>
-      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px">
-        <button class="btn btn-ghost" id="logoutBtn">Выйти</button>
-        <button class="btn" id="saveProfileBtn">Сохранить</button>
-      </div>
-      <p class="hint" style="margin-top:10px">
-        Личный кабинет сейчас локальный (на вашем устройстве). Позже можно сделать синхронизацию через полноценную регистрацию.
+    <div class="modal-body">
+      <p>
+        Заполните форму максимально честно. Это только для серьёзных ситуаций:
+        аварии, больницы, полиция, пропали документы или реальные попытки мошенничества.
       </p>
+
+      <form id="emergencyForm" class="modal-form">
+        <div class="field">
+          <label>Ваше имя*</label>
+          <input name="name" type="text" required />
+        </div>
+        <div class="field">
+          <label>Телефон / KakaoTalk*</label>
+          <input name="phone" type="text" required />
+        </div>
+        <div class="field">
+          <label>Город / район*</label>
+          <input name="city" type="text" required />
+        </div>
+        <div class="field">
+          <label>Что случилось?*</label>
+          <textarea name="message" required placeholder="Кратко опишите ситуацию. Можно без имён, главное — суть."></textarea>
+        </div>
+
+        <div class="hint">
+          Если ситуация критическая и секунды важны — лучше сразу звоните: <b>010-9809-1703</b>.  
+          Форма нужна, чтобы мы зафиксировали детали и могли подключить нужных людей.
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" data-close-modal="emergencyModal">Отмена</button>
+          <button type="submit" class="btn btn-primary">Отправить сигнал</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 
-<footer class="wrap" style="text-align:center;margin:30px 0 50px">
-  © 2025 SiyaEm Korea • Экстренная помощь в серьёзных случаях: <b>01098091703</b>
-</footer>
+<!-- Toast -->
+<div id="toast" class="toast"></div>
 
 <script>
-/* ===== CONFIG ===== */
-const GMAPS_KEY = "AIzaSyBfroP4Q7_yFpEMPXgDMn-bohk1xRxTkro";
-
-/* THEME */
-document.getElementById('themeToggle').onclick = () => {
-  document.documentElement.classList.toggle('light');
-};
-
-/* HERO TYPING (фикс, чтобы не дёргалось) */
-const typingEl = document.getElementById('typing');
-const phrases = [
-  "большие возможности.",
-  "места, которым доверяешь.",
-  "руководство по честной жизни в Корее."
-];
-let pi=0, ci=0, fwd=true;
-(function loop(){
-  const p = phrases[pi];
-  typingEl.textContent = p.slice(0, ci);
-  ci += fwd ? 1 : -1;
-  if (fwd && ci === p.length + 3) fwd = false;
-  if (!fwd && ci === 0){ fwd = true; pi = (pi+1) % phrases.length; }
-  setTimeout(loop, fwd ? 70 : 40);
-})();
-
-/* AUTH (вход) */
-(function(){
-  const authScreen = document.getElementById('authScreen');
-  const form = document.getElementById('authForm');
-  const PROFILE_KEY = 'siyaem_profile';
-
-  // уже логинились?
-  const stored = localStorage.getItem(PROFILE_KEY);
-  if (stored){
-    authScreen.style.display = 'none';
-  }
-
-  form.addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const name = document.getElementById('authName').value.trim();
-    const contact = document.getElementById('authContact').value.trim();
-    if(!name || !contact) return;
-    const profile = { name, contact, role:'guest', about:'' };
-    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
-    authScreen.style.display = 'none';
-    fillProfileFromStorage();
-    showToast('Добро пожаловать, ' + name + '!');
-  });
-})();
-
-/* RATINGS (звёзды) */
-const ratings = {};
-document.querySelectorAll('.stars').forEach(g=>{
-  const id = g.dataset.id; ratings[id] = ratings[id] || 4;
-  g.querySelectorAll('.star').forEach(s=>{
-    s.onclick = ()=>{
-      const v = +s.dataset.v;
-      ratings[id] = (ratings[id] + v)/2;
-      const cntEl = document.getElementById('r-'+id);
-      cntEl.textContent = +cntEl.textContent + 1;
-      paint(g, ratings[id]);
-    };
-  });
-  paint(g, ratings[id]);
-});
-function paint(g,val){
-  g.querySelectorAll('.star').forEach(st=>{
-    st.style.opacity = (+st.dataset.v <= Math.round(val)) ? '1' : '.35';
-  });
-}
-
-/* MAP (ленивая загрузка) */
-const mapModal = document.getElementById('mapModal');
-document.getElementById('openMap').onclick = ()=>openMapAt(36.9305,127.0458);
-document.querySelectorAll('[data-map]').forEach(b=>{
-  b.addEventListener('click', ()=>{
-    const [lat,lng] = b.dataset.map.split(',').map(Number);
-    openMapAt(lat,lng);
-  });
-});
-document.getElementById('closeMap').onclick = ()=>mapModal.classList.remove('show');
-let _map,_marker,_mapsLoaded=false;
-function openMapAt(lat,lng){ mapModal.classList.add('show'); ensureMap(lat,lng); }
-function ensureMap(lat,lng){
-  if(!_mapsLoaded){
-    const s = document.createElement('script');
-    s.src = `https://maps.googleapis.com/maps/api/js?key=${GMAPS_KEY}&callback=__initMap`;
-    s.async = true;
-    window.__initMap = ()=>{ _mapsLoaded=true; initMap(lat,lng); };
-    document.body.appendChild(s);
-  } else initMap(lat,lng);
-}
-function initMap(lat,lng){
-  const c={lat,lng};
-  if(!_map){
-    _map = new google.maps.Map(document.getElementById('map'),{
-      center:c,zoom:15,styles:[{featureType:"poi",stylers:[{visibility:"off"}]}]
-    });
-    _marker = new google.maps.Marker({position:c,map:_map});
-  }else{
-    _map.setCenter(c); _marker.setPosition(c);
-  }
-}
-
-/* TOAST */
-function showToast(text){
-  const t = document.createElement('div');
-  t.className='toast';
-  t.textContent=text;
-  document.body.appendChild(t);
-  setTimeout(()=>t.classList.add('show'),50);
-  setTimeout(()=>t.remove(),4000);
-}
-
-/* APPLY MODAL (открытие / закрытие) */
-(function(){
-  const modal   = document.getElementById('applyModal');
-  const close   = document.getElementById('applyClose');
-  const ctx     = document.getElementById('f-context');
-  const resBox  = document.getElementById('applyResult');
-
-  function open(contextText){
-    if(ctx) ctx.value = contextText || 'Заявка';
-    if(resBox){ resBox.style.display='none'; resBox.textContent=''; }
-    modal.classList.add('show');
-  }
-  function closeM(){ modal.classList.remove('show'); }
-
-  close.addEventListener('click', closeM);
-  modal.addEventListener('click',(e)=>{ if(e.target===modal) closeM(); });
-
-  // кнопка "Стать партнёром" и все data-apply
-  document.addEventListener('click',(e)=>{
-    const btn = e.target.closest('[data-apply]');
-    if(!btn) return;
-    const text = btn.getAttribute('data-apply') || btn.textContent.trim();
-    open(text);
-  });
-
-  // после сабмита FormSubmit сам сделает redirect.
-  const form = document.getElementById('applyForm');
-  form.addEventListener('submit', ()=>{
-    // просто подсказка пользователю
-    resBox.style.display='block';
-    resBox.style.color='#10b981';
-    resBox.textContent='Отправляем заявку... Если страницу перекинуло на FormSubmit — всё хорошо, потом вернёт обратно.';
-  });
-})();
-
-/* PROFILE MODAL + localStorage */
-const PROFILE_KEY = 'siyaem_profile';
-const profileModal = document.getElementById('profileModal');
-const openProfileBtn = document.getElementById('openProfile');
-const closeProfileBtn = document.getElementById('closeProfile');
-const logoutBtn = document.getElementById('logoutBtn');
-const saveProfileBtn = document.getElementById('saveProfileBtn');
-
-function fillProfileFromStorage(){
-  const stored = localStorage.getItem(PROFILE_KEY);
-  const welcome = document.getElementById('profileWelcome');
-  const nameEl = document.getElementById('p-name');
-  const contactEl = document.getElementById('p-contact');
-  const roleEl = document.getElementById('p-role');
-  const aboutEl = document.getElementById('p-about');
-
-  if(!stored){
-    if(welcome) welcome.textContent = "Пока данных нет. Заполни, чтобы заявки было проще обрабатывать.";
-    return;
-  }
-  const p = JSON.parse(stored);
-  if(nameEl) nameEl.value = p.name || '';
-  if(contactEl) contactEl.value = p.contact || '';
-  if(roleEl) roleEl.value = p.role || 'guest';
-  if(aboutEl) aboutEl.value = p.about || '';
-  if(welcome) welcome.textContent = "Привет, " + (p.name || "гость") + "! Эти данные видишь только ты и команда SiyaEm.";
-}
-fillProfileFromStorage();
-
-openProfileBtn.addEventListener('click', ()=>{
-  fillProfileFromStorage();
-  profileModal.classList.add('show');
-});
-closeProfileBtn.addEventListener('click', ()=>profileModal.classList.remove('show'));
-profileModal.addEventListener('click',(e)=>{ if(e.target===profileModal) profileModal.classList.remove('show'); });
-
-logoutBtn.addEventListener('click', ()=>{
-  localStorage.removeItem(PROFILE_KEY);
-  showToast("Профиль очищен. Перезайди, чтобы заполнить заново.");
-  profileModal.classList.remove('show');
-  document.getElementById('authScreen').style.display='grid';
-});
-
-saveProfileBtn.addEventListener('click', ()=>{
-  const p = {
-    name   : document.getElementById('p-name').value.trim(),
-    contact: document.getElementById('p-contact').value.trim(),
-    role   : document.getElementById('p-role').value,
-    about  : document.getElementById('p-about').value.trim()
+  /* ================= FIREBASE AUTH ================= */
+  const firebaseConfig = {
+    apiKey: "AIzaSyDCDfuntzsXW6vUIJaq1qc8XgIsfBCTMMU",
+    authDomain: "siyaem-korea.firebaseapp.com",
+    projectId: "siyaem-korea",
+    storageBucket: "siyaem-korea.firebasestorage.app",
+    messagingSenderId: "230073434642",
+    appId: "1:230073434642:web:d58f5be657252c857b4ecb"
   };
-  localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
-  showToast("Профиль сохранён.");
-  fillProfileFromStorage();
-  profileModal.classList.remove('show');
-});
 
-/* PRICING (категории как у Notion Pricing) */
-const pricingModal = document.getElementById('pricingModal');
-const closePricing = document.getElementById('closePricing');
-const openPricingBtns = document.querySelectorAll('.open-pricing');
-const prTabs = document.getElementById('prTabs');
-const prGrid = document.getElementById('prGrid');
-const prTyping = document.getElementById('prTyping');
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
 
-closePricing.onclick=()=>{ pricingModal.classList.remove('show'); };
+  const authScreen   = document.getElementById('authScreen');
+  const appScreen    = document.getElementById('appScreen');
+  const authForm     = document.getElementById('authForm');
+  const authEmail    = document.getElementById('authEmail');
+  const authPassword = document.getElementById('authPassword');
+  const authSubmit   = document.getElementById('authSubmit');
+  const authErrorEl  = document.getElementById('authError');
+  const tabLogin     = document.getElementById('tabLogin');
+  const tabRegister  = document.getElementById('tabRegister');
+  const logoutBtn    = document.getElementById('logoutBtn');
+  const authAnonBtn  = document.getElementById('authAnon');
 
-const sections = {
-  food:{
-    title:"Еда",
-    tabs:["Фастфуд","Лапша","Супы","Мясо","Десерты"],
-    items:{
-      "Фастфуд":[{title:"Бургеры/Картошка",points:["Русское меню","Доставка","Купоны"],cat:"Еда,Фастфуд"},
-                 {title:"Курица/Пицца",points:["Семейные сеты","Не остро / остро","До 02:00"],cat:"Еда,Фастфуд"}],
-      "Лапша":[{title:"Кальгуксу",points:["Домашняя лапша","Большие порции"],cat:"Еда,Лапша"},
-               {title:"Рамен",points:["Авторские бульоны","Острота 1–5"],cat:"Еда,Лапша"}],
-      "Супы":[{title:"Кимчи-чиге",points:["Горячо","Сытно"],cat:"Еда,Супы"}],
-      "Мясо":[{title:"Самгёпсаль",points:["На углях","Салаты включены"],cat:"Еда,Мясо"}],
-      "Десерты":[{title:"Торты/Эклеры",points:["На заказ","Дизайн"],cat:"Еда,Десерты"}]
-    }
-  },
-  salon:{
-    title:"Салоны",
-    tabs:["Маникюр","Парикмахер","Косметология"],
-    items:{
-      "Маникюр":[{title:"Маникюр + покрытие",points:["Палитра 200+","Стерильность"],cat:"Салоны"}],
-      "Парикмахер":[{title:"Стрижка/Окрашивание",points:["Колористика","Уход"],cat:"Салоны"}],
-      "Косметология":[{title:"Чистка/Массаж",points:["Аппаратная/мануальная"],cat:"Салоны"}]
-    }
-  },
-  auto:{
-    title:"Авто",
-    tabs:["СТО","Детейлинг","Шины"],
-    items:{
-      "СТО":[{title:"Диагностика",points:["Сканер/электрика"],cat:"Авто"}],
-      "Детейлинг":[{title:"Полировка/Защита",points:["Керамика","Плёнки"],cat:"Авто"}],
-      "Шины":[{title:"Шиномонтаж",points:["Хранение сезонное"],cat:"Авто"}]
-    }
-  },
-  edu:{
-    title:"Образование",
-    tabs:["Языки","Подготовка","Кружки"],
-    items:{
-      "Языки":[{title:"Корейский A0–B2",points:["Группы/индивидуально"],cat:"Образование"}],
-      "Подготовка":[{title:"TOPIK",points:["Пробные тесты"],cat:"Образование"}],
-      "Кружки":[{title:"Танцы/Музыка",points:["Детские/взрослые"],cat:"Образование"}]
-    }
-  }
-};
+  let authMode = 'login'; // 'login' | 'register'
 
-let prTimer=null;
-function startPrTyping(words,el){
-  if(prTimer){clearTimeout(prTimer);prTimer=null;}
-  let i=0,j=0,fwd=true;
-  const typeDelay=75, eraseDelay=45, holdFull=900, holdEmpty=420;
-  (function tick(){
-    const w=words[i]; el.textContent=w.slice(0,j);
-    if(fwd){
-      if(j<w.length){ j++; prTimer=setTimeout(tick,typeDelay); }
-      else{ fwd=false; prTimer=setTimeout(tick,holdFull); }
+  function setAuthMode(mode){
+    authMode = mode;
+    if(mode==='login'){
+      tabLogin.classList.add('active');
+      tabRegister.classList.remove('active');
+      authSubmit.textContent = 'Войти';
     }else{
-      if(j>0){ j--; prTimer=setTimeout(tick,eraseDelay); }
-      else{ fwd=true; i=(i+1)%words.length; prTimer=setTimeout(tick,holdEmpty); }
+      tabRegister.classList.add('active');
+      tabLogin.classList.remove('active');
+      authSubmit.textContent = 'Создать аккаунт';
+    }
+    authErrorEl.textContent = '';
+  }
+
+  tabLogin.onclick    = ()=>setAuthMode('login');
+  tabRegister.onclick = ()=>setAuthMode('register');
+
+  authForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    authErrorEl.textContent = '';
+    authSubmit.disabled = true;
+    authSubmit.textContent = 'Подождите…';
+
+    try{
+      if(authMode==='login'){
+        await auth.signInWithEmailAndPassword(authEmail.value.trim(), authPassword.value);
+        showToast('Добро пожаловать в SiyaEm Korea');
+      }else{
+        await auth.createUserWithEmailAndPassword(authEmail.value.trim(), authPassword.value);
+        showToast('Аккаунт создан, вы вошли в систему');
+      }
+    }catch(err){
+      console.error(err);
+      let msg = 'Ошибка. Проверьте данные.';
+      if(err.code==='auth/invalid-email') msg='Неверный формат e-mail.';
+      if(err.code==='auth/user-not-found') msg='Пользователь не найден.';
+      if(err.code==='auth/wrong-password') msg='Неверный пароль.';
+      if(err.code==='auth/email-already-in-use') msg='Такой e-mail уже зарегистрирован.';
+      authErrorEl.textContent = msg;
+    }finally{
+      authSubmit.disabled = false;
+      authSubmit.textContent = authMode==='login' ? 'Войти' : 'Создать аккаунт';
+    }
+  });
+
+  authAnonBtn.onclick = ()=>{
+    auth.signInAnonymously()
+      .then(()=>showToast('Вход без регистрации. Некоторые функции могут быть ограничены.'))
+      .catch(err=>{console.error(err);authErrorEl.textContent='Не удалось войти анонимно.'});
+  };
+
+  logoutBtn.onclick = ()=>auth.signOut();
+
+  auth.onAuthStateChanged(user=>{
+    if(user){
+      authScreen.style.display='none';
+      appScreen.style.display='block';
+      const email  = user.email || 'анонимный вход';
+      const name   = email!=='анонимный вход' ? email.split('@')[0] : 'Гость SiyaEm';
+      document.getElementById('profileName').textContent  = name;
+      document.getElementById('profileEmail').textContent = email;
+      restoreProfilePhone();
+    }else{
+      authScreen.style.display='flex';
+      appScreen.style.display='none';
+      authPassword.value='';
+    }
+  });
+
+  /* ================= THEME ================= */
+  const themeToggle = document.getElementById('themeToggle');
+  function setTheme(mode){
+    if(mode==='light'){
+      document.documentElement.classList.add('light');
+    }else{
+      document.documentElement.classList.remove('light');
+    }
+    localStorage.setItem('siyaem_theme', mode);
+  }
+  const storedTheme = localStorage.getItem('siyaem_theme') || 'dark';
+  setTheme(storedTheme);
+  themeToggle.onclick = ()=>{
+    const now = document.documentElement.classList.contains('light') ? 'dark' : 'light';
+    setTheme(now);
+  };
+
+  /* ================= TYPING TEXT ================= */
+  const typingEl = document.getElementById('typingHero');
+  const phrases = [
+    '«В Корее много мошенников, не дайте им добраться до вас».',
+    'Мы проверяем заведения, страховщиков и помощников с документами.',
+    'За любую попытку развода даём пожизненный бан в каталоге SiyaEm.'
+  ];
+  let pi=0, ci=0, forward=true;
+  (function loop(){
+    const p = phrases[pi];
+    typingEl.textContent = p.slice(0,ci);
+    if(forward){
+      if(ci<p.length){ ci++; setTimeout(loop,45); }
+      else { forward=false; setTimeout(loop,1400); }
+    }else{
+      if(ci>0){ ci--; setTimeout(loop,30); }
+      else { forward=true; pi=(pi+1)%phrases.length; setTimeout(loop,400); }
     }
   })();
-}
-function openSection(key){
-  const sec = sections[key]; if(!sec) return;
-  pricingModal.classList.add('show');
-  startPrTyping([sec.title,"лучшие подборки","рядом с вами"], prTyping);
-  prTabs.innerHTML='';
-  sec.tabs.forEach((t,idx)=>{
-    const el=document.createElement('button');
-    el.className='tab'+(idx===0?' active':'');
-    el.textContent=t;
-    el.onclick=()=>{
-      prTabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-      el.classList.add('active');
-      renderTab(sec,t);
-    };
-    prTabs.appendChild(el);
+
+  /* ================= PROFILE (локальное сохранение телефона) ================= */
+  const profilePhoneInput  = document.getElementById('profilePhoneInput');
+  const profilePhoneLabel  = document.getElementById('profilePhoneLabel');
+  const saveProfileBtn     = document.getElementById('saveProfileBtn');
+
+  function restoreProfilePhone(){
+    try{
+      const val = localStorage.getItem('siyaem_profile_phone') || '';
+      profilePhoneInput.value = val;
+      profilePhoneLabel.textContent = val || 'не добавлен';
+    }catch(_){}
+  }
+  restoreProfilePhone();
+
+  saveProfileBtn.onclick = ()=>{
+    const val = profilePhoneInput.value.trim();
+    localStorage.setItem('siyaem_profile_phone', val);
+    profilePhoneLabel.textContent = val || 'не добавлен';
+    showToast('Профиль обновлён');
+  };
+
+  /* ================= МОДАЛКИ ================= */
+  const applyModal      = document.getElementById('applyModal');
+  const emergencyModal  = document.getElementById('emergencyModal');
+  const applyContextInp = document.getElementById('applyContext');
+
+  function openModal(modal){ modal.classList.add('show'); }
+  function closeModalById(id){ const m=document.getElementById(id); if(m) m.classList.remove('show'); }
+
+  document.querySelectorAll('[data-close-modal]').forEach(btn=>{
+    btn.onclick = ()=>closeModalById(btn.getAttribute('data-close-modal'));
   });
-  renderTab(sec,sec.tabs[0]);
-}
-function renderTab(sec,tab){
-  const list=sec.items[tab]||[];
-  prGrid.innerHTML='';
-  list.forEach(card=>{
-    const div=document.createElement('div');
-    div.className='pr-card';
-    div.innerHTML=`
-      <h4>${card.title}</h4>
-      <ul>${card.points.map(p=>`<li>${p}</li>`).join('')}</ul>
-      <div class="pr-cta">
-        <button class="btn map">Показать точки</button>
-        <button class="btn" data-apply="Прайс — ${card.title}">Оставить заявку</button>
-      </div>`;
-    div.querySelector('.map').onclick=()=>{
-      const cats=(card.cat||'').split(',').map(s=>s.trim());
-      document.querySelectorAll('#cards .card').forEach(c=>{
-        const has=(c.dataset.cat||'').split(',').some(v=>cats.includes(v.trim()));
-        c.style.outline = has ? '2px solid #6aa3ff' : 'none';
-        c.style.opacity = has ? '1' : '0.55';
-      });
-      pricingModal.classList.remove('show');
-      openMapAt(36.9305,127.0458);
+
+  applyModal.addEventListener('click',e=>{ if(e.target===applyModal) applyModal.classList.remove('show'); });
+  emergencyModal.addEventListener('click',e=>{ if(e.target===emergencyModal) emergencyModal.classList.remove('show'); });
+
+  // Открытие заявки из разных мест
+  document.getElementById('openApplyFromHeader').onclick = ()=>{
+    applyContextInp.value = 'Заявка: шапка сайта';
+    openModal(applyModal);
+  };
+  document.getElementById('openApplyMain').onclick = ()=>{
+    applyContextInp.value = 'Заявка: главный блок';
+    openModal(applyModal);
+  };
+  document.getElementById('openApplyProfile').onclick = ()=>{
+    applyContextInp.value = 'Заявка: личный кабинет';
+    openModal(applyModal);
+  };
+
+  document.querySelectorAll('[data-open-apply]').forEach(btn=>{
+    btn.onclick = ()=>{
+      applyContextInp.value = 'Заявка по партнёру: ' + (btn.getAttribute('data-open-apply') || '');
+      openModal(applyModal);
     };
-    prGrid.appendChild(div);
   });
-}
-openPricingBtns.forEach(b=>b.onclick=()=>openSection(b.dataset.section));
-document.getElementById('closePricing').onclick=()=>{
-  if(prTimer){clearTimeout(prTimer);prTimer=null;}
-  pricingModal.classList.remove('show');
-  document.querySelectorAll('#cards .card').forEach(c=>{c.style.outline='none';c.style.opacity='1';});
-};
+
+  // Экстренная помощь
+  function openEmergency(origin){
+    const hiddenFieldName = 'origin';
+    const form = document.getElementById('emergencyForm');
+    let hidden = form.querySelector('input[name="'+hiddenFieldName+'"]');
+    if(!hidden){
+      hidden = document.createElement('input');
+      hidden.type='hidden';
+      hidden.name=hiddenFieldName;
+      form.appendChild(hidden);
+    }
+    hidden.value = origin;
+    openModal(emergencyModal);
+  }
+
+  document.getElementById('openEmergencyFromHeader').onclick = ()=>openEmergency('Шапка сайта');
+  document.getElementById('openEmergencyMain').onclick      = ()=>openEmergency('Главный блок');
+  document.getElementById('openEmergencyBlock').onclick     = ()=>openEmergency('Блок «Экстренная помощь»');
+
+  /* ================= FormSubmit (заявки на почту) ================= */
+  const FORMSUBMIT_URL = "https://formsubmit.co/el/minoce";
+
+  async function sendViaFormSubmit(form, extra){
+    const fd = new FormData(form);
+    if(extra){
+      Object.entries(extra).forEach(([k,v])=>fd.append(k,v));
+    }
+    // служебные поля FormSubmit
+    fd.append('_captcha','false');
+    fd.append('_template','table');
+    fd.append('_subject', extra && extra._subject ? extra._subject : 'Новая заявка SiyaEm');
+    try{
+      const res = await fetch(FORMSUBMIT_URL, { method:'POST', body:fd });
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      return true;
+    }catch(err){
+      console.error('FormSubmit error', err);
+      return false;
+    }
+  }
+
+  const applyForm = document.getElementById('applyForm');
+  applyForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const ok = await sendViaFormSubmit(applyForm, {
+      _subject: 'Заявка партнёра / клиента с сайта SiyaEm',
+      source: 'applyModal',
+      page: location.href,
+      ua: navigator.userAgent
+    });
+    if(ok){
+      showToast('✅ Заявка отправлена. Мы свяжемся с вами.');
+      applyForm.reset();
+      applyContextInp.value = 'Главная страница SiyaEm Korea';
+      applyModal.classList.remove('show');
+    }else{
+      alert('Не удалось отправить заявку. Попробуйте ещё раз или напишите в WhatsApp / Kakao: 010-9809-1703');
+    }
+  });
+
+  const emergencyForm = document.getElementById('emergencyForm');
+  emergencyForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const ok = await sendViaFormSubmit(emergencyForm, {
+      _subject: '⚠️ Экстренная помощь SiyaEm',
+      source: 'emergencyModal',
+      page: location.href,
+      ua: navigator.userAgent
+    });
+    if(ok){
+      showToast('🚨 Сигнал получен. Мы постараемся отреагировать как можно быстрее.');
+      emergencyForm.reset();
+      emergencyModal.classList.remove('show');
+    }else{
+      alert('Не удалось отправить. Если это реально срочно — лучше позвоните: 010-9809-1703');
+    }
+  });
+
+  /* ================= TOAST ================= */
+  const toastEl = document.getElementById('toast');
+  let toastTimer = null;
+  function showToast(text){
+    toastEl.textContent = text;
+    toastEl.classList.add('show');
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 4000);
+  }
 </script>
+
 </body>
 </html>
